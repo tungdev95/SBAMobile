@@ -1,0 +1,457 @@
+{
+    "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+    "proposalCode": "LOS.CHCC.2024.02",
+    "reportCode": "000151/24/BĐS-TD",
+    "customerId": "f76884a2-03d7-4118-9612-1d559d689202",
+    "customerNameByLos": "Tên Khách hàng test ngày 18-11-2023",
+    "addressCustomerByLos": "300Huỳnh Mẫn Đạt, Phường 01, Quận 10, TP HCM",
+    "typeCustomerByLos": "1",
+    "cccdCustomerByLos": "010203040506",
+    "dateCustomerLos": "2024-01-02T09:24:30.120+00:00",
+    "customer": {
+        "customerId": "f76884a2-03d7-4118-9612-1d559d689202",
+        "customerName": "Test tạo ngày 15122023",
+        "customerTypeId": null,
+        "customerType": null,
+        "taxCode": null,
+        "personIdentification": "010203040506",
+        "address": "600 Huỳnh Mẫn Đạt, Phường 01, Quận 10, TP HCM",
+        "phoneNumber": null,
+        "representator": null,
+        "position": null,
+        "dateCreate": "2023-12-15T10:09:01.756+00:00",
+        "dateModify": null,
+        "status": 1
+    },
+    "branchCode": "VN0011251",
+    "branch": {
+        "branchCode": "VN0011251",
+        "branchName": "CHI NHANH TAN BINH",
+        "address": null,
+        "email": null,
+        "phoneNumber": null,
+        "regionCode": "VN0010006",
+        "createdDate": null,
+        "taxCode": "0301103908-005",
+        "hibernateLazyInitializer": {}
+    },
+    "transOfficeCode": "VN0011251",
+    "transOffice": {
+        "transOfficeCode": "VN0011251",
+        "transOfficeName": "CHI NHÁNH TÂN BÌNH",
+        "address": "224 Le Van Sy, P.1 Q.Tan Binh, TP.HCM",
+        "email": null,
+        "phoneNumber": null,
+        "branchCode": "VN0011251",
+        "createdDate": null,
+        "taxCode": "0301103908-005",
+        "hibernateLazyInitializer": {}
+    },
+    "rmName": "Đỗ Văn Long",
+    "rmPhone": "0903700747",
+    "resultEmail": "longdv@sacombank.com;tuanld6127@sacombank.com",
+    "invoiceEmail": "tuanld6127@sacombank.com",
+    "surveyGuide": "Người hướng dẫn khảo sát SBA",
+    "surveyGuidePhone": "0123456789",
+    "surveyTime": "2024-01-17T15:58:53.282+00:00",
+    "proposalDate": "2024-01-02T09:24:30.120+00:00",
+    "appraisalDate": null,
+    "submissionDate": null,
+    "approvedDate": null,
+    "fileStatus": 3,
+    "previousFileStatus": 2,
+    "filesStatus": {
+        "filesStatusId": 3,
+        "filesStatus": "Đã bổ sung HSPL",
+        "hibernateLazyInitializer": {}
+    },
+    "assetName": null,
+    "appraisalPurposeId": 1,
+    "appraisalPurpose": {
+        "appraisalPurposeId": 1,
+        "appraisalPurposeName": "Tham khảo cấp tín dụng tại Sacombank",
+        "short_": "TD",
+        "hibernateLazyInitializer": {}
+    },
+    "assetLevelOneId": 1,
+    "assetLevelOne": {
+        "assetLevelOneId": 1,
+        "assetLevelOneName": "Bất động sản",
+        "_short": "BĐS"
+    },
+    "assetLevelTwoId": 2,
+    "assetLevelTwo": {
+        "assetLevelTwoId": 2,
+        "assetLevelTwoName": "Căn hộ chung cư",
+        "assetLevelOneId": "1"
+    },
+    "assetLevelThreeId": null,
+    "assetLevelThree": null,
+    "assetLevelThrees": "QTS phát sinh từ HĐ mua bán/VBTT/thuê mua văn phòng-diện tích thương mại",
+    "address": "Phường 09, Quận Phú Nhuận, Thành phố Hồ Chí Minh",
+    "addressDetail": null,
+    "addressStreet": null,
+    "addressWard": "27049",
+    "addressDistrict": "768",
+    "addressProvince": "79",
+    "latitude": 21.035856,
+    "longitude": 105.775795,
+    "flowId": 1,
+    "surveyer": null,
+    "appraiser": null,
+    "appraisalUnit": 1,
+    "surveyReportFileName": "BBKS-1712027910516.pdf",
+    "reportSignDate": "2024-04-02T03:18:30.917+00:00",
+    "appraisalInformFileName": null,
+    "appraisalResultFileName": null,
+    "appraisalReportFileName": null,
+    "signatureDate": null,
+    "cancelDate": null,
+    "timeApproval": null,
+    "typeCreated": 1,
+    "assetCommons": [
+        {
+            "assetCommonId": 2083,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "assetCode": "SBA.381330007",
+            "climsCode": "202312181690778",
+            "addressByLos": "Dương Bá Trạc, Hồ Chí Minh",
+            "assetLevelThreeId": 10,
+            "assetLevelThree": {
+                "assetLevelThreeId": 10,
+                "assetLevelThreeName": "QTS phát sinh từ HĐ mua bán/VBTT/thuê mua văn phòng-diện tích thương mại",
+                "assetLevelTwoId": "2"
+            },
+            "appraisalTypeId": 2,
+            "appraisalType": {
+                "appraisalTypeId": 2,
+                "appraisalTypeName": "Tái cấp"
+            },
+            "legalStatusId": 2,
+            "legalStatus": {
+                "legalStatusId": 2,
+                "legalStatusName": "Đang chờ cấp GCN",
+                "description": "Đang chờ cấp GCN"
+            },
+            "legalNumber": null,
+            "addressDetail": null,
+            "addressStreet": "Dương Bá Trạc",
+            "addressWard": "27049",
+            "wards": {
+                "code": "27049",
+                "name": "09",
+                "nameEn": "09",
+                "fullName": "Phường 09",
+                "fullNameEn": "Ward 09",
+                "codeName": "09",
+                "districtCode": "768",
+                "administrativeUnitId": 8
+            },
+            "addressDistrict": "768",
+            "districts": {
+                "code": "768",
+                "name": "Phú Nhuận",
+                "nameEn": "Phu Nhuan",
+                "fullName": "Quận Phú Nhuận",
+                "fullNameEn": "Phu Nhuan District",
+                "codeName": "phu_nhuan",
+                "provinceCode": "79",
+                "administrativeUnitId": 5
+            },
+            "addressProvince": "79",
+            "provinces": {
+                "code": "79",
+                "name": "Hồ Chí Minh",
+                "nameEn": "Ho Chi Minh",
+                "fullName": "Thành phố Hồ Chí Minh",
+                "fullNameEn": "Ho Chi Minh City",
+                "codeName": "ho_chi_minh",
+                "administrativeUnitId": 1,
+                "administrativeRegionId": 7,
+                "companyBranchCode": "SG"
+            }
+        }
+    ],
+    "assetImages": [
+        {
+            "assetImageId": 323204,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "ecmId": "26ca9cca-d02f-4029-9119-ecce6417eb5e",
+            "filename": "cvtd-sba@sacombank.com_1712028356043.png",
+            "mediaType": "image/png",
+            "description": "",
+            "whoUpload": "cvtd-sba@sacombank.com",
+            "dateUpload": "2024-04-02T03:25:56.043+00:00",
+            "type": 5
+        },
+        {
+            "assetImageId": 323203,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "ecmId": "557f0ef5-3e33-411a-9f00-9a3c86905bfd",
+            "filename": "cvtd-sba@sacombank.com_1712028334312.png",
+            "mediaType": "image/png",
+            "description": "",
+            "whoUpload": "cvtd-sba@sacombank.com",
+            "dateUpload": "2024-04-02T03:25:34.312+00:00",
+            "type": 2
+        },
+        {
+            "assetImageId": 323205,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "ecmId": "7fcc0bfa-0241-4eee-9155-db0713caf804",
+            "filename": "cvtd-sba@sacombank.com_1712028386013.png",
+            "mediaType": "image/png",
+            "description": "",
+            "whoUpload": "cvtd-sba@sacombank.com",
+            "dateUpload": "2024-04-02T03:26:26.013+00:00",
+            "type": 1
+        },
+        {
+            "assetImageId": 323207,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "ecmId": "fc880ef3-bc9f-494d-94d9-3f4acf529c3a",
+            "filename": "cvtd-sba@sacombank.com_1712028441466.png",
+            "mediaType": "image/png",
+            "description": "",
+            "whoUpload": "cvtd-sba@sacombank.com",
+            "dateUpload": "2024-04-02T03:27:21.466+00:00",
+            "type": 4
+        },
+        {
+            "assetImageId": 323209,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "ecmId": "b7dccdae-f4f8-4e1c-b64f-43986f5eef6a",
+            "filename": "cvtd-sba@sacombank.com_1712029834475.png",
+            "mediaType": "image/png",
+            "description": null,
+            "whoUpload": "cvtd-sba@sacombank.com",
+            "dateUpload": "2024-04-02T03:50:34.475+00:00",
+            "type": 3
+        }
+    ],
+    "surveySchedules": [],
+    "legalDocuments": [
+        {
+            "legalDocumentId": 6004,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "legalDocumentTypeId": 35,
+            "legalDocumentType": {
+                "legalDocumentTypeId": 35,
+                "name": "Giấy chứng nhận quyền sử dụng đất quyền sở hữu nhà ở và tài sản khác gắn liền với đất",
+                "assetLevelTwoId": 1,
+                "isRequired": 0,
+                "isDeleted": 0
+            },
+            "documentContent": "Test",
+            "ecmId": "aa03d168-dbde-4c90-986e-ff15f189ff08",
+            "fileIdByLos": null,
+            "filename": "cvtd-sba@sacombank.com_1712026909580.pdf",
+            "mediaType": "application/pdf",
+            "dateUpload": "2024-04-02T03:01:49.580+00:00",
+            "whoUpload": "cvtd-sba@sacombank.com",
+            "type": 3
+        }
+    ],
+    "flow": {
+        "flowId": 1,
+        "flowName": "Thông thường",
+        "hibernateLazyInitializer": {}
+    },
+    "isReceivedLos": null,
+    "clientIdEms": null,
+    "checkClimsLos": null,
+    "surveySignDate": "2024-04-02T03:18:30.859+00:00",
+    "modifyStaffUsername": "cvtd-sba@sacombank.com",
+    "receivedLos": null,
+    "assignments": [
+        {
+            "assignmentId": 9689,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "jobTypeId": 0,
+            "jobType": {
+                "jobTypeId": 0,
+                "jobTypeName": "Khởi tạo"
+            },
+            "companyBranchId": 1,
+            "companyBranch": {
+                "companyBranchId": 1,
+                "companyBranchName": "Trụ sở SBA",
+                "addressDetail": "8899",
+                "addressStreet": "Nam Kỳ Khởi Nghĩa",
+                "addressWard": "27019",
+                "addressDistrict": "767",
+                "addressProvince": "79",
+                "code": "SG"
+            },
+            "staff": "[\"LOS\"]",
+            "timeAssigned": "2024-01-02T09:24:30.405+00:00",
+            "timeEnd": null,
+            "jobAssigner": null,
+            "priorityLevel": null,
+            "note": null,
+            "status": 1
+        },
+        {
+            "assignmentId": 9690,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "jobTypeId": 1,
+            "jobType": {
+                "jobTypeId": 1,
+                "jobTypeName": "Tiếp nhận"
+            },
+            "companyBranchId": 1,
+            "companyBranch": {
+                "companyBranchId": 1,
+                "companyBranchName": "Trụ sở SBA",
+                "addressDetail": "8899",
+                "addressStreet": "Nam Kỳ Khởi Nghĩa",
+                "addressWard": "27019",
+                "addressDistrict": "767",
+                "addressProvince": "79",
+                "code": "SG"
+            },
+            "staff": "[\"cbth-sba@sacombank.com\"]",
+            "timeAssigned": "2024-01-02T09:24:30.405+00:00",
+            "timeEnd": null,
+            "jobAssigner": "Tự động",
+            "priorityLevel": null,
+            "note": null,
+            "status": -1
+        },
+        {
+            "assignmentId": 9691,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "jobTypeId": 1,
+            "jobType": {
+                "jobTypeId": 1,
+                "jobTypeName": "Tiếp nhận"
+            },
+            "companyBranchId": 1,
+            "companyBranch": {
+                "companyBranchId": 1,
+                "companyBranchName": "Trụ sở SBA",
+                "addressDetail": "8899",
+                "addressStreet": "Nam Kỳ Khởi Nghĩa",
+                "addressWard": "27019",
+                "addressDistrict": "767",
+                "addressProvince": "79",
+                "code": "SG"
+            },
+            "staff": "[\"los@sacombank.com\"]",
+            "timeAssigned": "2024-01-02T09:24:30.405+00:00",
+            "timeEnd": null,
+            "jobAssigner": "Tự động",
+            "priorityLevel": null,
+            "note": null,
+            "status": -1
+        },
+        {
+            "assignmentId": 9692,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "jobTypeId": 1,
+            "jobType": {
+                "jobTypeId": 1,
+                "jobTypeName": "Tiếp nhận"
+            },
+            "companyBranchId": 1,
+            "companyBranch": {
+                "companyBranchId": 1,
+                "companyBranchName": "Trụ sở SBA",
+                "addressDetail": "8899",
+                "addressStreet": "Nam Kỳ Khởi Nghĩa",
+                "addressWard": "27019",
+                "addressDistrict": "767",
+                "addressProvince": "79",
+                "code": "SG"
+            },
+            "staff": "[\"cbth1-sba@sacombank.com\"]",
+            "timeAssigned": "2024-01-02T09:24:30.405+00:00",
+            "timeEnd": null,
+            "jobAssigner": "Tự động",
+            "priorityLevel": null,
+            "note": null,
+            "status": 1
+        },
+        {
+            "assignmentId": 9693,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "jobTypeId": 1,
+            "jobType": {
+                "jobTypeId": 1,
+                "jobTypeName": "Tiếp nhận"
+            },
+            "companyBranchId": 1,
+            "companyBranch": {
+                "companyBranchId": 1,
+                "companyBranchName": "Trụ sở SBA",
+                "addressDetail": "8899",
+                "addressStreet": "Nam Kỳ Khởi Nghĩa",
+                "addressWard": "27019",
+                "addressDistrict": "767",
+                "addressProvince": "79",
+                "code": "SG"
+            },
+            "staff": "[\"cbtonghop2\"]",
+            "timeAssigned": "2024-01-02T09:24:30.405+00:00",
+            "timeEnd": null,
+            "jobAssigner": "Tự động",
+            "priorityLevel": null,
+            "note": null,
+            "status": -1
+        },
+        {
+            "assignmentId": 29129,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "jobTypeId": 3,
+            "jobType": {
+                "jobTypeId": 3,
+                "jobTypeName": "Khảo sát"
+            },
+            "companyBranchId": 1,
+            "companyBranch": {
+                "companyBranchId": 1,
+                "companyBranchName": "Trụ sở SBA",
+                "addressDetail": "8899",
+                "addressStreet": "Nam Kỳ Khởi Nghĩa",
+                "addressWard": "27019",
+                "addressDistrict": "767",
+                "addressProvince": "79",
+                "code": "SG"
+            },
+            "staff": "[\"cvtd-sba@sacombank.com\"]",
+            "timeAssigned": "2024-04-02T02:22:54.550+00:00",
+            "timeEnd": null,
+            "jobAssigner": "cbtm-sba@sacombank.com",
+            "priorityLevel": 1,
+            "note": "",
+            "status": 0
+        },
+        {
+            "assignmentId": 10192,
+            "appraisalFileId": "ab9459e6-c8af-468f-8297-652c4c7589b2",
+            "jobTypeId": 2,
+            "jobType": {
+                "jobTypeId": 2,
+                "jobTypeName": "Phân công KS"
+            },
+            "companyBranchId": 1,
+            "companyBranch": {
+                "companyBranchId": 1,
+                "companyBranchName": "Trụ sở SBA",
+                "addressDetail": "8899",
+                "addressStreet": "Nam Kỳ Khởi Nghĩa",
+                "addressWard": "27019",
+                "addressDistrict": "767",
+                "addressProvince": "79",
+                "code": "SG"
+            },
+            "staff": "[\"cbtm-sba@sacombank.com\"]",
+            "timeAssigned": "2024-01-04T10:10:52.408+00:00",
+            "timeEnd": null,
+            "jobAssigner": "cbth1-sba@sacombank.com",
+            "priorityLevel": 1,
+            "note": "",
+            "status": 1
+        }
+    ]
+}

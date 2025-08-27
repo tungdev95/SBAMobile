@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>666974916072-vkjd08eho9vbv2emg4796e5s0ij3ov26.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.666974916072-vkjd08eho9vbv2emg4796e5s0ij3ov26</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAi9-wd2IqJf4uIJS-8c9LlmJjSFMztlf0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>666974916072</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.sacombank.cmv.pilot</string>
+	<key>PROJECT_ID</key>
+	<string>mb-amc</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mb-amc.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:666974916072:ios:6ace9645ad869f09c3a85d</string>
+</dict>
+</plist>

@@ -1,0 +1,17 @@
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Flag">
+<g clip-path="url(#clip0_8931_1164)">
+<path id="Rectangle" d="M-3.66699 0H25.6663V22H-3.66699V0Z" fill="#41479B"/>
+<path id="Intersect" d="M25.6663 19.1355L14.8191 11L25.6663 2.86459V0H21.8469L10.9997 8.13544L0.15245 0H-3.66699V2.86458L7.18024 11L-3.66699 19.1355V22H0.152503L10.9997 13.8646L21.8469 22H25.6663V19.1355Z" fill="white"/>
+<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd" d="M-3.66758 0L-4 0.443229V0.894889L9.47209 10.999L-4 21.1031V21.5547L-3.11679 22.7323L10.9999 12.1448L25.1165 22.7323L26.2165 21.2657L12.5276 10.999L26.2165 0.732291L25.6673 0H24.1374L10.9999 9.85314L-2.13763 0H-3.66758Z" fill="#DC251C"/>
+<path id="Vector (Stroke)" fill-rule="evenodd" clip-rule="evenodd" d="M7.33301 7.33333V0H14.6663V7.33333H25.6663V14.6667H14.6663V22H7.33301V14.6667H-3.66699V7.33333H7.33301Z" fill="white"/>
+<path id="Vector (Stroke)_2" fill-rule="evenodd" clip-rule="evenodd" d="M9.16634 9.16667V0H12.833V9.16667H25.6663V12.8333H12.833V22H9.16634V12.8333H-3.66699V9.16667H9.16634Z" fill="#DC251C"/>
+</g>
+<rect x="0.5" y="0.5" width="21" height="21" rx="10.5" stroke="white"/>
+</g>
+<defs>
+<clipPath id="clip0_8931_1164">
+<rect width="22" height="22" rx="11" fill="white"/>
+</clipPath>
+</defs>
+</svg>
