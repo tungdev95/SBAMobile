@@ -73,20 +73,20 @@ class CustomBottomSheetDialog {
   static Future<DateTime?> showDatePicker(
     context, {
     DateTime? initialDate,
-    DateTime? firstDate,
-    DateTime? lastDate,
+    DateTime? minimumDate,
+    DateTime? maximumDate,
     CupertinoDatePickerMode? mode,
   }) {
-    firstDate = firstDate ?? DateTime(1900);
-    lastDate = lastDate ?? DateTime(2100);
+    minimumDate = minimumDate ?? DateTime(2000);
+    maximumDate = maximumDate ?? DateTime.now();
     initialDate = initialDate ?? DateTime.now();
 
-    if (initialDate.isAfter(lastDate)) {
-      initialDate = lastDate;
-    }
-    if (initialDate.isBefore(firstDate)) {
-      initialDate = firstDate;
-    }
+    // if (initialDate.isAfter(minimumDate)) {
+    //   initialDate = minimumDate;
+    // }
+    // if (initialDate.isBefore(maximumDate)) {
+    //   initialDate = maximumDate;
+    // }
     var valueSelect = initialDate;
     return showModalBottomSheet(
         isScrollControlled: true,
@@ -104,8 +104,8 @@ class CustomBottomSheetDialog {
                     color: AppColors.white,
                     child: CupertinoDatePicker(
                         mode: mode ?? CupertinoDatePickerMode.date,
-                        minimumDate: firstDate,
-                        maximumDate: lastDate,
+                        minimumDate: minimumDate,
+                        maximumDate: maximumDate,
                         initialDateTime: initialDate,
                         onDateTimeChanged: (value) {
                           valueSelect = value;

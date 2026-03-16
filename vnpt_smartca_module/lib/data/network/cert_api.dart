@@ -63,7 +63,8 @@ class CertApi {
 
   Future<SmartCAApiResponse> requestChangeDevice(String serial) async {
     final result = await httpClientService.post(
-      '/${AppConfig.language}/order/certorder/create_cert_change_device_order',
+      '/${AppConfig.language}/order/certorderCompleteOnline/create_cert_change_device_order',
+      // '/${AppConfig.language}/order/certorder/create_cert_change_device_order',
       {'serial': serial},
     );
     return SmartCAApiResponse.fromMap(result);
@@ -71,7 +72,8 @@ class CertApi {
 
   Future<SmartCAApiResponse> getDetailOrder(String idCert) async {
     final result = await httpClientService.post(
-      '/${AppConfig.language}/order/certorder/cert_order_by_credential',
+      '/${AppConfig.language}/order/certorderCompleteOnline/cert_order_by_credential',
+      // '/${AppConfig.language}/order/certorder/cert_order_by_credential',
       {'CredentialId': idCert},
     );
     return SmartCAApiResponse.fromMap(result);

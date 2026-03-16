@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scale_size/scale_size.dart';
@@ -20,6 +21,7 @@ import 'core/utils/language_enums.dart';
 import 'gen/assets.gen.dart';
 import 'method_channel_handler.dart';
 import 'views/bindings/app.bindings.dart';
+import 'views/controller/app_controller.dart';
 import 'views/i18n/generated_locales/l10n.dart';
 import 'views/routes/app_pages.dart';
 
@@ -29,6 +31,7 @@ main() async {
     await bootstrapSmartCAApp();
   }, (Object error, StackTrace stack) {
     debugPrint("error log ${error}");
+    debugPrint("error log ${stack}");
   });
 }
 
@@ -47,12 +50,14 @@ bootstrapSmartCAApp() async {
     method: MethodChannelNames.isReady,
     data: SmartCaResult(ResultCode.SUCCESS_CODE, ResultCodeDesc.SUCCESS),
   );
+  print("AppConfig.package la: ${AppConfig.package}");
 
   /// Khi có sự kiện configure thì mới tiến hành khởi tạo app
   methodChannelHandler.listen(
       method: MethodChannelNames.configure,
       listener: (event) async {
         final param = jsonDecode(event);
+        print("Param la: $param");
 
         AppConfig.environment = (param['env'] as int) == PROD_ENV
             ? Environment.prod
@@ -63,6 +68,75 @@ bootstrapSmartCAApp() async {
             : AppLanguage.vi;
 
         AppConfig.isFlutter = param['isFlutter'] ?? true;
+
+        if ((param['clientId'] != null && param['clientId'] != "") ||
+            (param['clientSecret'] != null && param['clientSecret'] != "")) {
+          AppConfig.clientId = param['clientId'] ?? '';
+          AppConfig.clientSecret = param['clientSecret'] ?? '';
+        } else {
+          throw Exception("ClientId and ClientSecret must assign value");
+        }
+
+        var customParams = param['customParams'];
+        if (customParams != null) {
+          if (customParams['colorPrimaryBtn'] != null &&
+              customParams['colorPrimaryBtn'] != "") {
+            AppConfig.colorPrimaryBtn = customParams['colorPrimaryBtn'];
+          }
+
+          if (customParams['logoCustom'] != null &&
+              customParams['logoCustom'] != "") {
+            AppConfig.logoCustom = customParams['logoCustom'];
+            AppConfig.sizeLogo = 94;
+          } else {
+            AppConfig.sizeLogo = 118;
+          }
+
+          if (customParams['backgroundLogin'] != null &&
+              customParams['backgroundLogin'] != "") {
+            AppConfig.backgroundLogin = customParams['backgroundLogin'];
+          }
+
+          if (customParams['featuresLink'] != null &&
+              customParams['featuresLink'] != "") {
+            AppConfig.featuresLink = customParams['featuresLink'];
+          }
+
+          if (customParams['customerId'] != null &&
+              customParams['customerId'] != "") {
+            AppConfig.customerId = customParams['customerId'];
+          }
+
+          if (customParams['borderRadiusBtn'] != null) {
+            AppConfig.borderRadiusBtn =
+                double.parse(customParams['borderRadiusBtn'].toString());
+          }
+
+          if (customParams['colorSecondBtn'] != null &&
+              customParams['colorSecondBtn'] != "") {
+            AppConfig.colorSecondBtn = customParams['colorSecondBtn'];
+          }
+
+          if (customParams['customerPhone'] != null &&
+              customParams['customerPhone'] != "") {
+            AppConfig.customerPhone = customParams['customerPhone'];
+          }
+
+          if (customParams['customerEmail'] != null &&
+              customParams['customerEmail'] != "") {
+            AppConfig.customerEmail = customParams['customerEmail'];
+          }
+
+          if (customParams['packageDefault'] != null &&
+              customParams['packageDefault'] != "") {
+            AppConfig.packageDefault = customParams['packageDefault'];
+          }
+
+          if (customParams['password'] != null &&
+              customParams['password'] != "") {
+            AppConfig.password = customParams['password'];
+          }
+        }
 
         // Cấu hình các thành phần phụ thuộc
         await configureDependencies(AppConfig.environment);
@@ -157,13 +231,23 @@ bootstrapSmartCAApp() async {
                   return GestureDetector(
                     onTap: () {
                       if (Get.context != null) {
+                        try {
+                          final currentHostAppMethod = Get.find<AppController>()
+                              .currentHostAppMethod
+                              .value;
+                          if (currentHostAppMethod.isNotEmpty)
+                            methodChannelHandler.send(
+                                method: "${currentHostAppMethod}Result",
+                                data: SmartCaResult.userCancel());
+                        } catch (e, s) {}
+
                         Navigator.popUntil(
                             Get.context!, (route) => route.isFirst);
                         NavigatorHandler.closeSDK();
                       }
                     },
                     child: Container(
-                      margin: EdgeInsets.only(top: 1.top),
+                      margin: EdgeInsets.only(top: 0.6.top),
                       padding: EdgeInsets.only(right: 10),
                       height: kToolbarHeight,
                       width: 50,

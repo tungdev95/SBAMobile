@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../gen/assets.gen.dart';
 import '../../controller/enter_info_controller.dart';
 import '../../i18n/generated_locales/l10n.dart';
@@ -15,7 +17,8 @@ class ConfirmCertPackScreen extends StatefulWidget {
   final OrderCertModel orderCertModel;
   final ProfileModel profileModel;
 
-  const ConfirmCertPackScreen({super.key, required this.orderCertModel, required this.profileModel});
+  const ConfirmCertPackScreen(
+      {super.key, required this.orderCertModel, required this.profileModel});
 
   @override
   State<StatefulWidget> createState() {
@@ -35,7 +38,8 @@ class _ConfirmCertPackState extends State<ConfirmCertPackScreen> {
               children: [
                 Row(
                   children: [
-                    Assets.images.icCertInfo.image(width: 20, height: 20, fit: BoxFit.fill),
+                    Assets.images.icCertInfo
+                        .image(width: 20, height: 20, fit: BoxFit.fill),
                     const SizedBox(width: 6),
                     BaseText(
                       AppLocalizations.current.certPackNoteLabel,
@@ -80,7 +84,8 @@ class _ConfirmCertPackState extends State<ConfirmCertPackScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
-      title: AppLocalizations.current.certificate_package_page_confirm_order_title,
+      title:
+          AppLocalizations.current.certificate_package_page_confirm_order_title,
       loadingWidget: const BaseLoading<EnterInfoController>(),
       colorBg: const Color.fromRGBO(241, 244, 250, 1),
       body: Column(
@@ -89,7 +94,8 @@ class _ConfirmCertPackState extends State<ConfirmCertPackScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _CertPackageViewWidget(purchaseCertificateModel: widget.orderCertModel.pricing),
+                  _CertPackageViewWidget(
+                      purchaseCertificateModel: widget.orderCertModel.pricing),
                   _ItemInfo(
                     orderCertModel: widget.orderCertModel,
                     profileModel: widget.profileModel,
@@ -153,14 +159,18 @@ class _ConfirmCertPackState extends State<ConfirmCertPackScreen> {
                     )),
                 const SizedBox(height: 10),
                 AppButtonWidget(
-                  label: AppLocalizations.current.pay,
+                  label: widget.orderCertModel.pricing.price > 0
+                      ? AppLocalizations.current.pay
+                      : AppLocalizations.current.pinDialogButton,
+                  backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                   onTap: () {
-                    String? referrerCode =
-                        controller.formKey4.currentState?.fields["referralCode"]?.value.toString().trim();
+                    String? referrerCode = controller
+                        .formKey4.currentState?.fields["referralCode"]?.value
+                        ?.toString()
+                        .trim();
                     Get.to(() => PaymentScreen(
                           orderCertModel: widget.orderCertModel,
-                          profileModel: widget.profileModel,
-                          raCode: referrerCode,
+                          raCode: referrerCode ?? "",
                         ))?.then((value) {
                       if (value != null) {
                         Get.back(result: value);
@@ -180,7 +190,8 @@ class _ConfirmCertPackState extends State<ConfirmCertPackScreen> {
 class _CertPackageViewWidget extends StatelessWidget {
   final Pricing purchaseCertificateModel;
 
-  const _CertPackageViewWidget({super.key, required this.purchaseCertificateModel});
+  const _CertPackageViewWidget(
+      {super.key, required this.purchaseCertificateModel});
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +204,8 @@ class _CertPackageViewWidget extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 7),
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(11), topRight: Radius.circular(11)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(11), topRight: Radius.circular(11)),
             ),
             padding: EdgeInsets.only(left: 16, right: 16, top: 8),
             child: BaseText(
@@ -220,8 +232,9 @@ class _CertPackageViewWidget extends StatelessWidget {
                       height: 14,
                       decoration: const BoxDecoration(
                           color: Color.fromRGBO(241, 244, 250, 1),
-                          borderRadius:
-                              BorderRadius.only(topRight: Radius.circular(14), bottomRight: Radius.circular(14))),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(14),
+                              bottomRight: Radius.circular(14))),
                     )
                   ],
                 ),
@@ -250,8 +263,9 @@ class _CertPackageViewWidget extends StatelessWidget {
                       height: 14,
                       decoration: const BoxDecoration(
                           color: Color.fromRGBO(241, 244, 250, 1),
-                          borderRadius:
-                              BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(14),
+                              bottomLeft: Radius.circular(14))),
                     )
                   ],
                 ),
@@ -263,7 +277,9 @@ class _CertPackageViewWidget extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 7),
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(11), bottomRight: Radius.circular(11)),
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(11),
+                  bottomRight: Radius.circular(11)),
             ),
             padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
             child: Column(
@@ -342,7 +358,10 @@ class _ItemInfo extends StatelessWidget {
   final ProfileModel profileModel;
   final bool isTypeTurn;
 
-  const _ItemInfo({required this.orderCertModel, required this.profileModel, required this.isTypeTurn});
+  const _ItemInfo(
+      {required this.orderCertModel,
+      required this.profileModel,
+      required this.isTypeTurn});
 
   _renderInfo(String label, String content, Color color) {
     return Row(
@@ -390,11 +409,14 @@ class _ItemInfo extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 7),
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(11), topRight: Radius.circular(11)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(11), topRight: Radius.circular(11)),
             ),
             padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
             child: BaseText(
-              isTypeTurn ? AppLocalizations.current.signingInformation : AppLocalizations.current.noticeOfInvoice,
+              isTypeTurn
+                  ? AppLocalizations.current.signingInformation
+                  : AppLocalizations.current.noticeOfInvoice,
               fontWeight: FontWeight.w700,
               fontSize: 16,
               color: const Color(0xff08285C),
@@ -405,26 +427,37 @@ class _ItemInfo extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 7),
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(11), bottomRight: Radius.circular(11)),
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(11),
+                  bottomRight: Radius.circular(11)),
             ),
             padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
             child: Column(
               children: [
                 _renderInfo(
-                    isTypeTurn ? AppLocalizations.current.numberOfSignatures : AppLocalizations.current.fullName,
-                    isTypeTurn ? AppLocalizations.current.turn(0) : profileModel.fullName ?? "",
-                    isTypeTurn ? const Color(0xff0D75D6) : const Color(0xff08285C)),
+                    isTypeTurn
+                        ? AppLocalizations.current.numberOfSignatures
+                        : AppLocalizations.current.fullName,
+                    isTypeTurn
+                        ? AppLocalizations.current.turn(0)
+                        : profileModel.fullName ?? "",
+                    isTypeTurn
+                        ? const Color(0xff0D75D6)
+                        : const Color(0xff08285C)),
                 Visibility(
                     visible: isTypeTurn == false,
                     child: Column(
                       children: [
                         const SizedBox(height: 8),
-                        _renderInfo(AppLocalizations.current.phone, profileModel.phone ?? "", const Color(0xff08285C)),
+                        _renderInfo(AppLocalizations.current.phone,
+                            profileModel.phone ?? "", const Color(0xff08285C)),
+                        const SizedBox(height: 8),
+                        _renderInfo(AppLocalizations.current.emailOnly,
+                            profileModel.email ?? "", const Color(0xff08285C)),
                         const SizedBox(height: 8),
                         _renderInfo(
-                            AppLocalizations.current.emailOnly, profileModel.email ?? "", const Color(0xff08285C)),
-                        const SizedBox(height: 8),
-                        _renderInfo(AppLocalizations.current.address, profileModel.userAddress?.diaChi ?? "",
+                            AppLocalizations.current.address,
+                            profileModel.userAddress?.diaChi ?? "",
                             const Color(0xff08285C))
                       ],
                     )),

@@ -14,6 +14,19 @@ class DatetimeFormat {
     return outputDate;
   }
 
+  String formatDateHour(String dateTime) {
+    String outputDate;
+    try {
+      DateTime parseDate = DateTime.tryParse(dateTime)!.toUtc();
+      var inputDate = DateTime.parse(parseDate.toLocal().toString());
+      var outputFormat = DateFormat('dd/MM/yyyy HH:mm');
+      outputDate = outputFormat.format(inputDate);
+    } catch (e) {
+      outputDate = '';
+    }
+    return outputDate;
+  }
+
   String formatDate(String dateTime) {
     DateTime parseDate;
     String outputDate;

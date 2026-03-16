@@ -1,8 +1,8 @@
 {
   "ABIRoot": {
     "kind": "Root",
-    "name": "TopLevel",
-    "printedName": "TopLevel",
+    "name": "SignaturePad",
+    "printedName": "SignaturePad",
     "children": [
       {
         "kind": "Import",
@@ -77,6 +77,22 @@
         "declAttributes": [
           "AccessControl",
           "ObjC"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
         ]
       },
       {
@@ -92,7 +108,7 @@
               {
                 "kind": "TypeNominal",
                 "name": "WeakStorage",
-                "printedName": "SignaturePad.SignaturePadDelegate?"
+                "printedName": "(any SignaturePad.SignaturePadDelegate)?"
               }
             ],
             "declKind": "Var",
@@ -101,8 +117,9 @@
             "moduleName": "SignaturePad",
             "isOpen": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
+              "Preconcurrency",
+              "Custom",
               "HasStorage",
               "AccessControl",
               "ReferenceOwnership"
@@ -118,12 +135,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Optional",
-                    "printedName": "SignaturePad.SignaturePadDelegate?",
+                    "printedName": "(any SignaturePad.SignaturePadDelegate)?",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "SignaturePadDelegate",
-                        "printedName": "SignaturePad.SignaturePadDelegate",
+                        "printedName": "any SignaturePad.SignaturePadDelegate",
                         "usr": "c:@M@SignaturePad@objc(pl)SignaturePadDelegate"
                       }
                     ],
@@ -151,12 +168,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Optional",
-                    "printedName": "SignaturePad.SignaturePadDelegate?",
+                    "printedName": "(any SignaturePad.SignaturePadDelegate)?",
                     "children": [
                       {
                         "kind": "TypeNominal",
                         "name": "SignaturePadDelegate",
-                        "printedName": "SignaturePad.SignaturePadDelegate",
+                        "printedName": "any SignaturePad.SignaturePadDelegate",
                         "usr": "c:@M@SignaturePad@objc(pl)SignaturePadDelegate"
                       }
                     ],
@@ -210,6 +227,7 @@
             "moduleName": "SignaturePad",
             "isOpen": true,
             "declAttributes": [
+              "Preconcurrency",
               "Custom",
               "AccessControl"
             ],
@@ -262,6 +280,7 @@
             "declAttributes": [
               "Dynamic",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "AccessControl",
               "Override",
@@ -304,6 +323,7 @@
             "declAttributes": [
               "Dynamic",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "AccessControl",
               "Required"
@@ -337,6 +357,7 @@
             "declAttributes": [
               "Dynamic",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "Override",
               "AccessControl"
@@ -392,6 +413,7 @@
             "declAttributes": [
               "Dynamic",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "AccessControl",
               "Override"
@@ -447,6 +469,7 @@
             "declAttributes": [
               "Dynamic",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "AccessControl",
               "Override"
@@ -502,6 +525,7 @@
             "declAttributes": [
               "Dynamic",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "AccessControl",
               "Override"
@@ -557,6 +581,7 @@
             "declAttributes": [
               "Dynamic",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "AccessControl",
               "Override"
@@ -580,6 +605,7 @@
             "moduleName": "SignaturePad",
             "isOpen": true,
             "declAttributes": [
+              "Preconcurrency",
               "Custom",
               "AccessControl"
             ],
@@ -608,6 +634,7 @@
             "moduleName": "SignaturePad",
             "isOpen": true,
             "declAttributes": [
+              "Preconcurrency",
               "Custom",
               "AccessControl"
             ],
@@ -639,6 +666,7 @@
             "moduleName": "SignaturePad",
             "isOpen": true,
             "declAttributes": [
+              "Preconcurrency",
               "Custom",
               "AccessControl"
             ],
@@ -651,6 +679,7 @@
         "moduleName": "SignaturePad",
         "isOpen": true,
         "declAttributes": [
+          "Preconcurrency",
           "Custom",
           "AccessControl",
           "IBDesignable",
@@ -664,6 +693,20 @@
           "ObjectiveC.NSObject"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Equatable",
@@ -715,6 +758,13 @@
           },
           {
             "kind": "Conformance",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "__DefaultCustomPlaygroundQuickLookable",
             "printedName": "__DefaultCustomPlaygroundQuickLookable",
             "usr": "s:s38__DefaultCustomPlaygroundQuickLookableP",
@@ -727,25 +777,354 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
       "kind": "IntegerLiteral",
       "offset": 718,
       "length": 1,
       "value": "5"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
       "kind": "IntegerLiteral",
       "offset": 748,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
       "kind": "FloatLiteral",
       "offset": 875,
       "length": 3,
       "value": "3.0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2407,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2464,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2492,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2516,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2530,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "FloatLiteral",
+      "offset": 2536,
+      "length": 3,
+      "value": "2.0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2552,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2566,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "FloatLiteral",
+      "offset": 2572,
+      "length": 3,
+      "value": "2.0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2614,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2659,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2685,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2711,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2794,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2806,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2832,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2844,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 2869,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3017,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3063,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3126,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3142,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3165,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3186,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3229,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3292,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3308,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3331,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3352,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3379,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3391,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3433,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3496,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3512,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3535,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3556,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3583,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3595,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3637,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3677,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3722,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3748,
+      "length": 1,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3774,
+      "length": 1,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3801,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3813,
+      "length": 1,
+      "value": "3"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 3931,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/SignaturePad\/SignaturePad\/SignaturePad.swift",
+      "kind": "IntegerLiteral",
+      "offset": 4105,
+      "length": 1,
+      "value": "0"
     }
   ]
 }

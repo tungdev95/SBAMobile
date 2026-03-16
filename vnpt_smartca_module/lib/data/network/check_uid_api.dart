@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import '../../configs/app_config.dart';
+import '../../core/models/response/check_client_permission_response.dart';
 import '../../data/network/smartca_api_gateway.dart';
 
 import '../../configs/injector/injector.dart';
@@ -21,5 +23,16 @@ class CheckUidApi {
       {"uid": identifier, "phone": phone, "loaiGiayTo": typeDocument, "deviceid": deviceInfo.deviceId},
     );
     return CheckUidResponse.fromJson(result);
+  }
+
+  checkClientPermission() async {
+    final result = await _httpClientService.post(
+      '/${AppConfig.language}/thirdpartyapi/register/checkAppClientPermission',
+      {},
+      // options: Options(headers: {
+      //   "authorization": "Bearer $accessToken",
+      // }),
+    );
+    return CheckClientPermissionResponse.fromJson(result);
   }
 }

@@ -9,7 +9,7 @@ part of 'assets_land_info.dart';
 AssetLandInfo _$AssetLandInfoFromJson(Map<String, dynamic> json) =>
     AssetLandInfo(
       assetId: json['assetId'] as String?,
-      assetLandInforId: json['assetLandInforId'] as int?,
+      assetLandInforId: (json['assetLandInforId'] as num?)?.toInt(),
       landPlotNumber: json['landPlotNumber'] as String?,
       mapSheetNumber: json['mapSheetNumber'] as String?,
       realAddressDetail: json['realAddressDetail'] as String?,
@@ -22,18 +22,18 @@ AssetLandInfo _$AssetLandInfoFromJson(Map<String, dynamic> json) =>
       legalAddressWard: json['legalAddressWard'] as String?,
       legalAddressDistrict: json['legalAddressDistrict'] as String?,
       legalAddressProvince: json['legalAddressProvince'] as String?,
-      roadInPriceRange: json['roadInPriceRange'] as int?,
+      roadInPriceRange: (json['roadInPriceRange'] as num?)?.toInt(),
       distanceToMainRoad: (json['distanceToMainRoad'] as num?)?.toDouble(),
-      roadContiguousTypeId: json['roadContiguousTypeId'] as int?,
-      positionId: json['positionId'] as int?,
+      roadContiguousTypeId: (json['roadContiguousTypeId'] as num?)?.toInt(),
+      positionId: (json['positionId'] as num?)?.toInt(),
       minWidthToMainRoad: (json['minWidthToMainRoad'] as num?)?.toDouble(),
       maxWidthToMainRoad: (json['maxWidthToMainRoad'] as num?)?.toDouble(),
       note: json['note'] as String?,
-      zoneId: json['zoneId'] as int?,
-      positionInPriceRangeId: json['positionInPriceRangeId'] as int?,
+      zoneId: (json['zoneId'] as num?)?.toInt(),
+      positionInPriceRangeId: (json['positionInPriceRangeId'] as num?)?.toInt(),
       legalMainDirection: json['legalMainDirection'] as String?,
       legalShape: json['legalShape'] as String?,
-      legalNumberOfFacade: json['legalNumberOfFacade'] as int?,
+      legalNumberOfFacade: (json['legalNumberOfFacade'] as num?)?.toInt(),
       legalFacadeLength: (json['legalFacadeLength'] as num?)?.toDouble(),
       legalLandLength: (json['legalLandLength'] as num?)?.toDouble(),
       legalAreaWidth: (json['legalAreaWidth'] as num?)?.toDouble(),
@@ -43,7 +43,7 @@ AssetLandInfo _$AssetLandInfoFromJson(Map<String, dynamic> json) =>
       legalCommonArea: (json['legalCommonArea'] as num?)?.toDouble(),
       realMainDirection: json['realMainDirection'] as String?,
       realShape: json['realShape'] as String?,
-      realNumberOfFacade: json['realNumberOfFacade'] as int?,
+      realNumberOfFacade: (json['realNumberOfFacade'] as num?)?.toInt(),
       realFacadeLength: (json['realFacadeLength'] as num?)?.toDouble(),
       realLandLength: (json['realLandLength'] as num?)?.toDouble(),
       realAreaWidth: (json['realAreaWidth'] as num?)?.toDouble(),
@@ -101,7 +101,7 @@ AssetLandInfo _$AssetLandInfoFromJson(Map<String, dynamic> json) =>
               [],
       isConsolidation: json['isConsolidation'] as bool? ?? false,
       isConsolidationPurpose: json['isConsolidationPurpose'] as bool? ?? false,
-      orderBy: json['orderBy'] as int?,
+      orderBy: (json['orderBy'] as num?)?.toInt(),
       legalAreaNotConsiderValue:
           (json['legalAreaNotConsiderValue'] as num?)?.toDouble(),
       realAreaNotConsiderValue:
@@ -202,7 +202,7 @@ ConstructionCheckList _$ConstructionCheckListFromJson(
     ConstructionCheckList(
       id: json['id'] as String?,
       constructionFutureCheckListId:
-          json['constructionFutureCheckListId'] as int?,
+          (json['constructionFutureCheckListId'] as num?)?.toInt(),
       name: json['name'] as String?,
       groundFloorArea: (json['groundFloorArea'] as num?)?.toDouble(),
       totalFloorArea: (json['totalFloorArea'] as num?)?.toDouble(),
@@ -230,7 +230,8 @@ ConstructionFutureInfo _$ConstructionFutureInfoFromJson(
         Map<String, dynamic> json) =>
     ConstructionFutureInfo(
       id: json['id'] as String?,
-      contructionFutureInforId: json['contructionFutureInforId'] as int?,
+      contructionFutureInforId:
+          (json['contructionFutureInforId'] as num?)?.toInt(),
       name: json['name'] as String?,
       basicDesign: json['basicDesign'] as String?,
       decision: json['decision'] as String?,

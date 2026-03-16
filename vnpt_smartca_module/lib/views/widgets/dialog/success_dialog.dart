@@ -73,7 +73,7 @@ class SuccessDialog extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 title,
-                style: mainTheme.textTheme.headline6!
+                style: mainTheme.textTheme.titleLarge!
                     .copyWith(color: Colors.black),
                 textAlign: TextAlign.center,
               ),
@@ -90,10 +90,10 @@ class SuccessDialog extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: '',
-                      style: mainTheme.textTheme.bodyText2,
+                      style: mainTheme.textTheme.bodyMedium,
                     ),
                   ],
-                  style: mainTheme.textTheme.bodyText2,
+                  style: mainTheme.textTheme.bodyMedium,
                 ),
                 textAlign: TextAlign.center,
               ),

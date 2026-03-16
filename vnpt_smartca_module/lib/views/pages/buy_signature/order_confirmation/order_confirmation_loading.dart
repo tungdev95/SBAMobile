@@ -22,7 +22,7 @@ class OrderConfirmationLoadingPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  LoadingCircleWidget(sizeLoading: 150),
+                  LoadingCircleWidget(sizeLoading: 120),
                   SizedBox(height: 20),
                   BaseText(
                     AppLocalizations.current.processingPackageSignature,

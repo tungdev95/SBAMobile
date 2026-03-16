@@ -8,7 +8,7 @@ part of 'legal_model.dart';
 
 LegalModel _$LegalModelFromJson(Map<String, dynamic> json) => LegalModel(
       assetId: json['assetId'] as String?,
-      legalInformationTypeId: json['legalInformationTypeId'] as int?,
+      legalInformationTypeId: (json['legalInformationTypeId'] as num?)?.toInt(),
       legalInformationNumber: json['legalInformationNumber'] as String?,
       issueUnit: json['issueUnit'] as String?,
       issueDate: json['issueDate'] == null
@@ -21,7 +21,7 @@ LegalModel _$LegalModelFromJson(Map<String, dynamic> json) => LegalModel(
           : LegalInformationType.fromJson(
               json['legalDocumentType'] as Map<String, dynamic>),
       investor: json['investor'] as String?,
-      orderBy: json['orderBy'] as int?,
+      orderBy: (json['orderBy'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$LegalModelToJson(LegalModel instance) =>
@@ -41,9 +41,9 @@ Map<String, dynamic> _$LegalModelToJson(LegalModel instance) =>
 LegalInformationType _$LegalInformationTypeFromJson(
         Map<String, dynamic> json) =>
     LegalInformationType(
-      legalDocumentTypeId: json['legalDocumentTypeId'] as int?,
+      legalDocumentTypeId: (json['legalDocumentTypeId'] as num?)?.toInt(),
       name: json['name'] as String?,
-      assetLevelTwoId: json['assetLevelTwoId'] as int?,
+      assetLevelTwoId: (json['assetLevelTwoId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$LegalInformationTypeToJson(

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../configs/app_config.dart';
 import '../../../../core/models/response/certificate_model.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../controller/generate_cer_key_controller.dart';
@@ -12,16 +11,15 @@ import '../../../widgets/app_button_widget.dart';
 import '../../../widgets/base_screen.dart';
 import '../../../widgets/base_text.dart';
 import '../../../widgets/bottom_contact.dart';
-import '../../../widgets/header_step.dart';
 import '../../../widgets/loading_circle_widget.dart';
 
 class GenerateCerKeyPage extends StatefulWidget {
-  final CertificateModel  certificateModel;
+  final CertificateModel certificateModel;
   final String? pin;
   final String? otp;
 
-  const GenerateCerKeyPage({Key? key,required this.certificateModel, this.pin, this.otp})
-      : super(key: key);
+  const GenerateCerKeyPage(
+      {super.key, required this.certificateModel, this.pin, this.otp});
 
   @override
   State<StatefulWidget> createState() => _GenerateCerKeyState();
@@ -34,7 +32,9 @@ class _GenerateCerKeyState extends State<GenerateCerKeyPage> {
   void initState() {
     super.initState();
     controller = Get.put(GenerateCerKeyController(
-        certificateModel: widget.certificateModel, pin: widget.pin, otp: widget.otp));
+        certificateModel: widget.certificateModel,
+        pin: widget.pin,
+        otp: widget.otp));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       controller.checkCertStatus();
     });
@@ -49,91 +49,77 @@ class _GenerateCerKeyState extends State<GenerateCerKeyPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        Navigator.popUntil(context, (route) => route.isFirst);
-        return true;
-      },
-      child: Obx(() {
-        return BaseScreen(
-          title: (controller.processDesc.value != null &&
-                  (controller.processDesc.value?.isSuccess ?? false))
-              ? AppLocalizations.current.orderAPPROVE_REQUEST_CERT_WAITING
-              : AppLocalizations.current.generateCerKey,
+        onWillPop: () async {
+          Navigator.popUntil(context, (route) => route.isFirst);
+          return true;
+        },
+        child: BaseScreen(
           onBackPress: () {
             Navigator.popUntil(context, (route) => route.isFirst);
           },
           body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              HeaderStep(
-                step: 2,
-                customImageStep: Assets.images.stepTwoNew,
-              ),
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      const ImageSliderWidget(),
-                      Obx(() {
-                        if (controller.isLoading.value) {
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Obx(() {
+                      if (controller.isLoading.value) {
+                        return LoadingCircleWidget(
+                          title: AppLocalizations.current.generateCerKey,
+                          subtitle: AppLocalizations.current.waitaMinute,
+                        );
+                      }
+                      if (controller.processDesc.value != null) {
+                        if (controller.processDesc.value?.isSuccess ?? false) {
                           return Container(
-                            margin: const EdgeInsets.only(top: 60, bottom: 20),
-                            child: LoadingCircleWidget(
-                              title: AppLocalizations.current.initializingKeyPair,
-                              subtitle: AppLocalizations
-                                  .current.initializingKeyPairDescription,
+                            margin: const EdgeInsets.only(top: 20, bottom: 20),
+                            child: Column(
+                              children: [
+                                Assets.images.icDialogSuccess.image(width: 70),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
+                                  child: BaseText(
+                                    AppLocalizations
+                                        .current.waitingForApprovalTitle,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    textAlign: TextAlign.center,
+                                    color: const Color(0xff08285C),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                      bottom: 10, left: 10, right: 10),
+                                  child: BaseText(
+                                    AppLocalizations.current.waitingCapCTS,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    textAlign: TextAlign.center,
+                                    textOverflow: TextOverflow.visible,
+                                    color: const Color(0xffED1C24),
+                                  ),
+                                )
+                              ],
                             ),
                           );
+                        } else {
+                          return renderInfoBody(controller.processDesc.value!);
                         }
-                        if (controller.processDesc.value != null) {
-                          if (controller.processDesc.value?.isSuccess ?? false) {
-                            return Container(
-                              margin: const EdgeInsets.only(top: 60, bottom: 20),
-                              child: Column(
-                                children: [
-                                  Assets.images.icDialogSuccess.image(width: 100),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 10),
-                                    child: BaseText(
-                                      AppLocalizations
-                                          .current.waitingForApprovalTitle,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      textAlign: TextAlign.center,
-                                      height: 24 / 16,
-                                      color: const Color(0xff08285C),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        bottom: 10, left: 10, right: 10),
-                                    child: BaseText(
-                                      AppLocalizations.current.waitingCapCTS,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      textAlign: TextAlign.center,
-                                      height: 24 / 14,
-                                      textOverflow: TextOverflow.visible,
-                                      color: const Color(0xffED1C24),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
-                          } else {
-                            return renderInfoBody(controller.processDesc.value!);
-                          }
-                        }
-                        return const SizedBox();
-                      })
-                    ],
-                  ),
+                      }
+                      return const SizedBox();
+                    })
+                  ],
                 ),
               ),
               Obx(() {
                 return Visibility(
-                  visible: !controller.isLoading.value,
+                  visible: !controller.isLoading.value &&
+                      controller.processDesc.value != null,
                   child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       child: AppButtonWidget(
@@ -148,9 +134,7 @@ class _GenerateCerKeyState extends State<GenerateCerKeyPage> {
               const BottomContact(),
             ],
           ),
-        );
-      }),
-    );
+        ));
   }
 
   renderInfoBody(ProcessDescModel value) {
@@ -202,12 +186,12 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
               },
               autoPlay: true,
               aspectRatio: 16 / 9,
-              height: 160,
+              height: 150,
               viewportFraction: 0.8,
               enlargeFactor: 0.2,
               enlargeCenterPage: true,
             )),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         renderIndicator()
       ],
     );
@@ -247,6 +231,8 @@ class InfoNotifyWidget extends StatelessWidget {
     return Container(
       margin: margin ?? const EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (image?.isNotEmpty ?? false)
             Container(
@@ -254,7 +240,6 @@ class InfoNotifyWidget extends StatelessWidget {
                 child: Image.asset(
                   image!,
                   width: 100,
-                  package: AppConfig.package,
                 )),
           if (title?.isNotEmpty ?? false)
             Padding(

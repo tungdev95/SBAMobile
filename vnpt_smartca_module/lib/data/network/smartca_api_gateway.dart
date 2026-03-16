@@ -1,16 +1,13 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe, avoid_print, constant_identifier_names, prefer_const_constructors
 
-import 'dart:io';
-
-import 'package:dio/io.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter/foundation.dart';
+import '../../core/models/app/exceptions.dart';
 import '../../core/models/app/smartca_api_config.dart';
 import '../../core/services/network_info_service.dart';
 import '../../core/services/secure_local_storage.dart';
 import 'package:dio/dio.dart';
 
-import '../../core/models/app/exceptions.dart';
 import 'auth_interceptor.dart';
 
 String sha =
@@ -18,8 +15,8 @@ String sha =
 String certSubject = '/CN=*.vnptit.vn';
 String certSubject1 = '/CN=*.vnpt.vn';
 
-const CONNECT_TIMEOUT = 3 * 60;
-const RECEIVE_TIMEOUT = 4 * 60;
+const CONNECT_TIMEOUT = 5 * 60;
+const RECEIVE_TIMEOUT = 5 * 60;
 
 class SmartCAApiGateway<TData> {
   final SmartCAApiConfig apiGWConfig;
@@ -45,12 +42,16 @@ class SmartCAApiGateway<TData> {
     _dio = Dio(options);
     _dio
       ..interceptors.clear()
-      ..interceptors.add(AuthInterceptor(_secureLocalDataSource, _dio))
-      ..interceptors.add(LogInterceptor(
-          requestBody: kDebugMode,
-          requestHeader: kDebugMode,
+      ..interceptors
+          .add(AuthInterceptor(_secureLocalDataSource, _dio, apiGWConfig))
+      ..interceptors.add(
+        LogInterceptor(
+          // requestBody: kDebugMode,
+          //  requestHeader: kDebugMode,
           responseBody: kDebugMode,
-          responseHeader: kDebugMode))
+          // responseHeader: kDebugMode,
+        ),
+      )
       ..interceptors.add(
         // [408,429,500,502,503,504,440,460,499,520,521,522,523,524,525,527,598,599]
         RetryInterceptor(
@@ -72,33 +73,33 @@ class SmartCAApiGateway<TData> {
     //   return dio;
     // }
 
-    _dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () {
-        // Don't trust any certificate just because their root cert is trusted.
-        final HttpClient client =
-            HttpClient(context: SecurityContext(withTrustedRoots: true));
-        // You can test the intermediate / root cert here. We just ignore it.
-        client.badCertificateCallback =
-            ((X509Certificate cert, String host, int port) {
-          if (cert.subject != certSubject || cert.subject != certSubject1) {
-            return false;
-          }
-          if (cert.sha1.toString() == sha) {
-            return false;
-          }
-          return true;
-        });
-        return client;
-      },
-    );
+    // _dio.httpClientAdapter = IOHttpClientAdapter(
+    //   createHttpClient: () {
+    //     // Don't trust any certificate just because their root cert is trusted.
+    //     final HttpClient client =
+    //         HttpClient(context: SecurityContext(withTrustedRoots: true));
+    //     // You can test the intermediate / root cert here. We just ignore it.
+    //     client.badCertificateCallback =
+    //         ((X509Certificate cert, String host, int port) {
+    //       if (cert.subject != certSubject || cert.subject != certSubject1) {
+    //         return false;
+    //       }
+    //       if (cert.sha1.toString() == sha) {
+    //         return false;
+    //       }
+    //       return true;
+    //     });
+    //     return client;
+    //   },
+    // );
   }
 
   Future _processRequest(String path, {dynamic data, options}) async {
     try {
-      // return await _networkInfo.isConnected
-      //     ? await _dio.request(path, data: data, options: options)
-      //     : throw NoInternetException();
-      return await _dio.request(path, data: data, options: options);
+      return await _networkInfo.isConnected
+          ? await _dio.request(path, data: data, options: options)
+          : throw NoInternetException();
+      // return await _dio.request(path, data: data, options: options);
     } catch (e) {
       rethrow;
     }

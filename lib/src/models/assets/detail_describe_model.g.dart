@@ -8,8 +8,8 @@ part of 'detail_describe_model.dart';
 
 DetailDescribeModel _$DetailDescribeModelFromJson(Map<String, dynamic> json) =>
     DetailDescribeModel(
-      detailDescribeId: json['detailDescribeId'] as int?,
-      assetLandInforId: json['assetLandInforId'] as int?,
+      detailDescribeId: (json['detailDescribeId'] as num?)?.toInt(),
+      assetLandInforId: (json['assetLandInforId'] as num?)?.toInt(),
       categoryName: json['categoryName'] as String?,
       feature: json['feature'] as String?,
       area: json['area'] as String?,

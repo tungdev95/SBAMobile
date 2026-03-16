@@ -27,25 +27,24 @@ class BaseEditText extends StatelessWidget {
   final TextInputType? keyboardType;
   final Color? borderColor;
 
-  const BaseEditText({
-    super.key,
-    required this.label,
-    required this.isRequired,
-    required this.formName,
-    this.readOnly = false,
-    required this.maxLength,
-    required this.placeHolder,
-    this.initValue,
-    this.data = const [],
-    this.isPickDate,
-    this.validators = const [],
-    this.textInputAction = TextInputAction.next,
-    this.backgroundColor,
-    this.paddingHorizontal = 16,
-    this.controller,
-    this.keyboardType,
-    this.borderColor
-  });
+  const BaseEditText(
+      {super.key,
+      required this.label,
+      required this.isRequired,
+      required this.formName,
+      this.readOnly = false,
+      required this.maxLength,
+      required this.placeHolder,
+      this.initValue,
+      this.data = const [],
+      this.isPickDate,
+      this.validators = const [],
+      this.textInputAction = TextInputAction.next,
+      this.backgroundColor,
+      this.paddingHorizontal = 16,
+      this.controller,
+      this.keyboardType,
+      this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -67,18 +66,23 @@ class BaseEditText extends StatelessWidget {
               ? FormBuilderDateTimePicker(
                   name: formName,
                   inputType: InputType.date,
-                  initialValue: initValue == null ? null : DatetimeFormat().parseStringToDate(initValue!),
+                  initialValue: initValue == null
+                      ? null
+                      : DatetimeFormat().parseStringToDate(initValue!),
                   decoration: ConfigInputDecoration().config(placeHolder,
                       suffixIcon: Container(
                         alignment: Alignment.center,
                         width: 20,
                         height: 20,
-                        child: Assets.images.icCalendar.image(width: 20, height: 20, fit: BoxFit.fill),
+                        child: Assets.images.icCalendar
+                            .image(width: 20, height: 20, fit: BoxFit.fill),
                       )),
                   format: DateFormat("dd/MM/yyyy"),
                   textInputAction: textInputAction,
                   validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(errorText: AppLocalizations.current.inputRequired(label)),
+                    FormBuilderValidators.required(
+                        errorText:
+                            AppLocalizations.current.inputRequired(label)),
                     // ...validators,
                   ]),
                 )
@@ -89,7 +93,9 @@ class BaseEditText extends StatelessWidget {
                       initialValue: initValue,
                       decoration: ConfigInputDecoration().config(placeHolder),
                       validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(errorText: AppLocalizations.current.inputRequired(label)),
+                        FormBuilderValidators.required(
+                            errorText:
+                                AppLocalizations.current.inputRequired(label)),
                         ...validators
                       ]),
                       onChanged: (value) {
@@ -106,25 +112,26 @@ class BaseEditText extends StatelessWidget {
                       name: formName,
                       autofocus: false,
                       readOnly: readOnly,
+                      enableSuggestions: true,
                       initialValue: initValue,
                       // onSubmitted: (value) => controller.onFormSubmit(),
                       controller: controller,
                       textInputAction: textInputAction,
                       keyboardType: keyboardType,
                       maxLength: maxLength,
-                      decoration: ConfigInputDecoration().config(placeHolder, borderColor: borderColor, fillColor: backgroundColor),
+                      decoration: ConfigInputDecoration().config(placeHolder,
+                          borderColor: borderColor, fillColor: backgroundColor),
                       validator: isRequired
                           ? FormBuilderValidators.compose([
-                              FormBuilderValidators.required(errorText: AppLocalizations.current.inputRequired(label)),
+                              FormBuilderValidators.required(
+                                  errorText: AppLocalizations.current
+                                      .inputRequired(label)),
                               FormBuilderValidators.maxLength(maxLength,
-                                  errorText: AppLocalizations.current.maxLength(maxLength)),
+                                  errorText: AppLocalizations.current
+                                      .maxLength(maxLength)),
                               ...validators
                             ])
-                          : FormBuilderValidators.compose([
-                              FormBuilderValidators.maxLength(maxLength,
-                                  errorText: AppLocalizations.current.maxLength(maxLength)),
-                              ...validators
-                            ]),
+                          : FormBuilderValidators.compose([...validators]),
                     ))
         ],
       ),

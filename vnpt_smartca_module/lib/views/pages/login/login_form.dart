@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_function_declarations_over_variables
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,6 +14,7 @@ import '../../controller/auth_controller.dart';
 import '../../controller/login_controller.dart';
 import '../../i18n/generated_locales/l10n.dart';
 
+import '../../utils/color.dart';
 import '../forgot_password/index.dart';
 import '../register_account/register_account/index.dart';
 import 'list_accounts.dart';
@@ -53,6 +57,8 @@ class LoginForm extends StatelessWidget {
         name: 'uid',
         maxLength: usernameMaxLength,
         textInputAction: TextInputAction.next,
+        readOnly: AppConfig.customerId != "",
+        initialValue: AppConfig.customerId,
         decoration:
             inputDecoration(AppLocalizations.current.usernamePlacehoder),
         validator: FormBuilderValidators.compose([
@@ -106,6 +112,7 @@ class LoginForm extends StatelessWidget {
                       FormBuilderTextField(
                         name: 'password',
                         obscureText: controller.obscureText.value,
+                        initialValue: AppConfig.password != "" ? AppConfig.password : null,
                         onSubmitted: (value) => controller.onFormSubmit(),
                         textInputAction: TextInputAction.done,
                         maxLength: passwordMaxLength,
@@ -139,7 +146,8 @@ class LoginForm extends StatelessWidget {
                             },
                             child: Text(
                               AppLocalizations.current.forgotPassword,
-                              style: TextStyle(color: Color(0xff0D75D6)),
+                              style:
+                                  TextStyle(color: HexColor(AppConfig.colorPrimaryBtn)),
                             )),
                         alignment: Alignment.centerRight,
                       ),
@@ -150,7 +158,7 @@ class LoginForm extends StatelessWidget {
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xff0D75D6),
+                                backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                                 minimumSize: const Size.fromHeight(48),
                                 shadowColor: Colors.transparent,
                                 elevation: 0.0,
@@ -160,9 +168,9 @@ class LoginForm extends StatelessWidget {
                                               ?.useBiometric ==
                                           true
                                       ? BorderRadius.only(
-                                          topLeft: Radius.circular(8),
-                                          bottomLeft: Radius.circular(8))
-                                      : BorderRadius.circular(8), // <-- Radius
+                                          topLeft: Radius.circular(AppConfig.borderRadiusBtn ?? 8),
+                                          bottomLeft: Radius.circular(AppConfig.borderRadiusBtn ?? 8))
+                                      : BorderRadius.circular(AppConfig.borderRadiusBtn ?? 8), // <-- Radius
                                 ),
                               ),
                               child: Text(
@@ -182,14 +190,13 @@ class LoginForm extends StatelessWidget {
                               child: Container(
                                   padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: Color(0xff0D75D6),
+                                    color: HexColor(AppConfig.colorPrimaryBtn),
                                     borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(8),
-                                        bottomRight: Radius.circular(8)),
+                                        topRight: Radius.circular(AppConfig.borderRadiusBtn ?? 8),
+                                        bottomRight: Radius.circular(AppConfig.borderRadiusBtn ?? 8)),
                                   ),
                                   height: 48,
-                                  child: Assets.images.faceId
-                                      .svg(package: AppConfig.package)),
+                                  child: Assets.images.faceId.svg()),
                             )
                         ],
                       ),
@@ -210,7 +217,7 @@ class LoginForm extends StatelessWidget {
                           child: Text(
                             "${AppLocalizations.current.createAccount} / ${AppLocalizations.current.activeAccount}",
                             style: TextStyle(
-                                fontSize: 15, color: Color(0xff0D75D6)),
+                                fontSize: 15.5, color: HexColor(AppConfig.colorPrimaryBtn)),
                           ),
                         ),
                         alignment: Alignment.center,
@@ -223,19 +230,20 @@ class LoginForm extends StatelessWidget {
                             padding: EdgeInsets.zero,
                             visualDensity:
                                 VisualDensity(horizontal: -4, vertical: -4),
-                            textStyle: TextStyle(color: Color(0xff1262CC)),
+                            textStyle:
+                                TextStyle(color: HexColor(AppConfig.colorPrimaryBtn)),
                             backgroundColor: Colors.white,
                           ),
                           onPressed: () async => await launchUrl(
                               mode: LaunchMode.externalApplication,
                               Uri.parse(AppConfig.featuresLink)),
                           icon: Icon(Icons.help_outline,
-                              color: Color(0xff0D75D6)),
+                              color: HexColor(AppConfig.colorPrimaryBtn)),
                           label: Text(
                             AppLocalizations.current.userManual,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xff0D75D6)),
+                                color: HexColor(AppConfig.colorPrimaryBtn)),
                           ),
                         ),
                         alignment: Alignment.center,
@@ -244,8 +252,23 @@ class LoginForm extends StatelessWidget {
                   ),
                 )),
           ),
-          Assets.images.smartcaLogo
-              .svg(height: 118, package: AppConfig.package),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Assets.images.smartcaLogo.svg(
+                height: AppConfig.sizeLogo,
+              ),
+              if (AppConfig.logoCustom != "") ...[
+                SizedBox(
+                  width: 5,
+                ),
+                SvgPicture.string(
+                  utf8.decode(base64.decode(AppConfig.logoCustom)),
+                  height: 80,
+                ),
+              ]
+            ],
+          )
         ],
       ),
     );

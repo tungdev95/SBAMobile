@@ -37,27 +37,27 @@ List<SignatureDropdownViewType> listDropview = [
 List<SignatureDropdownViewType> listDropviewVN = [
   SignatureDropdownViewType(
     value: 1,
-    text: "1. Chỉ hiển thị text",
+    text: AppLocalizations.current.chi_hien_thi_text,
   ),
   SignatureDropdownViewType(
     value: 2,
-    text: "2. Hiển thị text và logo bên trái",
+    text: AppLocalizations.current.hien_thi_text_logo_ben_trai,
   ),
   SignatureDropdownViewType(
     value: 3,
-    text: "3. Chỉ hiển thị logo",
+    text: AppLocalizations.current.chi_hien_thi_logo,
   ),
   SignatureDropdownViewType(
     value: 4,
-    text: "4. Hiển thị text và logo phía trên",
+    text: AppLocalizations.current.hien_thi_text_logo_tren,
   ),
   SignatureDropdownViewType(
     value: 5,
-    text: "5. Hiển thị text và hình nền",
+    text: AppLocalizations.current.hien_thi_text_hinh_nen,
   ),
   SignatureDropdownViewType(
     value: 6,
-    text: "6. Hiển thị text, logo bên trái và chữ ký",
+    text: AppLocalizations.current.hien_thi_text_logo_ben_trai_chu
   ),
 ];
 

@@ -1,30 +1,37 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
 import '../../../controller/otp_verify_controller.dart';
+import '../../../utils/color.dart';
 import '../../../widgets/base_screen.dart';
 
 import '../../../../core/models/request/ekyc_result_model.dart';
 import '../../../../core/utils/enums.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../controller/buy_certificate_controller.dart';
+import '../../../controller/otp_verify_controller.dart';
 import '../../../i18n/generated_locales/l10n.dart';
 import '../../../widgets/app_button_widget.dart';
 import '../../../widgets/base_loading.dart';
+import '../../../widgets/base_screen.dart';
 import '../../../widgets/base_text.dart';
-import '../../../widgets/bottom_contact.dart';
 import '../../../widgets/dialog_notification.dart';
+import '../../../widgets/bottom_contact.dart';
 import '../../certificate/setup_pin_code/widget/create_pin_code_widget.dart';
 import '../confirm_information/index.dart';
+
+StreamSubscription? successVerifyOTP;
 
 class OTPVerifyPage extends StatefulWidget {
   final bool requiredEKYC;
   final EkycResponseModel ekycResponseModel;
 
   const OTPVerifyPage(
-      {Key? key, required this.ekycResponseModel, required this.requiredEKYC})
-      : super(key: key);
+      {super.key, required this.ekycResponseModel, required this.requiredEKYC});
 
   @override
   State<StatefulWidget> createState() => OTPVerifyState();
@@ -33,7 +40,7 @@ class OTPVerifyPage extends StatefulWidget {
 class OTPVerifyState extends State<OTPVerifyPage> {
   late FocusNode _focusNode;
 
-  bool hasError = false;
+  bool hasError = true;
   String errorMsg = '';
   String pin = '';
 
@@ -46,7 +53,9 @@ class OTPVerifyState extends State<OTPVerifyPage> {
     _focusNode = FocusNode();
 
     controllerEkyc.ekycErrorCount = 0;
-    controller.successVerifyOTP.listen((success) async {
+
+    successVerifyOTP?.cancel();
+    successVerifyOTP = controller.successVerifyOTP.listen((success) async {
       if (success) {
         // VERIFY OTP SUCCESS
         controller.successVerifyOTP.value = false;
@@ -66,6 +75,8 @@ class OTPVerifyState extends State<OTPVerifyPage> {
               value.phone = widget.ekycResponseModel.phone;
               value.deviceId = widget.ekycResponseModel.deviceId;
               value.otp = pin;
+              value.email = widget.ekycResponseModel.email;
+              value.uid = widget.ekycResponseModel.uid;
               Get.to(() => ConfirmInformationPage(
                     ekycResponseModel: value,
                     fromEKYC: true,
@@ -88,14 +99,18 @@ class OTPVerifyState extends State<OTPVerifyPage> {
     });
   }
 
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   // ignore: avoid-unused-parameters
   void verifyOTP(String pin) {
     _focusNode.unfocus();
-    if (checkValidPin()) {
-      // API OTP
-      widget.ekycResponseModel.otp = pin;
-      controller.verifyOTP(widget.ekycResponseModel);
-    }
+    // API OTP
+    widget.ekycResponseModel.otp = pin;
+    controller.verifyOTP(widget.ekycResponseModel);
   }
 
   @override
@@ -180,7 +195,7 @@ class OTPVerifyState extends State<OTPVerifyPage> {
                           },
                           child: BaseText(
                             AppLocalizations.current.resendOTP,
-                            color: Color(0xff0D75D6),
+                            color: HexColor(AppConfig.colorPrimaryBtn),
                           ),
                         ),
                       ],
@@ -192,8 +207,13 @@ class OTPVerifyState extends State<OTPVerifyPage> {
           ),
           AppButtonWidget(
             label: AppLocalizations.current.confirm,
+            backgroundColor:
+                !hasError ? HexColor(AppConfig.colorPrimaryBtn) : Colors.grey,
             doublePadding: 15,
             onTap: () {
+              if (hasError) {
+                return;
+              }
               verifyOTP(pin);
             },
           ),
@@ -202,41 +222,6 @@ class OTPVerifyState extends State<OTPVerifyPage> {
         ]),
       ),
     );
-  }
-
-  bool checkValidPin() {
-    bool temp = false;
-    try {
-      var reg = "012345678901234567890";
-      var req1 = "987654321098765432109";
-      hasError = false;
-      errorMsg = "";
-      if (pin.length != 6) {
-        setState(() {
-          hasError = true;
-          errorMsg = AppLocalizations.current.pinValidateSixDigit;
-        });
-        temp = false;
-      } else if (reg.contains(pin) || req1.contains(pin)) {
-        setState(() {
-          hasError = true;
-          errorMsg = AppLocalizations.current.pinValidateSequence;
-        });
-        temp = false;
-      } else if (int.parse(pin) % 111111 == 0) {
-        setState(() {
-          hasError = true;
-          errorMsg = AppLocalizations.current.pinValidateTheSame;
-        });
-        temp = false;
-      } else {
-        temp = true;
-      }
-    } catch (e) {
-      onShowError(e.toString());
-      temp = false;
-    }
-    return temp;
   }
 
   void onShowError(String content) {

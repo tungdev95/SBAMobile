@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../views/controller/auth_controller.dart';
 import '../../../views/i18n/generated_locales/l10n.dart';
 
+import '../../configs/app_config.dart';
 import '../../configs/injector/injector.dart';
 import '../../core/models/app/exceptions.dart';
 import '../../core/models/app/user_info_on_device.dart';
@@ -34,8 +35,16 @@ class LoginController extends GetxController {
   }
 
   init() async {
+    userInfoList.value = await _userInfoOnDeviceService.getAllUsers();
+
     try {
-      userInfoList.value = await _userInfoOnDeviceService.getAllUsers();
+      if (AppConfig.customerId != "") {
+        userInfoList.value = userInfoList.value
+            .where((element) => element.uid == AppConfig.customerId)
+            .toList();
+        showUsernameInput.value = true;
+      }
+
       if (userInfoList.value.isNotEmpty) {
         authController.currentUser.value = userInfoList.value.first;
         showUsernameInput.value = false;

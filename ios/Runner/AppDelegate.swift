@@ -8,7 +8,7 @@ import AppCenterCrashes
 
 
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
     
     //Khai báo biến
@@ -24,8 +24,10 @@ import AppCenterCrashes
       GeneratedPluginRegistrant.register(with: self)
       
       let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-      let digitalSignChannel = FlutterMethodChannel(name: "com.sacombank.cmv/digitalSign",
-                                                binaryMessenger: controller.binaryMessenger)
+      let digitalSignChannelOld = FlutterMethodChannel(name: "com.sacombank.cmv/digitalSign",
+                                                 binaryMessenger: controller.binaryMessenger)
+      let digitalSignChannelNew = FlutterMethodChannel(name: "com.vnpt.flutter/partner",
+                                                 binaryMessenger: controller.binaryMessenger)
 
       self.vnptSmartCASDK = VNPTSmartCASDK(
           viewController:  controller,
@@ -35,24 +37,29 @@ import AppCenterCrashes
           isFlutterApp: true
       )
       
-      digitalSignChannel.setMethodCallHandler({
+      let handler: FlutterMethodCallHandler = {
         (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
-          // This method is invoked on the UI thread.
           if (call.method == "initSmartCa") {
               result(true)
           } else if (call.method == "getAuthentication") {
               self.getAuthentication(result: result)
           } else if (call.method == "getMainInfo") {
               self.getMainInfo(result: result)
-          } else if (call.method == "startSign") {
+          } else if (call.method == "startSign" || call.method == "getWaitingTransaction") {
               self.getWaitingTransaction(call: call, result: result)
-          } else if (call.method == "destroySDK") {
+          } else if (call.method == "destroySDK" || call.method == "signOut") {
               self.destroySDK()
+              result(true)
+          } else if (call.method == "createAccount") {
+              // Placeholder for createAccount logic
               result(true)
           } else {
               result(FlutterMethodNotImplemented)
           }
-      })
+      }
+
+      digitalSignChannelOld.setMethodCallHandler(handler)
+      digitalSignChannelNew.setMethodCallHandler(handler)
       
       GeneratedPluginRegistrant.register(with: self.vnptSmartCASDK?.flutterEngine as! FlutterPluginRegistry);
       return super.application(application, didFinishLaunchingWithOptions: launchOptions)

@@ -13,7 +13,8 @@ class OTPVerifyApi {
 
   verifyOTP(EkycResponseModel ekycModel) async {
     var param = {
-      "Uid": ekycModel.ocrResult.id,
+      //Nếu đối tác truyền CCCD vào thì dùng thuộc tính AppConfig.customerId làm param
+      "uid": AppConfig.customerId != "" ? AppConfig.customerId : ekycModel.ocrResult.id,
       "deviceId": ekycModel.deviceId,
       "otp": ekycModel.otp,
       "phone": ekycModel.phone,
@@ -27,7 +28,8 @@ class OTPVerifyApi {
 
   resendOTP(EkycResponseModel ekycModel) async {
     var param = {
-      "uid": ekycModel.ocrResult.id,
+      //Nếu đối tác truyền CCCD vào thì dùng thuộc tính AppConfig.customerId làm param
+      "uid": AppConfig.customerId != "" ? AppConfig.customerId : ekycModel.ocrResult.id,
       "deviceId": ekycModel.deviceId,
       "phone": ekycModel.phone,
     };

@@ -15,10 +15,10 @@ AssetsModel _$AssetsModelFromJson(Map<String, dynamic> json) => AssetsModel(
           : CustomerModel.fromJson(json['customer'] as Map<String, dynamic>),
       customerId: json['customerId'] as String?,
       address: json['address'] as String?,
-      assetLevelOneId: json['assetLevelOneId'] as int?,
+      assetLevelOneId: (json['assetLevelOneId'] as num?)?.toInt(),
       assetType: $enumDecode(_$AssetsTypeEnumEnumMap, json['assetLevelTwoId'],
           unknownValue: AssetsTypeEnum.bds),
-      assetLevelThreeId: json['assetLevelThreeId'] as int?,
+      assetLevelThreeId: (json['assetLevelThreeId'] as num?)?.toInt(),
       brandCode: json['brandCode'] as String?,
       branch: json['branch'] == null
           ? null
@@ -36,8 +36,9 @@ AssetsModel _$AssetsModelFromJson(Map<String, dynamic> json) => AssetsModel(
       assetImages: (json['assetImages'] as List<dynamic>?)
           ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))
           .toList(),
-      exportType:
-          (json['exportType'] as List<dynamic>?)?.map((e) => e as int).toList(),
+      exportType: (json['exportType'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
       transOfficeCode: json['transOfficeCode'] as String?,
       transOffice: json['transOffice'] == null
           ? null
@@ -56,7 +57,7 @@ AssetsModel _$AssetsModelFromJson(Map<String, dynamic> json) => AssetsModel(
           ? null
           : DateTime.parse(json['approvedDate'] as String),
       assetName: json['assetName'] as String?,
-      appraisalPurposeId: json['appraisalPurposeId'] as int?,
+      appraisalPurposeId: (json['appraisalPurposeId'] as num?)?.toInt(),
       assetLevelThrees: json['assetLevelThrees'] as String?,
       addressDetail: json['addressDetail'] as String?,
       addressStreet: json['addressStreet'] as String?,
@@ -65,18 +66,18 @@ AssetsModel _$AssetsModelFromJson(Map<String, dynamic> json) => AssetsModel(
       addressProvince: json['addressProvince'] as String?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
-      flowId: json['flowId'] as int?,
+      flowId: (json['flowId'] as num?)?.toInt(),
       surveySchedules: (json['surveySchedules'] as List<dynamic>?)
               ?.map((e) =>
                   SurveyScheduleModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      typeCreated: json['typeCreated'] as int?,
+      typeCreated: (json['typeCreated'] as num?)?.toInt(),
       customerNameByLos: json['customerNameByLos'],
       description: json['description'] as String?,
-      appraisalUnit: json['appraisalUnit'] as int?,
+      appraisalUnit: (json['appraisalUnit'] as num?)?.toInt(),
       addressCustomDetail: json['addressCustomDetail'] as String?,
-      rePricingNumber: json['rePricingNumber'] as int?,
+      rePricingNumber: (json['rePricingNumber'] as num?)?.toInt(),
       extraData: json['extraData'] as Map<String, dynamic>? ?? const {},
     );
 
@@ -168,11 +169,11 @@ const _$FileStatusEnumMap = {
 };
 
 AssetCommons _$AssetCommonsFromJson(Map<String, dynamic> json) => AssetCommons(
-      assetCommonId: json['assetCommonId'] as int?,
+      assetCommonId: (json['assetCommonId'] as num?)?.toInt(),
       appraisalFileId: json['appraisalFileId'] as String?,
       assetCode: json['assetCode'] as String?,
       climsCode: json['climsCode'] as String?,
-      assetLevelThreeId: json['assetLevelThreeId'] as int?,
+      assetLevelThreeId: (json['assetLevelThreeId'] as num?)?.toInt(),
       extraData: json['extraData'] as Map<String, dynamic>?,
       addressWard: json['addressWard'] as String?,
       addressDistrict: json['addressDistrict'] as String?,

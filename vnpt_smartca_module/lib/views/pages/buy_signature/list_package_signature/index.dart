@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 
 import '../../../../core/models/response/certificate_model.dart';
 import '../../../../core/models/response/service_pack_model.dart';
@@ -92,57 +94,60 @@ class ListPackageSignatureState extends State<ListPackageSignaturePage> {
               ),
             ),
             indexPackageSelected >= 0
-                ? Container(
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: Color(0xffE7F1FB),
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Color(0xff0D75D6)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        BaseText(
-                          AppLocalizations.current.service_pack_total_amount,
-                          color: Color(0xff5768A5),
-                          fontSize: 16,
-                        ),
-                        SizedBox(height: 10),
-                        BaseText(
-                          Common.formatPrice(totalMoney),
-                          color: Color(0xff0D75D6),
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: BaseText(
-                                AppLocalizations.current.totalNumberSignatures(totalTurnSignature),
-                                color: Color(0xff5768A5),
+                ? SafeArea(
+                  child: Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Color(0xffE7F1FB),
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Color(0xff0D75D6)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          BaseText(
+                            AppLocalizations.current.service_pack_total_amount,
+                            color: Color(0xff5768A5),
+                            fontSize: 16,
+                          ),
+                          SizedBox(height: 10),
+                          BaseText(
+                            Common.formatPrice(totalMoney),
+                            color: Color(0xff0D75D6),
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: BaseText(
+                                  AppLocalizations.current.totalNumberSignatures(totalTurnSignature),
+                                  color: Color(0xff5768A5),
+                                ),
                               ),
-                            ),
-                            BaseText(
-                              AppLocalizations.current.included10VAT,
-                              color: Color(0xff5768A5),
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        AppButtonWidget(
-                          label: AppLocalizations.current.Continue,
-                          doublePadding: 15,
-                          onTap: () {
-                            Get.to(() => OrderConfirmationPage(packageModel: listPackage[indexPackageSelected]));
-                          },
-                        ),
-                      ],
+                              BaseText(
+                                AppLocalizations.current.included10VAT,
+                                color: Color(0xff5768A5),
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          AppButtonWidget(
+                            label: AppLocalizations.current.Continue,
+                            backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
+                            doublePadding: 15,
+                            onTap: () {
+                              Get.to(() => OrderConfirmationPage(packageModel: listPackage[indexPackageSelected]));
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  )
+                )
                 : Container()
           ],
         ),

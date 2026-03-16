@@ -1,14 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../../configs/app_config.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../i18n/generated_locales/l10n.dart';
 import '../../../widgets/bottom_contact.dart';
-import '../../../widgets/header_step.dart';
 import '../../../widgets/widget.dart';
 
 class WaitForAcceptScreen extends StatefulWidget {
+  // final CertificateModel? certificateModel;
 
   const WaitForAcceptScreen({Key? key}) : super(key: key);
 
@@ -17,10 +16,13 @@ class WaitForAcceptScreen extends StatefulWidget {
 }
 
 class _GenerateCerKeyState extends State<WaitForAcceptScreen> {
+  // late GenerateCerKeyController controller;
 
   @override
   void initState() {
     super.initState();
+    // controller = Get.put(GenerateCerKeyController(certificateModel: widget.certificateModel));
+    // controller.getInfoApproved();
   }
 
   @override
@@ -30,21 +32,21 @@ class _GenerateCerKeyState extends State<WaitForAcceptScreen> {
       hiddenIconBack: true,
       body: Column(
         children: [
-          HeaderStep(
-            step: 2,
-            customImageStep: Assets.images.stepTwoNew,
-          ),
+          // HeaderStep(
+          //   step: 2,
+          //   customImageStep: Assets.images.stepTwoNew,
+          // ),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  const ImageSliderWidget(),
+                  // const ImageSliderWidget(),
                   Container(
-                    margin: const EdgeInsets.only(top: 60, bottom: 20),
+                    margin: const EdgeInsets.only(top: 20, bottom: 20),
                     child: Column(
                       children: [
-                        Assets.images.icDialogSuccess.image(width: 100),
+                        Assets.images.icDialogSuccess.image(width: 70),
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                           child: BaseText(
@@ -76,9 +78,13 @@ class _GenerateCerKeyState extends State<WaitForAcceptScreen> {
           ),
           Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: AppButtonWidget(label: AppLocalizations.current.iUnderstand, onTap: () {
-                Navigator.popUntil(context, (route) => route.isFirst);
-              },)),
+              child: AppButtonWidget(
+                label: AppLocalizations.current.iUnderstand,
+                onTap: () {
+                  // todo
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                },
+              )),
           const BottomContact(),
         ],
       ),
@@ -124,12 +130,12 @@ class _ImageSliderWidgetState extends State<ImageSliderWidget> {
               },
               autoPlay: true,
               aspectRatio: 16 / 9,
-              height: 160,
+              height: 150,
               viewportFraction: 0.8,
               enlargeFactor: 0.2,
               enlargeCenterPage: true,
             )),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         renderIndicator()
       ],
     );
@@ -174,7 +180,6 @@ class InfoNotifyWidget extends StatelessWidget {
                 child: Image.asset(
                   image!,
                   width: 100,
-                  package: AppConfig.package,
                 )),
           if (title?.isNotEmpty ?? false)
             Padding(

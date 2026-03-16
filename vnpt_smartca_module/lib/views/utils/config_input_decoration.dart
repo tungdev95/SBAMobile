@@ -3,7 +3,12 @@
 import 'package:flutter/material.dart';
 
 class ConfigInputDecoration {
-  InputDecoration config(String hintText, {Widget? suffixIcon, Color? fillColor, Color? borderColor}) {
+  InputDecoration config(String hintText,
+      {Widget? suffixIcon,
+      Color? fillColor,
+      Color? borderColor,
+      double? vertical,
+      FontWeight? fontWeight}) {
     return InputDecoration(
         isDense: true,
         labelText: hintText,
@@ -11,23 +16,23 @@ class ConfigInputDecoration {
         floatingLabelBehavior: FloatingLabelBehavior.never,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: borderColor == null ? BorderSide(
-              width: 0,
-              style: BorderStyle.none) : BorderSide(
-              width: 0.5, color: borderColor),
+          borderSide: borderColor == null
+              ? BorderSide(width: 0, style: BorderStyle.none)
+              : BorderSide(width: 0.5, color: borderColor),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: borderColor == null ? BorderSide(
-              width: 0,
-              style: BorderStyle.none) : BorderSide(
-              width: 0.5, color: borderColor),
+          borderSide: borderColor == null
+              ? BorderSide(width: 0, style: BorderStyle.none)
+              : BorderSide(width: 0.5, color: borderColor),
         ),
         filled: true,
         counterText: "",
         errorMaxLines: 3,
-        contentPadding: EdgeInsets.all(12),
-        labelStyle: TextStyle(color: Color(0xffA5B0C2), fontSize: 14),
+        contentPadding:
+            EdgeInsets.symmetric(horizontal: 12, vertical: vertical ?? 11),
+        labelStyle: TextStyle(
+            color: Color(0xffA5B0C2), fontSize: 14, fontWeight: fontWeight),
         hintStyle: TextStyle(color: Color(0xffA5B0C2), fontSize: 14),
         fillColor: fillColor ?? Color(0xffF2F6FA),
         suffixIcon: suffixIcon);

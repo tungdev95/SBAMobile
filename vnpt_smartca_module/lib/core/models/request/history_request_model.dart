@@ -6,8 +6,8 @@ import '../response/certificate_model.dart';
 class HistoryRequestModel {
   String? order;
   bool? isDesc;
-  DateTime? fromDate;
-  DateTime? toDate;
+  DateTime? startDate = DateTime.now().add(Duration(days: -30));
+  DateTime? endDate = DateTime.now();
   String? keySearch;
   CertificateModel? certificateModel;
   int? page;
@@ -16,8 +16,8 @@ class HistoryRequestModel {
   HistoryRequestModel(
       {this.order,
       this.isDesc,
-      this.fromDate,
-      this.toDate,
+      this.startDate,
+      this.endDate,
       this.keySearch,
       this.certificateModel,
       this.page,
@@ -27,8 +27,11 @@ class HistoryRequestModel {
     return {
       'order': order,
       'isDesc': isDesc,
-      "fromDate": fromDate?.fromDate(),
-      "toDate": toDate?.fromDate(),
+      "startDate": (startDate ?? DateTime.now().add(Duration(days: -30)))
+              .dateFormatEN() +
+          "T00:00:00",
+      "endDate":
+          (endDate ?? DateTime.now()).dateFormatEN() + "T23:59:59.999999",
       "keySearch": keySearch,
       "cerId": certificateModel?.id,
       "page": page,

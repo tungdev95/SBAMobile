@@ -17,7 +17,7 @@ class TransactionRequests extends GetView<TransactionController> {
   static String routeName = "/TransactionRequests";
   final homeController = Get.isRegistered<HomeController>()
       ? Get.find<HomeController>()
-      : Get.put(HomeController());
+      : Get.put(HomeController(), permanent: true);
 
   TransactionRequests({super.key});
 

@@ -213,6 +213,7 @@ class ExtendCertificateController extends BaseController {
     if (signType == 0) {
       Get.to(() => SelectCertPackScreen(
             certSerial: certificateModel.serial!,
+            isPS0: certificateModel.isPS0Package(),
           ));
     } else {
       getNumberSign(certificateModel.id).then((value) {
@@ -221,7 +222,7 @@ class ExtendCertificateController extends BaseController {
         } else if (value <= 0) {
           // chuyen sang man chon goi cuoc
           Get.to(
-              () => SelectCertPackScreen(certSerial: certificateModel.serial!));
+              () => SelectCertPackScreen(certSerial: certificateModel.serial!, isPS0: certificateModel.isPS0Package(),));
         } else if (value > 0) {
           // hien thi thong bao con bao nhieu luot ky
           Get.dialog(
@@ -237,7 +238,7 @@ class ExtendCertificateController extends BaseController {
               },
               actionAccept: () {
                 Get.to(() =>
-                    SelectCertPackScreen(certSerial: certificateModel.serial!));
+                    SelectCertPackScreen(certSerial: certificateModel.serial!, isPS0: certificateModel.isPS0Package(),));
               },
             ),
           );

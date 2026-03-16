@@ -1,14 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
+import 'package:signature/signature.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 
 import '../i18n/generated_locales/l10n.dart';
 import 'app_button_widget.dart';
@@ -24,10 +24,23 @@ class DrawSignatureWidget extends StatefulWidget {
 }
 
 class _DrawSignatureState extends State<DrawSignatureWidget> {
-  final GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey();
   late Uint8List _signatureData;
   bool _isDrawed = false;
   bool _hasError = false;
+
+  final SignatureController _controller = SignatureController(
+    disabled: false,
+    penStrokeWidth: 3,
+    penColor: Colors.black,
+    exportBackgroundColor: Colors.transparent,
+    exportPenColor: Colors.black,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +64,7 @@ class _DrawSignatureState extends State<DrawSignatureWidget> {
         // ),
         SizedBox(height: 20),
         BaseText(
-          "Chữ ký của bạn",
+          AppLocalizations.current.drawYourSignature,
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
@@ -73,11 +86,17 @@ class _DrawSignatureState extends State<DrawSignatureWidget> {
               //   shape: RoundedRectangleBorder(
               //     borderRadius: BorderRadius.circular(10),
               //   ),
-              child: SfSignaturePad(
-                key: _signaturePadKey,
-                // backgroundColor: Colors.grey[200],
-                onDrawEnd: onDrawEnd,
+              child: Signature(
+                controller: _controller,
+                width: Get.width - 30,
+                height: 260,
+                backgroundColor: Colors.white,
               ),
+              // SfSignaturePad(
+              //   key: _signaturePadKey,
+              //   // backgroundColor: Colors.grey[200],
+              //   onDrawEnd: onDrawEnd,
+              // ),
               // ),
             )
             // child: Container(
@@ -110,13 +129,19 @@ class _DrawSignatureState extends State<DrawSignatureWidget> {
               flex: 1,
               child: AppButtonWidget(
                 label: AppLocalizations.current.clear,
-                labelColor: Color(0xff0D75D6),
-                backgroundColor: Color(0xffE0F0FF),
+                // labelColor: Color(0xff0D75D6),
+                // backgroundColor: Color(0xffE0F0FF),
+                labelColor: HexColor(AppConfig.colorPrimaryBtn),
+                backgroundColor: HexColor(AppConfig.colorSecondBtn),
+                border: AppConfig.colorPrimaryBtn == "#0D75D6"
+                    ? null
+                    : Border.all(
+                        width: 1.5, color: HexColor(AppConfig.colorPrimaryBtn)),
                 onTap: () {
                   setState(() {
                     _isDrawed = false;
                   });
-                  _signaturePadKey.currentState?.clear();
+                  _controller.clear();
                 },
               ),
             ),
@@ -125,6 +150,7 @@ class _DrawSignatureState extends State<DrawSignatureWidget> {
               flex: 1,
               child: AppButtonWidget(
                 label: AppLocalizations.current.confirm,
+                backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                 onTap: () {
                   handleSaveButtonPressed();
                 },
@@ -146,18 +172,16 @@ class _DrawSignatureState extends State<DrawSignatureWidget> {
   }
 
   Future handleSaveButtonPressed() async {
-    Uint8List data;
+    _isDrawed = false;
 
-    final imageData =
-        await _signaturePadKey.currentState?.toImage(pixelRatio: 3.0);
-    final ByteData? bytes =
-        await imageData?.toByteData(format: ImageByteFormat.png);
+    final bytes = await _controller.toPngBytes();
     if (bytes != null) {
-      data = bytes.buffer.asUint8List();
+      // data = bytes.buffer.asUint8List();
+      _isDrawed = true;
 
       setState(
         () {
-          _signatureData = data;
+          _signatureData = bytes;
         },
       );
     }

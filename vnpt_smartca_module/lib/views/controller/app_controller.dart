@@ -4,8 +4,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:device_info/device_info.dart';
-// import 'package:device_info_plus/device_info_plus.dart';
+// import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 // import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
@@ -21,6 +21,7 @@ import '../../../data/repository/authen_repository.dart';
 import '../../../data/repository/user_repository.dart';
 import '../../../views/i18n/generated_locales/l10n.dart';
 
+import '../../core/models/app/device_info.dart';
 import '../../core/models/app/user_info_on_device.dart';
 import '../../core/models/request/login.dart';
 import '../../core/models/response/certificate_model.dart';
@@ -31,7 +32,7 @@ import '../../data/repository/certificate_repository.dart';
 class AppController extends GetxController {
   final internetConnection = getIt<InternetConnectionChecker>();
   final localStorage = getIt<SecureLocalStorageService>();
-  final deviceInfo = getIt<DeviceInfoService>();
+  final deviceInfoService = getIt<DeviceInfoService>();
   final _userInfoOnDeviceService = getIt<UserInfoOnDeviceService>();
   final currentHostAppMethod = Rx<String>('');
   final pageController = PageController();
@@ -47,6 +48,7 @@ class AppController extends GetxController {
   final appVersion = "".obs;
 
   final refreshMainPage = 0.obs;
+  final deviceInfo = Rx<DeviceInfoModel?>(null);
 
   @override
   void onInit() {
@@ -60,10 +62,12 @@ class AppController extends GetxController {
   }
 
   getAppVersion() async {
-    appVersion.value = await deviceInfo.getAppversion() ?? "";
+    appVersion.value = await deviceInfoService.getAppversion() ?? "";
+    deviceInfo.value = await deviceInfoService.getDeviceInfo();
   }
 
   deviceChecker() async {
+    // isJailbroken.value = await FlutterJailbreakDetection.jailbroken;
     isValidPlatform.value =
         GetPlatform.isAndroid || GetPlatform.isIOS || GetPlatform.isMobile;
 
@@ -84,16 +88,18 @@ class AppController extends GetxController {
   internetChecker() async {
     isNetworkConnected.value = await internetConnection.hasConnection;
 
-    Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) async {
-      if (result != ConnectivityResult.none) {
+    Connectivity().onConnectivityChanged.listen(
+      (result) async {
+        // if (result.contains(ConnectivityResult.none) == false) {
         isNetworkConnected.value =
             await InternetConnectionChecker().hasConnection;
-      } else {
-        isNetworkConnected.value = false;
-      }
-    });
+        // } else {
+        //   isNetworkConnected.value = false;
+        // }
+
+        // print("isNetworkConnected ${isNetworkConnected.value}");
+      },
+    );
   }
 
   permissionChecker() async {

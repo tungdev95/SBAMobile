@@ -3,9 +3,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../../../core/models/app/purchase_cert_order_item_model.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../core/models/app/purchase_certificate_model.dart';
-import '../../../core/models/response/certificate_model.dart';
 import '../../../gen/assets.gen.dart';
 import '../../controller/buy_certificate_controller.dart';
 import '../../controller/enter_info_controller.dart';
@@ -14,10 +14,8 @@ import '../../utils/config_input_decoration.dart';
 import '../../widgets/widget.dart';
 
 class CertificatePackScreen extends StatefulWidget {
-  final CardInfo cardInfo;
-  final List<CertificateModel> listCerts;
-
-  const CertificatePackScreen({super.key, required this.cardInfo, required this.listCerts});
+  bool hideAppBar;
+  CertificatePackScreen({super.key, this.hideAppBar = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -44,8 +42,12 @@ class _CertificatePackBody extends State<CertificatePackScreen> {
   Widget build(BuildContext context) {
     return BaseScreen(
       title: AppLocalizations.current.selectCertificatePack,
+      hideAppBar: widget.hideAppBar,
       loadingWidget: const Stack(
-        children: [BaseLoading<EnterInfoController>(), BaseLoading<BuyCertificateController>()],
+        children: [
+          BaseLoading<EnterInfoController>(),
+          BaseLoading<BuyCertificateController>()
+        ],
       ),
       colorBg: const Color.fromRGBO(241, 244, 250, 1),
       body: SmartRefresher(
@@ -66,7 +68,8 @@ class _CertificatePackBody extends State<CertificatePackScreen> {
                     padding: const EdgeInsets.only(left: 16),
                     alignment: Alignment.centerLeft,
                     child: BaseText(
-                      AppLocalizations.current.listPacks(controller.listCertPacks.value.length),
+                      AppLocalizations.current
+                          .listPacks(controller.listCertPacks.value.length),
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: const Color(0xff08285C),
@@ -78,7 +81,8 @@ class _CertificatePackBody extends State<CertificatePackScreen> {
                     return Column(
                       children: [
                         const SizedBox(height: 90),
-                        Assets.images.icCertPackEmpty.image(width: 157, height: 135, fit: BoxFit.cover),
+                        Assets.images.icCertPackEmpty
+                            .image(width: 157, height: 135, fit: BoxFit.cover),
                         const SizedBox(height: 20),
                         BaseText(
                           AppLocalizations.current.emptyDataFiltered,
@@ -96,9 +100,11 @@ class _CertificatePackBody extends State<CertificatePackScreen> {
                     children: controller.listCertPacks.value
                         .map((e) => InkWell(
                             onTap: () {
-                              buyCertController.createOrder(e.pricingCode?.toString());
+                              buyCertController
+                                  .createOrder(e.pricingCode?.toString());
                             },
-                            child: _CertPackageViewWidget(purchaseCertificateModel: e)))
+                            child: _CertPackageViewWidget(
+                                purchaseCertificateModel: e)))
                         .toList(),
                   );
                 }),
@@ -126,7 +132,8 @@ class _CertPackageViewWidget extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 7),
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(11), topRight: Radius.circular(11)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(11), topRight: Radius.circular(11)),
             ),
             padding: EdgeInsets.only(left: 16, right: 16, top: 8),
             child: BaseText(
@@ -153,8 +160,9 @@ class _CertPackageViewWidget extends StatelessWidget {
                       height: 14,
                       decoration: const BoxDecoration(
                           color: Color.fromRGBO(241, 244, 250, 1),
-                          borderRadius:
-                              BorderRadius.only(topRight: Radius.circular(14), bottomRight: Radius.circular(14))),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(14),
+                              bottomRight: Radius.circular(14))),
                     )
                   ],
                 ),
@@ -183,8 +191,9 @@ class _CertPackageViewWidget extends StatelessWidget {
                       height: 14,
                       decoration: const BoxDecoration(
                           color: Color.fromRGBO(241, 244, 250, 1),
-                          borderRadius:
-                              BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(14),
+                              bottomLeft: Radius.circular(14))),
                     )
                   ],
                 ),
@@ -196,7 +205,9 @@ class _CertPackageViewWidget extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 7),
             decoration: const BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(11), bottomRight: Radius.circular(11)),
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(11),
+                  bottomRight: Radius.circular(11)),
             ),
             padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
             child: Column(
@@ -268,11 +279,14 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
   @override
   void initState() {
     // all
-    _filterModels.add(CertPackFilterModel(-1, AppLocalizations.current.all, true));
+    _filterModels
+        .add(CertPackFilterModel(-1, AppLocalizations.current.all, true));
     // theo luot ky
-    _filterModels.add(CertPackFilterModel(1, AppLocalizations.current.bySignatures, false));
+    _filterModels.add(
+        CertPackFilterModel(1, AppLocalizations.current.bySignatures, false));
     // khong gioi han luot ky
-    _filterModels.add(CertPackFilterModel(0, AppLocalizations.current.unlimitedNumberOfSignatures, false));
+    _filterModels.add(CertPackFilterModel(
+        0, AppLocalizations.current.unlimitedNumberOfSignatures, false));
 
     // controller.fetchItems();
 
@@ -282,9 +296,11 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
   _renderDieuBanCanBiet() {
     bool canShow = false;
     if (_listHasFilter.isNotEmpty) {
-      canShow = _listHasFilter.any((element) => element.code == 1 && element.isSelected == true);
+      canShow = _listHasFilter
+          .any((element) => element.code == 1 && element.isSelected == true);
     } else {
-      canShow = _filterModels.any((element) => element.code == 1 && element.isSelected == true);
+      canShow = _filterModels
+          .any((element) => element.code == 1 && element.isSelected == true);
     }
     return canShow
         ? Container(
@@ -293,7 +309,8 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
               children: [
                 Row(
                   children: [
-                    Assets.images.icCertInfo.image(width: 20, height: 20, fit: BoxFit.fill),
+                    Assets.images.icCertInfo
+                        .image(width: 20, height: 20, fit: BoxFit.fill),
                     const SizedBox(
                       width: 6,
                     ),
@@ -396,16 +413,22 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
               padding: const EdgeInsets.all(8),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: listFilter[index].isSelected ? const Color(0xffE7F1FB) : Colors.white,
+                  color: listFilter[index].isSelected
+                      ? const Color(0xffE7F1FB)
+                      : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: listFilter[index].isSelected ? const Color(0xff0D75D6) : const Color(0xffC9CED7))),
+                      color: listFilter[index].isSelected
+                          ? const Color(0xff0D75D6)
+                          : const Color(0xffC9CED7))),
               child: hasClearButton
                   ? Row(
                       children: [
                         BaseText(
                           listFilter[index].name,
-                          color: listFilter[index].isSelected ? const Color(0xff0D75D6) : const Color(0xff5768A5),
+                          color: listFilter[index].isSelected
+                              ? const Color(0xff0D75D6)
+                              : const Color(0xff5768A5),
                         ),
                         const SizedBox(
                           width: 6,
@@ -416,8 +439,10 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
 
                             if (_listHasFilter.isEmpty) {
                               setState(() {
-                                controller
-                                    .filter(_filterModels.where((element) => element.isSelected == true).toList());
+                                controller.filter(_filterModels
+                                    .where(
+                                        (element) => element.isSelected == true)
+                                    .toList());
                               });
                             } else {
                               setState(() {
@@ -429,15 +454,20 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
                             height: 20,
                             width: 20,
                             alignment: Alignment.center,
-                            child: Assets.images.icQrClose
-                                .image(fit: BoxFit.fill, height: 20, width: 20, color: const Color(0xff5768A5)),
+                            child: Assets.images.icQrClose.image(
+                                fit: BoxFit.fill,
+                                height: 20,
+                                width: 20,
+                                color: const Color(0xff5768A5)),
                           ),
                         )
                       ],
                     )
                   : BaseText(
                       listFilter[index].name,
-                      color: listFilter[index].isSelected ? const Color(0xff0D75D6) : const Color(0xff5768A5),
+                      color: listFilter[index].isSelected
+                          ? const Color(0xff0D75D6)
+                          : const Color(0xff5768A5),
                     ),
             ),
           );
@@ -461,7 +491,8 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
         FormBuilder(
           key: controller.formKey3,
           child: Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 12),
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 12),
             child: Row(
               children: [
                 Expanded(
@@ -469,6 +500,7 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
                       name: "searchText",
                       autofocus: false,
                       readOnly: false,
+                      enableSuggestions: true,
                       // initialValue: initValue,
                       // onSubmitted: (value) => controller.onFormSubmit(),
                       textInputAction: TextInputAction.search,
@@ -479,9 +511,11 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
                       },
                       maxLength: 250,
                       validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.maxLength(250, errorText: AppLocalizations.current.maxLength(250)),
+                        FormBuilderValidators.maxLength(250,
+                            errorText: AppLocalizations.current.maxLength(250)),
                       ]),
-                      decoration: ConfigInputDecoration().config(AppLocalizations.current.enterThePackageNameToSearch,
+                      decoration: ConfigInputDecoration().config(
+                          AppLocalizations.current.enterThePackageNameToSearch,
                           fillColor: Colors.white,
                           suffixIcon: Container(
                             height: 20,
@@ -517,7 +551,9 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
                                           ))),
                                   _FilterBoxWidget(
                                     listSelected: _listHasFilter,
-                                    getNewListSelected: (List<CertPackFilterModel> listSelected) {
+                                    getNewListSelected:
+                                        (List<CertPackFilterModel>
+                                            listSelected) {
                                       _listHasFilter = listSelected;
                                       setState(() {
                                         controller.filter(_listHasFilter);
@@ -544,7 +580,9 @@ class _CertPackageFilterBody extends State<_CertPackageFilter> {
             ),
           ),
         ),
-        _listHasFilter.isNotEmpty ? _renderList(_listHasFilter, true) : _renderList(_filterModels, false),
+        _listHasFilter.isNotEmpty
+            ? _renderList(_listHasFilter, true)
+            : _renderList(_filterModels, false),
         const SizedBox(
           height: 12,
         ),
@@ -558,7 +596,8 @@ class _FilterBoxWidget extends StatefulWidget {
   final List<CertPackFilterModel> listSelected;
   final Function(List<CertPackFilterModel>)? getNewListSelected;
 
-  const _FilterBoxWidget({super.key, required this.listSelected, this.getNewListSelected});
+  const _FilterBoxWidget(
+      {super.key, required this.listSelected, this.getNewListSelected});
 
   @override
   State<StatefulWidget> createState() {
@@ -580,25 +619,34 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
     // all
     // _listFilterByLuotKy.add(_FilterModel("", AppLocalizations.current.all, true));
     // theo luot ky
-    _listFilterByLuotKy.add(CertPackFilterModel(1, AppLocalizations.current.bySignatures, _checkSelected(1)));
+    _listFilterByLuotKy.add(CertPackFilterModel(
+        1, AppLocalizations.current.bySignatures, _checkSelected(1)));
     // khong gioi han luot ky
-    _listFilterByLuotKy
-        .add(CertPackFilterModel(0, AppLocalizations.current.unlimitedNumberOfSignatures, _checkSelected(0)));
+    _listFilterByLuotKy.add(CertPackFilterModel(
+        0,
+        AppLocalizations.current.unlimitedNumberOfSignatures,
+        _checkSelected(0)));
 
     // filter theo thang
-    _listFilterByMonth1
-        .add(CertPackFilterModel(2, AppLocalizations.current.filterByMonth(1), _checkSelected(2), month: 1));
-    _listFilterByMonth1
-        .add(CertPackFilterModel(3, AppLocalizations.current.filterByMonth(3), _checkSelected(3), month: 3));
-    _listFilterByMonth1
-        .add(CertPackFilterModel(4, AppLocalizations.current.filterByMonth(6), _checkSelected(4), month: 6));
+    _listFilterByMonth1.add(CertPackFilterModel(
+        2, AppLocalizations.current.filterByMonth(1), _checkSelected(2),
+        month: 1));
+    _listFilterByMonth1.add(CertPackFilterModel(
+        3, AppLocalizations.current.filterByMonth(3), _checkSelected(3),
+        month: 3));
+    _listFilterByMonth1.add(CertPackFilterModel(
+        4, AppLocalizations.current.filterByMonth(6), _checkSelected(4),
+        month: 6));
 
-    _listFilterByMonth2
-        .add(CertPackFilterModel(5, AppLocalizations.current.filterByMonth(12), _checkSelected(5), month: 12));
-    _listFilterByMonth2
-        .add(CertPackFilterModel(6, AppLocalizations.current.filterByMonth(24), _checkSelected(6), month: 24));
-    _listFilterByMonth2
-        .add(CertPackFilterModel(7, AppLocalizations.current.filterByMonth(36), _checkSelected(7), month: 36));
+    _listFilterByMonth2.add(CertPackFilterModel(
+        5, AppLocalizations.current.filterByMonth(12), _checkSelected(5),
+        month: 12));
+    _listFilterByMonth2.add(CertPackFilterModel(
+        6, AppLocalizations.current.filterByMonth(24), _checkSelected(6),
+        month: 24));
+    _listFilterByMonth2.add(CertPackFilterModel(
+        7, AppLocalizations.current.filterByMonth(36), _checkSelected(7),
+        month: 36));
     super.initState();
   }
 
@@ -623,10 +671,15 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
             decoration: BoxDecoration(
                 color: e.isSelected ? const Color(0xffE7F1FB) : Colors.white,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: e.isSelected ? const Color(0xff0D75D6) : const Color(0xffC9CED7))),
+                border: Border.all(
+                    color: e.isSelected
+                        ? const Color(0xff0D75D6)
+                        : const Color(0xffC9CED7))),
             child: BaseText(
               e.name,
-              color: e.isSelected ? const Color(0xff0D75D6) : const Color(0xff5768A5),
+              color: e.isSelected
+                  ? const Color(0xff0D75D6)
+                  : const Color(0xff5768A5),
             ),
           ),
         ),
@@ -655,13 +708,19 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: listFilter[index].isSelected ? const Color(0xffE7F1FB) : Colors.white,
+                  color: listFilter[index].isSelected
+                      ? const Color(0xffE7F1FB)
+                      : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: listFilter[index].isSelected ? const Color(0xff0D75D6) : const Color(0xffC9CED7))),
+                      color: listFilter[index].isSelected
+                          ? const Color(0xff0D75D6)
+                          : const Color(0xffC9CED7))),
               child: BaseText(
                 listFilter[index].name,
-                color: listFilter[index].isSelected ? const Color(0xff0D75D6) : const Color(0xff5768A5),
+                color: listFilter[index].isSelected
+                    ? const Color(0xff0D75D6)
+                    : const Color(0xff5768A5),
               ),
             ),
           );
@@ -683,13 +742,15 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
     return Container(
       decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10), topLeft: Radius.circular(10))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 17),
-            decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xffE0E0E0)))),
+            decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: Color(0xffE0E0E0)))),
             child: Row(
               children: [
                 Expanded(
@@ -708,15 +769,19 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
                     width: 26,
                     height: 26,
                     alignment: Alignment.center,
-                    child: Assets.images.icQrClose
-                        .image(width: 20, height: 20, color: const Color(0xff6D6D6D), fit: BoxFit.fill),
+                    child: Assets.images.icQrClose.image(
+                        width: 20,
+                        height: 20,
+                        color: const Color(0xff6D6D6D),
+                        fit: BoxFit.fill),
                   ),
                 )
               ],
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 15, bottom: 9),
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 15, bottom: 9),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -745,7 +810,8 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
           ),
           _renderList(_listFilterByLuotKy),
           Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 9),
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 20, bottom: 9),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -787,6 +853,7 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
             child: AppButtonWidget(
               label: AppLocalizations.current.apply,
+              backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
               onTap: () {
                 if (widget.getNewListSelected != null) {
                   List<CertPackFilterModel> listSelected = [];

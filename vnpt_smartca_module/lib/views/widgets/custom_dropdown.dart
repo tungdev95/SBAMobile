@@ -14,6 +14,7 @@ class CustomDropDown extends StatefulWidget {
   final int? selectedIndex;
   final Function? didSelected;
   final bool isRequired;
+  final bool? isEnable;
 
   CustomDropDown(
       {this.heightOfBox,
@@ -23,7 +24,8 @@ class CustomDropDown extends StatefulWidget {
       required this.listValues,
       this.selectedIndex,
       this.didSelected,
-      this.isRequired = false});
+      this.isRequired = false,
+      this.isEnable = true});
 
   @override
   State<StatefulWidget> createState() {
@@ -87,12 +89,14 @@ class _CustomDropDownState extends State<CustomDropDown> {
               child: DropdownButton<int>(
                 items: createListDropdownMenuItem(),
                 value: selectedIndex,
-                onChanged: (int? index) {
-                  setState(() {
-                    selectedIndex = index;
-                    widget.didSelected?.call(index);
-                  });
-                },
+                onChanged: widget.isEnable == true
+                    ? (int? index) {
+                        setState(() {
+                          selectedIndex = index;
+                          widget.didSelected?.call(index);
+                        });
+                      }
+                    : null,
                 // style: TextStyle(color: Color(0xff202223), fontSize: 14, fontWeight: FontWeight.w400),
                 // hint: BaseText(
                 //   widget.hintText,

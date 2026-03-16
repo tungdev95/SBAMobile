@@ -9,17 +9,19 @@ class SignBillApi {
 
   SignBillApi(this._httpClientService);
 
-  getBill(String serial) async {
+  getBill(String serial, String orderId) async {
     final result = await _httpClientService.post(
-      '/${AppConfig.language}/order/certorder/getPhieuYeuCauThayDoiThongTin',
-      {"Serial": serial, "Type": "html", "SignatureString": ""},
+      '/${AppConfig.language}/order/certorderCompleteOnline/getPhieuYeuCauThayDoiThongTin',
+      // '/${AppConfig.language}/order/certorder/getPhieuYeuCauThayDoiThongTin',
+      {"Serial": serial, "Type": "html", "SignatureString": "", "OrderId": orderId},
     );
     return SmartCAApiResponse.fromMap(result);
   }
 
   saveSignatureImage(String serial, String base64Signature) async {
     final result = await _httpClientService.post(
-      '/${AppConfig.language}/order/certorder/getPhieuYeuCauThayDoiThongTin',
+      '/${AppConfig.language}/order/certorderCompleteOnline/getPhieuYeuCauThayDoiThongTin',
+      // '/${AppConfig.language}/order/certorder/getPhieuYeuCauThayDoiThongTin',
       {"Serial": serial, "Type": "pdf", "SignatureString": base64Signature},
     );
     return SmartCAApiResponse.fromMap(result);
@@ -27,7 +29,8 @@ class SignBillApi {
 
   uploadOrderContract(String orderId, String base64Contract) async {
     final result = await _httpClientService.post(
-      '/${AppConfig.language}/order/certorder/upload_order_contract',
+      '/${AppConfig.language}/order/certorderCompleteOnline/upload_order_contract',
+      // '/${AppConfig.language}/order/certorder/upload_order_contract',
       {"OrderId": orderId, "Contract": base64Contract},
     );
     return SmartCAApiResponse.fromMap(result);

@@ -193,6 +193,26 @@ class AuthRemoteApi {
     }
   }
 
+  Future<ContractCheckExistModel> signContractWithoutOTP(
+      String contractId) async {
+    final url =
+        "${_eContractApiGWConfig.domain}/management-service/contracts/$contractId/sign-by-click";
+    var response = await httpClientService.post(
+      url,
+      null,
+      options: Options(headers: {
+        "Token-Key": _eContractApiGWConfig.tokenKey,
+        "Token-Id": _eContractApiGWConfig.tokenId
+      }),
+    );
+
+    if (response != null) {
+      return ContractCheckExistModel.fromJson(response);
+    } else {
+      return ContractCheckExistModel(code: 0, message: "", contractData: null);
+    }
+  }
+
   Future<ContractResponse> ssoContract(
       String accessToken, String phoneNumber) async {
     String url;
@@ -223,6 +243,18 @@ class AuthRemoteApi {
       String sub, String phoneNumber, String otp) async {
     String url = "/${AppConfig.language}/thirdpartyapi/preuser/verifyOTP";
     var param = {"uid": sub, "phone": phoneNumber, "otp": otp};
+    final result = await httpClientService.post(url, param);
+    return SmartCAApiResponse.fromMap(result);
+  }
+
+  Future<SmartCAApiResponse> createLoginLog(dynamic param) async {
+    String url = "/${AppConfig.language}/identityapi/loginlog/create";
+    final result = await httpClientService.post(url, param);
+    return SmartCAApiResponse.fromMap(result);
+  }
+
+  Future<SmartCAApiResponse> getLoginLog(dynamic param) async {
+    String url = "/${AppConfig.language}/identityapi/loginlog/list";
     final result = await httpClientService.post(url, param);
     return SmartCAApiResponse.fromMap(result);
   }

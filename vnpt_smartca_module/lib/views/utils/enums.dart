@@ -45,6 +45,7 @@ enum StatusCertEnum {
   WAITING_SYNC_ACCEPTANCE, // 9: Chờ đồng bộ biên bản nghiệm thu
   SYNC_ACCEPTANCE_FAILED, // 10: Đồng bộ biên bản nghiệm thu không thành công
   WAITING_APPROVE, // 11: Chờ duyệt
+  DELETED, // Hủy định danh
 }
 
 enum TransactionType { confirm, cancel }

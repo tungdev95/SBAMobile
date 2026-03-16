@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../../core/models/response/certificate_model.dart';
 import '../../../controller/auth_controller.dart';
 import '../../../controller/otp_verify_controller.dart';
@@ -14,7 +16,6 @@ import '../../../widgets/app_button_widget.dart';
 import '../../../widgets/base_loading.dart';
 import '../../../widgets/base_text.dart';
 import '../../../widgets/dialog/common_dialog.dart';
-import '../../../widgets/dialog_notification.dart';
 import '../../../widgets/bottom_contact.dart';
 import '../setup_pin_code/widget/create_pin_code_widget.dart';
 
@@ -40,7 +41,9 @@ class _OTPVerifyState extends State<VerifyOTPScreen> {
   final controller = Get.put(OTPVerifyController());
   final authController = Get.find<AuthController>();
 
-  final controllerEkyc = Get.put(BuyCertificateController());
+  final controllerEkyc = Get.isRegistered<BuyCertificateController>()
+      ? Get.find<BuyCertificateController>()
+      : Get.put(BuyCertificateController(), permanent: true);
 
   @override
   void initState() {
@@ -68,7 +71,7 @@ class _OTPVerifyState extends State<VerifyOTPScreen> {
           Expanded(
             child: SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.only(top: 60),
+                padding: EdgeInsets.only(top: 40),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -80,17 +83,16 @@ class _OTPVerifyState extends State<VerifyOTPScreen> {
                         fit: BoxFit.fill,
                       ),
                     ),
-                    SizedBox(height: 30),
-
+                    SizedBox(height: 20),
                     BaseText(
                       "${AppLocalizations.current.otpSendToPhone} ${authController.currentUser.value!.phone!}",
                       textOverflow: TextOverflow.visible,
                       textAlign: TextAlign.center,
                       maxLines: 2,
-                      height: 24 / 14,
+                      fontSize: 15,
                       color: Color(0xff5768A5),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 15),
                       child: CreatePinCodeTextField(
@@ -104,6 +106,11 @@ class _OTPVerifyState extends State<VerifyOTPScreen> {
                         },
                         focusNode: _focusNode,
                         onCompleteCallback: verifyOTP,
+                        obscureText: false,
+                        textStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     hasError
@@ -155,6 +162,7 @@ class _OTPVerifyState extends State<VerifyOTPScreen> {
           ),
           AppButtonWidget(
             label: AppLocalizations.current.confirm,
+            backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
             doublePadding: 15,
             onTap: () {
               verifyOTP(otp);
@@ -163,15 +171,6 @@ class _OTPVerifyState extends State<VerifyOTPScreen> {
           SizedBox(height: 10),
           BottomContact(),
         ]),
-      ),
-    );
-  }
-
-  void onShowError(String content) {
-    Get.dialog(
-      DialogNotification(
-        content: content,
-        onlyActionCancel: true,
       ),
     );
   }

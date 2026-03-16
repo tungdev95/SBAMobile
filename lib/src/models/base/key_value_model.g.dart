@@ -8,7 +8,7 @@ part of 'key_value_model.dart';
 
 KeyValueModel _$KeyValueModelFromJson(Map<String, dynamic> json) =>
     KeyValueModel(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String?,
       value: json['value'] as String?,
       key: json['key'] as String?,

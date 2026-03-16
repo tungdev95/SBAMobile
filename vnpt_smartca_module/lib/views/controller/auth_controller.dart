@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:get/get.dart';
 import '../../../core/models/request/login.dart';
 import '../../../core/models/response/token_model.dart';
@@ -7,8 +9,9 @@ import '../../../views/controller/app_controller.dart';
 import '../../../views/pages/register_account/register_account/index.dart';
 import '../../../views/utils/enums.dart';
 import 'package:local_auth_android/local_auth_android.dart';
-import 'package:local_auth_ios/local_auth_ios.dart';
+import 'package:local_auth_darwin/local_auth_darwin.dart';
 
+import '../../configs/app_config.dart';
 import '../../configs/injector/injector.dart';
 import '../../core/models/app/exceptions.dart';
 import '../../core/models/app/user_info_on_device.dart';
@@ -19,6 +22,8 @@ import '../../data/repository/user_repository.dart';
 import '../i18n/generated_locales/l10n.dart';
 import '../utils/exception_handler.dart';
 import '../widgets/dialog/common_dialog.dart';
+import 'home_controller.dart';
+import 'host_app_controller.dart';
 
 class AuthController extends GetxController {
   final authStatus = AuthenticationStatus.unauthenticated.obs;
@@ -27,7 +32,7 @@ class AuthController extends GetxController {
   final currentUser = Rx<UserInfoOnDeviceModel?>(null);
   final _authenRepository = getIt<AuthenRepository>();
   final _userInfoOnDeviceService = getIt<UserInfoOnDeviceService>();
-  final _biometricsService = getIt<BiometricsService>();
+  final biometricsService = getIt<BiometricsService>();
   final _userRepository = getIt<UserRepository>();
   bool isRegisterAccount = true;
   final canCheckBiometrics = false.obs;
@@ -43,7 +48,7 @@ class AuthController extends GetxController {
   onReady() async {
     super.onReady();
 
-    _biometricsService.init(
+    biometricsService.init(
         AppLocalizations.current
             .requestBiometricDesc(AppLocalizations.current.Continue),
         [
@@ -59,44 +64,80 @@ class AuthController extends GetxController {
             biometricSuccess: AppLocalizations.current.biometricSuccess,
           ),
           IOSAuthMessages(
-            cancelButton: AppLocalizations.current.close,
-            goToSettingsButton: AppLocalizations.current.goToSettingsButton,
-            goToSettingsDescription:
-                AppLocalizations.current.biometricsGoToSettingsDesc,
-            lockOut: AppLocalizations.current.iOSLockOut,
-          ),
+              cancelButton: AppLocalizations.current.close,
+              goToSettingsButton: AppLocalizations.current.goToSettingsButton,
+              goToSettingsDescription:
+                  AppLocalizations.current.biometricsGoToSettingsDesc,
+              lockOut: AppLocalizations.current.iOSLockOut),
         ]);
 
-    canCheckBiometrics.value = await _biometricsService.isDeviceSupported();
+    canCheckBiometrics.value = await biometricsService.isDeviceSupported();
   }
 
   toggleAuthBiometrics({bool? value, bool? authRequired = true}) async {
-    if (!await _biometricsService.isDeviceSupported()) {
+    try {
+      if (authRequired == true) {
+        final isDeviceSupported = await biometricsService.isDeviceSupported();
+        final availableBiometrics =
+            (await biometricsService.getAvailableBiometrics()).isNotEmpty;
+
+        if (!isDeviceSupported) {
+          showErrorModal(AppLocalizations.current.notSupportBiometrics);
+          return false;
+        }
+
+        if (availableBiometrics == false) {
+          showErrorModal(AppLocalizations.current.biometricsGoToSettingsDesc);
+          return false;
+        }
+
+        final authenticated =
+            await biometricsService.authenticateWithBiometrics();
+        if (!authenticated) {
+          return false;
+        }
+      }
+
+      final getCurrentUser =
+          await _userInfoOnDeviceService.getUser(currentUser.value!.uid);
+
+      final newUser = getCurrentUser;
+      newUser?.useBiometric = value ?? !(getCurrentUser?.useBiometric ?? false);
+      currentUser.value = newUser;
+
+      await _userInfoOnDeviceService.addOrUpdate(newUser!);
+
+      currentUser.update((val) {
+        val?.useBiometric = newUser.useBiometric;
+      });
+
+      return true;
+    } catch (e, s) {
+      exceptionHandler(GenericException(error: e, stack: s));
       showErrorModal(AppLocalizations.current.notSupportBiometrics);
       return false;
     }
-
-    if (authRequired == true) {
-      final authenticated =
-          await _biometricsService.authenticateWithBiometrics();
-      if (!authenticated) {
-        return false;
-      }
-    }
-
-    final newUser = currentUser.value;
-    newUser?.useBiometric =
-        value ?? !(currentUser.value?.useBiometric ?? false);
-    currentUser.value = newUser;
-
-    await _userInfoOnDeviceService.addOrUpdate(newUser!);
-    currentUser.refresh();
-    return true;
   }
 
   checkAuth() async {
     try {
       var uid = await _secureLocalDataSource.getLastData(USERNAME_KEY);
+
+      if (AppConfig.customerId != "" && AppConfig.customerId != uid) {
+        await signOut();
+
+        uid = AppConfig.customerId;
+        final failureOrUserInfor = await _authenRepository.getUserStatus(uid);
+
+        failureOrUserInfor.fold((l) async {
+          if ((l.error is ServerException) &&
+              (l.error as ServerException).codeDesc == "IDENTITY_NOT_FOUND") {
+            Get.to(()=>RegisterAccountPage());
+          }
+        }, (r) async {});
+
+        return;
+      }
 
       final tokenString =
           await _secureLocalDataSource.getLastData(LOCAL_ACCESS_TOKEN_AUTH);
@@ -111,7 +152,6 @@ class AuthController extends GetxController {
           }
           //TODO: Kiểm tra trạng thái User
         } else {
-          final appController = Get.find<AppController>();
           final password =
               await _secureLocalDataSource.getLastData(PASSWORD_KEY);
           if (password != null && uid != null) onLogin(uid, password);
@@ -125,7 +165,7 @@ class AuthController extends GetxController {
     }
   }
 
-  void signOut() async {
+  signOut() async {
     try {
       await _secureLocalDataSource.removeData(LOCAL_ACCESS_TOKEN_AUTH);
       await _secureLocalDataSource.removeData(FULLNAME_KEY);
@@ -140,7 +180,7 @@ class AuthController extends GetxController {
 
   loginWithBiometric() async {
     try {
-      var authenticated = await _biometricsService.authenticateWithBiometrics();
+      var authenticated = await biometricsService.authenticateWithBiometrics();
 
       if (authenticated == true && currentUser.value != null) {
         onLogin(currentUser.value!.uid, currentUser.value!.password);
@@ -150,7 +190,8 @@ class AuthController extends GetxController {
     }
   }
 
-  onLogin(String uid, String password) async {
+  onLogin(String uid, String password,
+      {bool isFromCreateAccount = false}) async {
     try {
       showProgress();
       authStatus.value = AuthenticationStatus.unauthenticated;
@@ -166,6 +207,7 @@ class AuthController extends GetxController {
             String error =
                 (failure.error as dynamic).response!.data['error_description'];
             if (error.toLowerCase().contains("no account") ||
+                error.toLowerCase().contains("account not found") ||
                 error.contains("Không tìm thấy thông tin tài khoản") ||
                 error.contains("Tài khoản không tồn tại")) {
               showNotifyModal(exceptionHandler(failure),
@@ -192,6 +234,20 @@ class AuthController extends GetxController {
       }
 
       authStatus.value = AuthenticationStatus.authenticated;
+
+      if (isFromCreateAccount != true) {
+        final hostAppController = Get.find<HostAppController>();
+        await hostAppController.checkCerts();
+      } else {
+        // if (isShowBuyCert == true && AppConfig.packageDefault != "") {
+        //   Get.to(() => CertificatePackScreen());
+        // }
+      }
+
+      if (Get.isRegistered<HomeController>() == true) {
+        final homeController = Get.find<HomeController>();
+        homeController.onReady();
+      }
 
       await _secureLocalDataSource.saveData(
           LOCAL_ACCESS_TOKEN_AUTH, token!.toJson());

@@ -79,25 +79,23 @@ class AppController extends BaseController<AppState> {
   }
 
   void doLogout() async {
-    if (userLogin?.pass == null) {
-      await oauth.logout();
-    }
-
-    state = state.copyWith.call(
-      userLogin: userLogin?.copyWith(
-        accessToken: null,
-        refreshToken: null,
-      ),
+    final newUser = userLogin?.copyWith(
+      accessToken: null,
+      refreshToken: null,
     );
-
+    state = state.copyWith.call(
+      userLogin: newUser,
+    );
+    await oauth.logout();
     ref
         .read(sharedPreferencesProvider)
-        .setString('user', jsonEncode(state.userLogin?.toJson()));
+        .setString('user', jsonEncode(newUser?.toJson()));
 
     AppRoutes.pushReplacement(context, const LoginPage());
   }
 
-  void removeUserInfo() {
+  Future<void> removeUserInfo() async {
+    await oauth.logout();
     ref.read(sharedPreferencesProvider).remove('user');
     state = state.copyWith.call(
       userLogin: null,

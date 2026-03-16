@@ -30,7 +30,8 @@ class ServicePackRepository {
   }
 
   // ignore: long-method
-  createServicePackOrder(ServicePackModel packModel, String referralCode) async {
+  createServicePackOrder(ServicePackModel packModel, String referralCode,
+      String? credentialId) async {
     var refId = '';
     var refUrl = '';
     try {
@@ -61,6 +62,7 @@ class ServicePackRepository {
       }
 
       var params = {"Items": carts, "RaCode": referralCode};
+      if (credentialId != null) params['credentialId'] = credentialId;
 
       var result = await remoteDataSource.createServicePackOrder(params);
 
@@ -105,7 +107,8 @@ class ServicePackRepository {
         } else {
           return Left(GenericException(
             error: ServerException(
-              message: AppLocalizations.current.service_pack_create_order_failed,
+              message:
+                  AppLocalizations.current.service_pack_create_order_failed,
               code: -1,
               codeDesc: result.codeDesc,
             ),

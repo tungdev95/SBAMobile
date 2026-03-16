@@ -1,6 +1,8 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../i18n/generated_locales/l10n.dart';
 import '../../../widgets/app_button_widget.dart';
 import '../../../widgets/dialog/common_dialog.dart';
@@ -26,14 +28,9 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
-  late BuyCertificateController controller;
-
-  _OrderDetailScreenState() {
-    final isRegistered = Get.isRegistered<BuyCertificateController>();
-    controller = isRegistered
-        ? Get.find<BuyCertificateController>()
-        : Get.put(BuyCertificateController());
-  }
+  final controller = Get.isRegistered<BuyCertificateController>()
+      ? Get.find<BuyCertificateController>()
+      : Get.put(BuyCertificateController());
 
   _renderItemInfo(String label, String content,
       {Color? contentColor,
@@ -285,7 +282,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 child: Column(
                   children: [
                     _renderItemInfo(AppLocalizations.current.orderCode,
-                        value.dhsxkdCustomerInfo.maGd,
+                        value.dhsxkdCustomerInfo.maGd ?? "",
                         contentFontWeight: FontWeight.w700,
                         contentColor: const Color(0xff08285C),
                         isShowCopyButton: true),
@@ -375,8 +372,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         child: Expanded(
                             child: AppButtonWidget(
                           doublePadding: 12,
-                          backgroundColor: const Color(0xffE0F0FF),
-                          labelColor: const Color(0xff0D75D6),
+                          // backgroundColor: const Color(0xffE0F0FF),
+                          // labelColor: const Color(0xff0D75D6),
+                          labelColor: HexColor(AppConfig.colorPrimaryBtn),
+                          backgroundColor: HexColor(AppConfig.colorSecondBtn),
+                          border: AppConfig.colorPrimaryBtn == "#0D75D6"
+                              ? null
+                              : Border.all(
+                                  width: 1.5,
+                                  color: HexColor(AppConfig.colorPrimaryBtn)),
                           label: AppLocalizations.current.cancel_order,
                           onTap: () {
                             // todo huy don hang
@@ -403,6 +407,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           child: AppButtonWidget(
                         doublePadding: 12,
                         label: AppLocalizations.current.Continue,
+                        backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                         onTap: () {
                           if (value.canContinue()) {
                             controller.handleOrderModelByStatus(value);

@@ -40,11 +40,11 @@ class ServicePackController extends GetxController {
 
   final formKey = GlobalKey<FormBuilderState>();
 
-  onFormSubmit(ServicePackModel packageModel) {
+  onFormSubmit(ServicePackModel packageModel, String? credentialId) {
     if (formKey.currentState!.saveAndValidate()) {
       final values = formKey.currentState!.value;
       var referralCode = values["referralCode"] ?? "";
-      createPersonalSignTurnOrder(packageModel, referralCode);
+      createPersonalSignTurnOrder(packageModel, referralCode, credentialId);
     }
   }
 
@@ -90,16 +90,18 @@ class ServicePackController extends GetxController {
     nvtruong: Hàm thanh toán đơn hàng (hàm này sẽ connect api qua vnpt dưới dạng webview)
    */
   // ignore: long-method
-  Future<void> createPersonalSignTurnOrder(ServicePackModel packageModel, String referralCode) async {
+  Future<void> createPersonalSignTurnOrder(ServicePackModel packageModel,
+      String referralCode, String? credentialId) async {
     try {
-
-      final tokenString = await secureLocalDataSource.getLastData(LOCAL_ACCESS_TOKEN_AUTH);
+      final tokenString =
+          await secureLocalDataSource.getLastData(LOCAL_ACCESS_TOKEN_AUTH);
       if (tokenString == null) {
         showErrorModal(AppLocalizations.current.serviceSomethingWentWrong);
         return;
       }
 
-      final failureOrServicePackItems = await _servicePackRepository.createServicePackOrder(packageModel, referralCode);
+      final failureOrServicePackItems = await _servicePackRepository
+          .createServicePackOrder(packageModel, referralCode, credentialId);
       failureOrServicePackItems.fold(
         (failure) => {
           Get.back(),

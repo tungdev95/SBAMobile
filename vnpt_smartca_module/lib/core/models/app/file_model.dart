@@ -19,11 +19,11 @@ class FileModel {
   static FileModel? fromDoc(Map element) {
     try {
       return FileModel(
-          name: element['name'],
-          size: element['size'],
+          name: element['name'] ?? "",
+          size: element['size'] ?? "",
           data: element['data'] ?? element["dataSigned"] ?? "",
           file: File(""),
-          path: element['name']);
+          path: element['name'] ?? "");
     } catch (e) {}
     return null;
   }

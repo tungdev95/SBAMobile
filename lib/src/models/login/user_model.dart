@@ -44,7 +44,6 @@ class UserModel extends Equatable with _$UserModel {
   @override
   List<Object?> get props => [
         accessToken,
-        refreshToken,
       ];
 }
 

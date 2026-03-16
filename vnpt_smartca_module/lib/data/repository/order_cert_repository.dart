@@ -222,4 +222,52 @@ class OrderCertRepository {
     }
   }
 
+  Future<Either<GenericException, SmartCAApiResponse>> createChangeInfoOrder(String certSerial, String newName) async {
+    try {
+      final remoteData = await remoteDataSource.createChangeInfoOrder(certSerial, newName);
+      return (remoteData.code == 0 || remoteData.code == 60014)
+          ? Right(remoteData)
+          : Left(GenericException(
+          error: ServerException(
+            message: remoteData.message,
+            code: remoteData.code,
+            codeDesc: remoteData.codeDesc,
+          )));
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
+
+  Future<Either<GenericException, SmartCAApiResponse>> getRefInfo(String value) async {
+    try {
+      final remoteData = await remoteDataSource.getRefInfo(value);
+      return remoteData.code == 0
+          ? Right(remoteData)
+          : Left(GenericException(
+          error: ServerException(
+            message: remoteData.message,
+            code: remoteData.code,
+            codeDesc: remoteData.codeDesc,
+          )));
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
+
+  Future<Either<GenericException, SmartCAApiResponse>> getAllOrder() async {
+    try {
+      final remoteData = await remoteDataSource.getAllOrder();
+      return remoteData.code == 0
+          ? Right(remoteData)
+          : Left(GenericException(
+          error: ServerException(
+            message: remoteData.message,
+            code: remoteData.code,
+            codeDesc: remoteData.codeDesc,
+          )));
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
+
 }

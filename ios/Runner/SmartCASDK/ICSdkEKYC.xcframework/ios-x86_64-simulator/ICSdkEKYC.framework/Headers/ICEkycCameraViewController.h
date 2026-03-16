@@ -3,7 +3,7 @@
 //  ICSdkEKYC
 //
 //  Created by MinhMinh on 08/12/2022.
-//  Copyright © 2022 iOS Team IC - VNPT IT. All rights reserved.
+//  Copyright © 2022 iOS Team IC - Innovation Center. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -11,296 +11,526 @@
 #import "ICEkycCameraPresenter.h"
 #import "ICEkycBaseViewController.h"
 
+#import "ICEkycAddFace.h"
+#import "ICEkycAddInformation.h"
+#import "ICEkycSearchFace.h"
+#import "ICEkycVerifyFace.h"
+
+
 NS_ASSUME_NONNULL_BEGIN
 
 
 @protocol ICEkycCameraDelegate <NSObject>
 
 @required
-- (void) icEkycGetResult; // getResult => icEkycGetResult
+/**
+ * Phương thức DELEGATE của SDK trả dữ liệu ra phía ngoài ứng dụng
+ * Dữ liệu trả ra là các thuộc tính của ICEKYCSavedData
+ * Lấy thông tin dữ liệu như sau
+ * Đối với Swift: ICEKYCSavedData.shared().<property>
+ * Đối với ObjectiveC: [ICEKYCSavedData shared].<property>
+ */
+- (void) icEkycGetResult;
 
 @optional
-- (void) icEkycCameraClosedWithType:(ScreenType)type; // closeSDK => icEkycCameraClosedWithType. ScreenType => StepType
+
+/**
+ * Phương thức DELEGATE của SDK khi người dùng chủ động thoát SDK
+ *
+ * @param type - Màn hình hoặc trạng thái cuối cùng khi người dùng thoát SDK.
+ * CancelPermission,   // Thoát SDK tại màn hình Yêu cầu cấp quyền truy cập máy ảnh
+ * HelpDocument,       // Thoát SDK tại màn hình Hướng dẫn chụp ảnh giấy tờ
+ * ScanQRCode,         // Thoát SDK tại màn hình Quét mã QR
+ * CaptureFront,       // Thoát SDK tại màn hình Chụp ảnh giấy tờ mặt trước
+ * CaptureBack,        // Thoát SDK tại màn hình Chụp ảnh giấy tờ mặt sau
+ * HelpOval,           // Thoát SDK tại màn hình Hướng dẫn chụp ảnh chân dung Nâng cao Oval
+ * AuthenFarFace,      // Thoát SDK tại màn hình Chụp ảnh chân dung Oval xa
+ * AuthenNearFace,     // Thoát SDK tại màn hình Chụp ảnh chân dung Oval gần
+ * HelpFaceBasic,      // Thoát SDK tại màn hình Hướng dẫn chụp ảnh chân dung cơ bản
+ * CaptureFaceBasic,   // Thoát SDK tại màn hình Chụp ảnh chân dung cơ bản
+ * Processing,         // Thoát SDK tại màn hình Xử lý dữ liệu
+ * Done,               // Thoát SDK khi đã thực hiện xong luồng eKYC
+ */
+- (void) icEkycCameraClosedWithType:(ScreenType)type;
 
 @end
 
 
 @interface ICEkycCameraViewController : ICEkycBaseViewController<ICEkycCameraViewProtocol>
 
-// Giá trị này xác định phiên bản khi sử dụng Máy ảnh tại bước chụp ảnh chân dung. Mặc định là normal
-@property (nonatomic) VersionSdk versionSdk; // đổi từ isVersion sang versionSdk
+@property (nonatomic) ICEkycCameraPresenter *presenter;
 
-// Giá trị này xác định kiểu giấy tờ để sử dụng. Mặc định là IdentityCard
-@property (nonatomic) TypeDocument documentType; // đổi từ isType sang documentType
 
-/* Giá trị này xác định việc luồng làm việc khi OCR giấy tờ và ảnh chân dung, bao gồm:
- • full, // thực hiện eKYC đầy đủ các bước: chụp mặt trước, chụp mặt sau và chụp ảnh chân dung
- • ocrFront, // thực hiện OCR giấy tờ một bước: chụp mặt trước
- • ocrBack, // thực hiện OCR giấy tờ một bước: chụp mặt trước
- • ocrFrontAndBack, // thực hiện OCR giấy tờ đầy đủ các bước: chụp mặt trước, chụp mặt sau
- • compare, // thực hiện so sánh khuôn mặt với mã ảnh chân dung được truyền từ bên ngoài
- • verifyFace, // thực hiện xác thực khuôn mặt với số ID, kiểu giấy tờ được truyền từ bên ngoài
- • searchFace, // thực hiện tìm kiếm thông tin dựa vào khuôn mặt
- Mặc định là full
- */
+// THUỘC TÍNH CẦN THIẾT ĐỂ ỨNG DỤNG CÓ THỂ NHẬN DỮ LIỆU SAU KHI THỰC HIỆN EKYC 
+@property (weak, nonatomic) id<ICEkycCameraDelegate> cameraDelegate;
+
+
+/*========== CÁC THUỘC TÍNH CƠ BẢN CÀI ĐẶT CHUNG SDK ==========*/
+
+// Các thuộc tính bảo mật dùng để kết nối đến dịch vụ eKYC
+// Có thể lấy thông tin tại địa chỉ https://ekyc.vnpt.vn/admin-dashboard/console/project-manager
+// Mã bảo mật khi thực hiện sử dụng dịch vụ eKYC, có định dạng "Bearer + (Access token)". Mặc định là ""
+@property (nonatomic) NSString *accessToken;
+
+// Mã bảo mật khi thực hiện sử dụng dịch vụ eKYC. Mặc định là ""
+@property (nonatomic) NSString *tokenId;
+
+// Mã bảo mật khi thực hiện sử dụng dịch vụ eKYC. Mặc định là ""
+@property (nonatomic) NSString *tokenKey;
+
+// Giá trị này xác định phiên bản khi sử dụng Máy ảnh tại bước chụp ảnh chân dung. Mặc định là Normal
+// - Normal: chụp ảnh chân dung 1 hướng
+// - ProOval: chụp ảnh chân dung xa gần
+@property (nonatomic) VersionSdk versionSdk;
+
+// Giá trị xác định luồng thực hiện eKYC. Mặc định là none, sử dụng khi gọi các phương thức trong SDK
+// - none: không thực hiện luồng nào cả
+// - full: thực hiện eKYC đầy đủ các bước: chụp mặt trước, chụp mặt sau và chụp ảnh chân dung
+// - ocrFront: thực hiện OCR giấy tờ một bước: chụp mặt trước
+// - ocr: thực hiện OCR giấy tờ đầy đủ các bước: chụp mặt trước, chụp mặt sau
+// - face: thực hiện so sánh khuôn mặt với mã ảnh chân dung được truyền từ bên ngoài
 @property (nonatomic) FlowType flowType;
 
+// Giá trị này xác định ngôn ngữ được sử dụng trong SDK. Mặc định là icekyc_vi
+// - icekyc_vi: Tiếng Việt
+// - icekyc_en: Tiếng Anh
+@property (nonatomic) NSString *languageSdk;
 
+// Giá trị này dùng để đảm bảo mỗi yêu cầu (request) từ phía khách hàng sẽ không bị thay đổi.
+// Sau mỗi request, dữ liệu trả về sẽ bao gồm giá trị challengeCode. Mặc định là "11111"
+@property (nonatomic) NSString *challengeCode;
 
-/*========== CÁC GIÁ TRỊ CÀI ĐẶT CHUNG SDK ==========*/
-// Giá trị này xác định ngôn ngữ được sử dụng trong SDK. Mặc định là vi
-@property (nonatomic) NSString *languageSdk; // "vi" languageApplication => languageSdk
+// Giá trị này được truyền vào để xác định nhiều luồng giao dịch trong cùng một phiên. Mặc định ""
+// Trường hợp ClientSession rỗng, SDK sẽ tạo mới ClientSession
+@property (nonatomic) NSString *inputClientSession;
 
-@property (nonatomic) NSBundle *languageBundle;
+// Giá trị này xác định việc có hiển thị màn hình trợ giúp hay không. Mặc định là false
+@property (nonatomic) BOOL isShowTutorial;
 
-// Giá trị số ID được nhập vào để thực hiện chức năng xác thực khuôn mặt. Mặc định là ""
-@property (nonatomic) NSString *verifyId;
+// Giá trị bật hoặt tắt chức năng hướng dẫn, mặc định là false
+@property (nonatomic) BOOL isDisableTutorial;
 
-// Giá trị được nhập vào để thực hiện chức năng xác thực khuôn mặt. Mặc định là "CARD_ID"
-@property (nonatomic) NSString *idType;
+// Giá trị này xác định việc có hiển thị màn hình Nghị định 13 hay không. Mặc định là không
+@property (nonatomic) BOOL isShowRequiredPermissionDecree;
 
-// Giá trị này dùng để đảm bảo mỗi yêu cầu (request) từ phía khách hàng sẽ không bị thay đổi. Sau mỗi request, dữ liệu trả về sẽ bao gồm giá trị challengeCode. Mặc định là "11111"
-@property (nonatomic) NSString *challengeCode; // "11111"
+// Giá trị xác định việc bổ sung sử dụng màn hình hướng dẫn "chụp ảnh giấy tờ" dạng Video (sau màn hình hướng dẫn bằng Ảnh). Mặc định là false
+// Hướng dẫn chụp giấy tờ bằng ảnh => Hướng dẫn chụp giấy tờ bằng Video => Chụp giấy tờ
+@property (nonatomic) BOOL isEnableTutorialCardAdvance;
 
-// Giá trị này xác định tên đơn vị, tên khách hàng sử dụng SDK eKYC. Mặc định ""
-@property (nonatomic) NSString *unitCustomer;
+// Giá trị xác định việc sử dụng màn hình hướng dẫn "chụp ảnh khuôn mặt" dạng mặc định hoặc chỉnh sửa nâng cao. Mặc định là HelpV1
+// - HelpDefault là giá trị cho bản hướng dẫn mặc định của SDK
+// - HelpVideoFullScreen là giá trị cho bản hướng dẫn bằng Video Full Screen
+// - HelpVideoAudioText là giá trị cho bản hướng dẫn nâng Video và Nội dung đi kèm
+// Lưu ý
+// - Khi sử dụng HelpV1. YÊU CẦU truyền tên Video hướng dẫn từ phía ngoài Ứng dụng vào SDK
+// - Khi sử dụng HelpV2. YÊU CẦU truyền tên Audio & Video hướng dẫn từ phía ngoài Ứng dụng vào SDK
+@property (nonatomic) ModelHelp modelHelpFace;
 
-// @property (nonatomic) NSString *resourceCustomer;
-// @property (nonatomic) NSString *hashFrontCompareFace; bỏ
+// Bật chức năng hiển thị nút bấm "Bỏ qua hướng dẫn" tại các màn hình hướng dẫn bằng video. Mặc định false
+@property (nonatomic) BOOL isEnableGotIt;
 
-// Giá trị này được truyền vào để xác định nhiều luồng giao dịch trong một phiên. Mặc định ""
-@property (nonatomic) NSString *inputClientSession; // clientSession => inputClientSession
+// Giá trị này xác định việc hiển thị nút bấm chức năng xoay máy ảnh trước sang máy ảnh sau ở phiên bản chụp chân dung cơ bản. Mặc định false
+@property (nonatomic) BOOL isShowSwitchCamera;
 
+// Giá trị này xác định việc sử dụng máy ảnh phía trước hoặc phía sau khi chụp ảnh mặt người. Mặc định PositionFront
+// - PositionFront: Máy ảnh phía trước tại bước chụp chân dung
+// - PositionBack: Máy ảnh phía sau tại bước chụp chân dung
+@property (nonatomic) CameraPosition cameraPositionForPortrait;
 
-@property (nonatomic) NSString *hashImageCompare; // hashFaceCompare => hashImageCompare
+// Thuộc tính zoom camera có giá trị từ 1.0 đến 3.0. Mặc định 1.5
+@property (nonatomic) CGFloat zoomCamera;
 
+// Giá trị quy định thời gian để đóng SDK khi thực hiện eKYC không thành công. Mặc định 60 giây
+@property (nonatomic) NSInteger expiresTime;
 
-/**
- */
-//@property (nonatomic) NSDictionary *objectAddFace; // bỏ
-// @property (nonatomic) UIImage *imageFaceToCompare; bỏ
+// Tắt chức năng gửi yêu cầu (call API) thực hiện eKYC. Mặc định false
+@property (nonatomic) BOOL isTurnOffCallService;
 
+// Giá trị quy định các bước của từng luồng eKYC trong cùng 1 phiên. Mặc định 0
+@property (nonatomic) NSInteger stepId;
 
-/**
- */
-//@property (nonatomic) NSString *hashFaceVoice; // bỏ
+// Giá trị xác định tỉ lệ nén ảnh để thực hiện giảm dung lượng ảnh. Mặc định 0.6
+@property (nonatomic) CGFloat compressionQualityImage;
 
+// Bật chức năng tự động tăng độ sáng màn hình chụp chân dung Oval. Mặc định false
+@property (nonatomic) BOOL isEnableAutoBrightness;
 
-/**
- */
+// Cấu hình độ sáng màn hình, giá trị nằm trong khoảng 0.0 đến 1.0. Mặc định 0.8
+@property (nonatomic) CGFloat screenBrightness;
 
-// @property (nonatomic) BOOL isShowResult; bỏ
-// @property (nonatomic) BOOL isShowResultCheckLiveness3DScan; bỏ
+// Khi chụp ảnh thành công (qua được bước kiểm tra tại Client)
+// - Nếu FALSE => vẫn hiển thị như hiện tại
+// - Nếu TRUE => thì không hiển thị màn hình Preview nữa, mà thực hiện các công việc như nhấn vào nút Tiếp theo
+@property (nonatomic) BOOL isSkipPreview;
 
+/*========== CÁC THUỘC TÍNH VỀ GIẤY TỜ ==========*/
 
-// Giá trị này xác định việc có hiển thị màn hình trợ giúp hay không. Mặc định là false
-@property (nonatomic) BOOL isShowTutorial; // isShowHelp => isShowTutorial
+// Giá trị này xác định kiểu giấy tờ để sử dụng. Mặc định là IdentityCard (Chứng minh nhân dân)
+// - IdentityCard: Chứng minh thư nhân dân, Căn cước công dân
+// - IDCardChipBased: Căn cước công dân gắn Chip
+// - Passport: Hộ chiếu
+// - DriverLicense: Bằng lái xe
+// - MilitaryIdCard: Chứng minh thư quân đội
+@property (nonatomic) TypeDocument documentType;
 
-@property (nonatomic) ModelHelp modelHelpCard;
+// Giá trị mã ảnh giấy tờ mặt trước được truyền vào để thực hiện ocrBack. Mặc định ""
+@property (nonatomic) NSString *hashFrontOCR;
 
-@property (nonatomic) ModelHelp modelHelpFace; // isVersionHelpVideoFullScreen => modelHelpFace
-
-// bật/tắt chức năng hướng dẫn chụp ảnh thẻ nâng cao
-// @property (nonatomic) BOOL isEnableTutorialCardAdvance; // bỏ
-
-// Giá trị này xác định việc hiển thị nút bấm chức năng xoay máy ảnh trước sang máy ảnh sau. Mặc định false
-@property (nonatomic) BOOL isShowSwitchCamera; // isShowRotateCamera => isShowSwitchCamera
-
-// Giá trị này xác định việc sử dụng máy ảnh phía trước hoặc phía sau khi chụp ảnh mặt người. Mặc định PositionFront
-@property (nonatomic) CameraPosition cameraPositionForPortrait; // BOOL isWantRotateCameraBack => CameraPosition cameraPositionForPortrait
-
-// Giá trị này xác định việc có xác thực số ID với mã tỉnh thành, quận huyện, xã phường tương ứng hay không. Kiểm tra quy tắc của số ID. Mặc định là false
-@property (nonatomic) BOOL isValidatePostcode;
-
-// Giá trị này xác định việc có thực hiện so sánh khuôn mặt chân dung trong giấy tờ và mặt người. Mặc định false
-@property (nonatomic) BOOL isEnableCompare; // đổi từ isCompare sang isEnableCompare
-
-// Giá trị này xác định việc có tự động đăng ký khuôn mặt và thông tin lên hệ thống hay không. Mặc định là false
-// @property (nonatomic) BOOL isAutoAddFace; // đổi từ isAddFace sang isAutoAddFace => Bỏ
-
-@property (nonatomic) BOOL isCheckLivenessFace;
-
+// Bật chức năng kiểm tra "ảnh giấy tờ" chụp trực tiếp hay không. Mặc định false
 @property (nonatomic) BOOL isCheckLivenessCard;
 
-@property (nonatomic) BOOL isCheckMaskedFace; // đổi từ isCheckMaskFace sang isCheckMaskedFace
+// Bật chức năng quét mã QR. Hiển thị màn hình quét mã trước màn hình chụp giấy tờ mặt trước. Mặc định false
+@property (nonatomic) BOOL isEnableScanQRCode;
 
-@property (nonatomic) BOOL isEnableWaterMark;
+// Bật chức năng hiển thị popup kết quả quét mã QR. Mặc định false
+@property (nonatomic) BOOL isShowQRCodeResult;
 
+// Giá trị quy định mức kiểm tra giấy tờ ở SDK, sử dụng Model AI Offline. Mặc định None
+// - None: Không thực hiện kiểm tra ảnh khi chụp ảnh giấy tờ
+// - Basic: Kiểm tra sau khi chụp ảnh cơ bản
+// - Medium: Kiểm tra sau khi chụp ảnh Nâng cao → hiển thị chi tiết lỗi chụp ảnh
+// - Advance: Kiểm tra ảnh hợp lệ trước khi chụp (hiển thị nút chụp)
+@property (nonatomic) TypeValidateDocument validateDocumentType;
 
-@property (nonatomic) BOOL isCompareFaces;
+// Giá trị này xác định việc có xác thực số ID với mã tỉnh thành, quận huyện, xã phường tương ứng hay không. Kiểm tra quy tắc của số ID. Mặc định là false
+@property (nonatomic) BOOL isValidatePostcode;
+
+// Giá trị này xác định danh sách các giấy tờ không được sử dụng
+@property (nonatomic) NSMutableArray<NSNumber *> *listBlockedDocument;
+
+/*========== CÁC THUỘC TÍNH VỀ KHUÔN MẶT ==========*/
+
+// Giá trị xác định việc hình thức chụp ảnh chân dung Oval. Mặc định là FarAndNear
+// - FarAndNear: thực hiện chụp ảnh Oval xa và Oval gần
+// - OnlyFar: thực hiện chụp ảnh Oval xa
+// - OnlyNear: thực hiện chụp ảnh Oval gần
+@property (nonatomic) VersionFaceOval modeVersionFaceOval;
+
+// Bật chức năng so sánh "ảnh chân dung với ảnh chân dung" hoặc "ảnh chân dung với ảnh giấy tờ chứa chân dung". Mặc định false
+@property (nonatomic) BOOL isEnableCompare;
+
+// Giá trị mã ảnh (ảnh chân dung hoặc ảnh giấy tờ chứa chân dung) được truyền vào để thực hiện so sánh khuôn mặt. Mặc định ""
+@property (nonatomic) NSString *hashImageCompare;
+
+// Bật chức năng so sánh ảnh chụp chân dung với ảnh chân dung (dạng ảnh thẻ hoặc ảnh khuôn mặt). Mặc định false
+// SDK sẽ thực hiện chức năng này khi đã bật chức năng so sánh (isEnableCompare = YES)
+@property (nonatomic) BOOL isCompareGeneral;
+
+// Giá trị quy định ngưỡng so sánh ảnh chụp chân dung với ảnh chân dung (dạng ảnh thẻ hoặc ảnh khuôn mặt). Mặc định "normal"
+// Thuộc tính này được sử dụng khi đã bật chức năng so sánh "ảnh chụp chân dung" với "ảnh chân dung" (isEnableCompare = YES) và (isCompareGeneral = YES)
 @property (nonatomic) NSString *thresLevel;
 
+// Giá trị xác định cơ chế kiểm tra ảnh chụp chân dung. Mặc định là NoneCheckFace
+// - NoneCheckFace: Không thực hiện kiểm tra ảnh chân dung chụp trực tiếp hay không
+// - IBeta: Kiểm tra ảnh chân dung chụp trực tiếp hay không iBeta (phiên bản hiện tại)
+// - Standard: Kiểm tra ảnh chân dung chụp trực tiếp hay không Standard (phiên bản mới)
+@property (nonatomic) ModeCheckLivenessFace checkLivenessFace;
 
-@property (nonatomic) BOOL isEnableScanQRCode; // đổi isVersionQRCode sang isEnableScanQRCode
-
-// Giá trị này xác định thời gian hết hạn quét mã QR, hết thời gian, SDK sẽ cảnh báo để thử lại hoặc bỏ qua. Mặc định là 30 (đơn vị giây)
-@property (nonatomic) NSInteger timeOutScanQRCode;
-
-
-// @property (nonatomic) BOOL isCustomize; bỏ
-
-@property (nonatomic) BOOL isEnableGotIt; // isSkipVoiceVideo => isEnableGotIt
-
-@property (nonatomic) TypeValidateDocument validateDocumentType;// BOOL isValidateDocument => TypeValidateDocument validateDocumentType
-
-@property (nonatomic) NSInteger expriseTime; // thêm mới (chuyển từ savedata sang thành thuộc tính của camera)
-
-@property (nonatomic) BOOL isTurnOffCallService; // isDisableCallAPI => isTurnOffCallService
+// Bật chức năng kiểm tra "ảnh chân dung" có bị che mặt hay không. Mặc định là false
+@property (nonatomic) BOOL isCheckMaskedFace;
 
 
-// Record video
+
+/*========== CÁC THUỘC TÍNH VỀ VIỆC QUAY VIDEO LẠI QUÁ TRÌNH THỰC HIỆN OCR VÀ FACE TRONG SDK ==========*/
+
+// Bật chức năng quay lại video thao tác chụp ảnh chân dung Oval. Mặc định false
 @property (nonatomic) BOOL isRecordVideoFace;
+
+// Bật chức năng quay lại video thao tác chụp ảnh giấy tờ. Mặc định false
 @property (nonatomic) BOOL isRecordVideoDocument;
-@property (nonatomic) BOOL isRecordVideoScanQRCode;
-
-@property (nonatomic) int videoRecordWidth;
-@property (nonatomic) int videoRecordHeight;
-@property (nonatomic) int videoRecordFPS;
-@property (nonatomic) float videoScale;
-
-// =====
 
 
-@property (nonatomic) NSString *baseUrl;
 
+/*========== CÁC THUỘC TÍNH VỀ MÔI TRƯỜNG PHÁT TRIỂN - URL TÁC VỤ TRONG SDK ==========*/
+
+// Bật chức năng "WaterMark", thực hiện ký lên ảnh để đảm bảo ảnh được chụp từ SDK. Mặc định false
+// Trường hợp bật chức năng này (isEnableWaterMark = true), cần cấu hình URL tương ứng với bộ TOKEN
+@property (nonatomic) BOOL isEnableWaterMark;
+
+// Bật chức năng thêm "Metadata" vào ảnh. Mặc định false
+@property (nonatomic) BOOL isAddMetadataImage;
+
+// Thời gian timeout khi gọi api, mặc định 60s
+@property (nonatomic) NSInteger timeoutCallApi;
+
+// Giá trị tên miền chính của SDK. Mặc định ""
+@property (nonatomic) NSString *changeBaseUrl;
+
+// Đường dẫn đầy đủ thực hiện tải ảnh lên phía máy chủ để nhận mã ảnh. Mặc định "" 
 @property (nonatomic) NSString *urlUploadImage;
 
+// Đường dẫn đầy đủ thực hiện bóc tách thông tin giấy tờ. Mặc định "" 
 @property (nonatomic) NSString *urlOcr;
 
+// Đường dẫn đầy đủ thực hiện bóc tách thông tin mặt trước giấy tờ. Mặc định "" 
 @property (nonatomic) NSString *urlOcrFront;
 
-@property (nonatomic) NSString *urlOcrBack;
-
+// Đường dẫn đầy đủ thực hiện so sánh ảnh chụp khuôn mặt và ảnh giấy tờ chứa ảnh đại diện. Mặc định "" 
 @property (nonatomic) NSString *urlCompare;
 
+// Đường dẫn đầy đủ thực hiện so sánh ảnh chụp khuôn mặt và ảnh chân dung (dạng ảnh thẻ hoặc ảnh khuôn mặt). Mặc định "" 
 @property (nonatomic) NSString *urlCompareGeneral;
 
+// Đường dẫn đầy đủ thực hiện xác thực khuôn mặt và số giấy tờ. Mặc định "" 
 @property (nonatomic) NSString *urlVerifyFace;
 
+// Đường dẫn đầy đủ thực hiện đăng ký thông tin khuôn mặt. Mặc định "" 
 @property (nonatomic) NSString *urlAddFace;
 
-@property (nonatomic) NSString *urlCheckLivenessCard;
+// Đường dẫn đầy đủ thực hiện đăng ký thông tin định danh thẻ. Mặc định "" 
+@property (nonatomic) NSString *urlAddCardId;
 
-@property (nonatomic) NSString *urlCheckMaskFace;
+// Đường dẫn đầy đủ thực hiện kiểm tra ảnh giấy tờ chụp trực tiếp. Mặc định ""
+@property (nonatomic) NSString *urlLivenessCard;
 
+// Đường dẫn đầy đủ thực hiện kiểm tra ảnh chụp khuôn mặt có bị che hay không. Mặc định ""
+@property (nonatomic) NSString *urlCheckMaskedFace;
+
+// Đường dẫn đầy đủ thực hiện tìm kiếm khuôn mặt. Mặc định "" 
 @property (nonatomic) NSString *urlSearchFace;
 
+// Đường dẫn đầy đủ thực hiện kiểm tra ảnh chân dung chụp trực tiếp (phiên bản chụp ảnh chân dung Cơ bản). Mặc định "" 
 @property (nonatomic) NSString *urlLivenessFace;
 
+// Đường dẫn đầy đủ thực hiện kiểm tra ảnh chân dung chụp trực tiếp (phiên bản chụp ảnh chân dung Nâng cao Oval). Mặc định "" 
 @property (nonatomic) NSString *urlLivenessFace3D;
 
-@property (nonatomic) NSString *keyHeaderRequest; // headerKey => keyHeaderRequest
+// Đường dẫn Lưu log toàn bộ giao dịch ngay cả khi KH bị thao tác lỗi. Chỉ gửi khi bị lỗi
+@property (nonatomic) NSString *urlLogSdk;
 
-@property (nonatomic) NSString *valueHeaderRequest; // headerValue => valueHeaderRequest
+// Thông tin KEY:VALUE truyền vào Header. Mặc định [] 
+@property (nonatomic) NSMutableDictionary *headersRequest;
 
+// Ưu tiên TransactionPartnerID trong headersRequest
+// TransactionPartnerID OCR sử dụng cho khách hàng đối soát. Mặc định ""
+@property (nonatomic) NSString *transactionPartnerIdOCR;
 
-//Man
-//=================================
+// TransactionPartnerID OCR Front sử dụng cho khách hàng đối soát. Mặc định ""
+@property (nonatomic) NSString *transactionPartnerIdOCRFront;
 
-// @property (nonatomic) BOOL isProVoiceOval;
+// TransactionPartnerID Liveness Front sử dụng cho khách hàng đối soát. Mặc định ""
+@property (nonatomic) NSString *transactionPartnerIdLivenessFront;
 
-// ================================= ANIMATION NANE
-//
+// TransactionPartnerID Liveness Back sử dụng cho khách hàng đối soát. Mặc định ""
+@property (nonatomic) NSString *transactionPartnerIdLivenessBack;
+
+// TransactionPartnerID Compare Face sử dụng cho khách hàng đối soát. Mặc định ""
+@property (nonatomic) NSString *transactionPartnerIdCompareFace;
+
+// TransactionPartnerID Liveness Face sử dụng cho khách hàng đối soát. Mặc định ""
+@property (nonatomic) NSString *transactionPartnerIdLivenessFace;
+
+// TransactionPartnerID Masked Face sử dụng cho khách hàng đối soát. Mặc định ""
+@property (nonatomic) NSString *transactionPartnerIdMaskedFace;
+
+/*========== CHỈNH SỬA TÊN CÁC TỆP TIN HIỆU ỨNG - VIDEO HƯỚNG DẪN ==========*/
+
+// Tên hiệu ứng xoay quanh khung Oval ở màn hình chụp chân dung. Mặc định "" 
 @property (nonatomic) NSString *nameOvalAnimation;
-//
+
+// Tên hiệu ứng nhấp nháy cảnh báo trạng thái xác định ảnh ở màn hình chụp chân dung. Mặc định "" 
 @property (nonatomic) NSString *nameFeedbackAnimation;
-//
+
+// Tên hiệu ứng quét lên xuống ở màn hình quét mã QR. Mặc định "" 
 @property (nonatomic) NSString *nameScanQRCodeAnimation;
-//
+
+// Tên hiệu ứng xoay quanh khung viền ở màn hình hiển thị giấy tờ đã chụp. Mặc định "" 
 @property (nonatomic) NSString *namePreviewDocumentAnimation;
-//
-// tên. mặc định ""
+
+// Tên hiệu ứng nhấp nháy tròn ở màn hình Xử lý dũ liệu. Mặc định "" 
 @property (nonatomic) NSString *nameLoadSuccessAnimation;
 
+// Tên Audio hướng dẫn chụp ảnh khuôn mặt xa gần. Mặc định ""
+@property (nonatomic) NSString *nameHelpAudioFace;
 
-// ================================= VIDEO NANE
+// Tên Video hướng dẫn chụp ảnh khuôn mặt Oval. Mặc định "" 
 @property (nonatomic) NSString *nameHelpVideoFace;
+
+// Tên video hướng dẫn chụp ảnh giấy tờ. Sử dụng với bản hướng dẫn nâng cao của SDK. Mặc định "" 
 @property (nonatomic) NSString *nameHelpVideoDocument;
 
 
-// Thanh header: PA 1 nút đóng bên phải. PA 2 nút đóng bên trái. mặc định là 1
-@property (nonatomic) NSInteger styleHeader;
 
-// Họa tiết dưới nền mặc định có hiện
-@property (nonatomic) BOOL isUsingUnderBackground;
+/*========== CÁC THUỘC TÍNH VỀ CÀI ĐẶT MÀU SẮC GIAO DIỆN TRONG SDK ==========*/
 
-// màu nội dung Thanh header: Màu chữ và màu nút đóng. mặc định là FFFFFF
-@property (nonatomic) UIColor *colorContentHeader;
+// Vị trí nút đóng SDK trên thanh tiêu đề. Mặc định LeftButton
+// LeftButton - nút đóng bên trái
+// RightButton - nút đóng bên phải.
+@property (nonatomic) ModeButtonHeaderBar modeButtonHeaderBar;
 
-// màu nen Thanh header. mặc định là trong suốt
-@property (nonatomic) UIColor *colorBackgroundHeader;
+// Màu nội dung thanh tiêu đề: bao gồm màu chữ và màu nút đóng. Mặc định là FFFFFF
+@property (nonatomic) UIColor *contentColorHeaderBar;
 
-// Màu văn bản chính - Tiêu đề & Văn bản phụ. mặc định là FFFFFF
-@property (nonatomic) UIColor *colorContentMain;
+// Màu nền thanh tiêu đề. Mặc định là trong suốt
+@property (nonatomic) UIColor *backgroundColorHeaderBar;
 
-// Màu nền: dùng cho màn help + preview
-@property (nonatomic) UIColor *colorBackgroundMain;
+// Màu nội dung chính. Áp dụng cho toàn bộ các màn hình. Mặc định là 142730
+@property (nonatomic) UIColor *textColorContentMain;
 
-// Đường line trên hướng dẫn chụp GTTT. mặc định D9D9D9
-@property (nonatomic) UIColor *colorLine;
+// Màu tiêu đề chính. Mặc định 00A96F
+// Áp dụng cho Tiêu đề: CHỤP MẶT TRƯỚC, ẢNH MẶT TRƯỚC, Chấm tròn nhỏ ở màn hình Hướng dẫn, màn hình Preview 
+@property (nonatomic) UIColor *titleColorMain;
 
-// Button và Thanh hướng dẫn khi đưa mặt vào khung oval. mặc định 18D696. hiện đang thừa (Thanh hướng dẫn khi đưa mặt vào khung oval)
-@property (nonatomic) UIColor *colorBackgroundButton;
+// Màu nền chính. Mặc định là FFFFFF
+// Áp dụng cho màn Hướng dẫn (Help), màn xem trước (Preview) 
+@property (nonatomic) UIColor *backgroundColorMainScreen;
 
-//Màu text cho button và thanh hướng dẫn khi đưa mặt vào khung oval. mặc định 142730
-@property (nonatomic) UIColor *colorEkycTextButton;
+// Đường kẻ ngang ngăn cách các nội dung, mặc định 0x142730
+// Áp dụng trên các màn hình Hướng dẫn, các màn hình Cảnh báo 
+@property (nonatomic) UIColor *backgroundColorLine;
 
-// Màu nền chụp. document thì alpha = 0.5. face thì alpha = 1.0. mặc định 142730
-@property (nonatomic) UIColor *colorEkycCaptureBackground;
+// Màu nền nút bấm ở trạng thái hoạt động, mặc định 0x00A96F 
+@property (nonatomic) UIColor *backgroundColorActiveButton;
 
-// Màu hiệu ứng hiện đang thiếu (Thanh hướng dẫn khi đưa mặt vào khung oval). mặc định 18D696
-@property (nonatomic) UIColor *colorEkycEffect;
+// Màu nền nút bấm ở trạng thái không hoạt động, mặc định B8C1C6
+@property (nonatomic) UIColor *backgroundColorDeactiveButton;
 
-// Màu nút chụp ảnh. mặc định là FFFFFF
-@property (nonatomic) UIColor *colorEkycButtonCapture;
+// Màu tiêu đề nút bấm ở trạng thái hoạt động, mặc định FFFFFF 
+@property (nonatomic) UIColor *titleColorActiveButton;
 
-// Màu đường viền khung chụp mặt Oval. mặc định là FFFFFF
-@property (nonatomic) UIColor *colorEkycOval;
+// Màu tiêu đề nút bấm ở trạng thái không hoạt động, mặc định FFFFFF
+@property (nonatomic) UIColor *titleColorDeactiveButton;
 
+// Màu nền chụp ảnh giấy tờ, quét mã QR. Mặc định FFFFFF
+@property (nonatomic) UIColor *backgroundColorCaptureDocumentScreen;
 
-// màu Họa tiết dưới nền. mặc định 18D696
-@property (nonatomic) UIColor *colorEkycUnderBackgound;
-
-// hiển thị logo
-@property (nonatomic) BOOL isShowTrademark;
-
-// Logo mặc định là logo vnpt
-@property (nonatomic) UIImage *imageTrademark;
-
-// Kích thước logo mặc định 38x12
-@property (nonatomic) CGSize sizeLogo;
-
-// Màu nền cho pop up mặc định FFFFFF
-@property (nonatomic) UIColor *colorBackgroundPopup;
-
-// Màu văn bản trên popup. mặc định 142730
-@property (nonatomic) UIColor *colorEkycTextPopup;
+// Màu nền chụp ảnh chân dung. Mặc định FFFFFF alpha = 0.75
+@property (nonatomic) UIColor *backgroundColorCaptureFaceScreen;
 
 
-// Ngưỡng cho phép khi tìm kiếm khuôn mặt
-@property (nonatomic) NSInteger threshold;
+// Màu hiệu ứng cảnh báo ở màn chụp khuôn mặt Oval, mặc định 00A96F 
+@property (nonatomic) UIColor *effectColorNoticeFace;
 
-// Số lượng kết quả tối đa khi tìm kiếm khuôn mặt
-@property (nonatomic) NSInteger maxResult;
+// Màu chữ nội dung trong ô cảnh báo ở màn chụp khuôn mặt Oval, mặc định FFFFFF
+@property (nonatomic) UIColor *textColorNoticeFace;
 
-/* camera Delegate */
-@property (weak, nonatomic) id<ICEkycCameraDelegate> cameraDelegate;
+// Màu hiệu ứng cảnh báo giấy tờ không hợp lệ, mặc định CA2A2A
+@property (nonatomic) UIColor *effectColorNoticeInvalidFace;
 
-@property (nonatomic) ICEkycCameraPresenter *presenter;
+// Màu hiệu ứng Nội dung mô tả khi giấy tờ hợp lệ. mặc định 18D696 
+@property (nonatomic) UIColor *colorContentFaceEffect;
 
-#pragma mark - Các phương thức
+// Màu hiệu ứng cảnh báo giấy tờ hợp lệ, mặc định 00A96F
+@property (nonatomic) UIColor *effectColorNoticeValidDocument;
 
-/** Phương thức thực hiện Đăng ký THÔNG TIN CÁ NHÂN và Mã ảnh chân dung lên máy chủ
- @param object - là thông tin thực hiện đăng ký
- Dữ liệu được trả về thông qua phương thức icEkycGetResult
+// Màu hiệu ứng cảnh báo giấy tờ không hợp lệ, mặc định CA2A2A
+@property (nonatomic) UIColor *effectColorNoticeInvalidDocument;
+
+// Màu nội dung trong ô cảnh báo giấy tờ hợp lệ. mặc định FFFFFF
+@property (nonatomic) UIColor *textColorNoticeValidDocument;
+
+// Màu nội dung trong ô cảnh báo giấy tờ không hợp lệ. mặc định FFFFFF
+@property (nonatomic) UIColor *textColorNoticeInvalidDocument;
+
+
+// Màu nút chụp ảnh giấy tờ, mặc định 142730 
+@property (nonatomic) UIColor *tintColorButtonCapture;
+
+// Màu đường viền khung chụp mặt Oval, cơ bản, mặc định 00A96F 
+@property (nonatomic) UIColor *backgroundColorBorderCaptureFace;
+
+// Giá trị quy định việc hiển thị LOGO thương hiệu. Mặc định false
+@property (nonatomic) BOOL isShowLogo;
+
+// LOGO thương hiệu hiển thị ở cuối mỗi màn hình. Mặc định là Powered by ✻ VNPT AI
+@property (nonatomic) UIImage *logo;
+
+// LOGO thương hiệu hiển thị ở màn hình chụp Oval. Mặc định là VNPT AI
+@property (nonatomic) UIImage *logoFaceOval;
+
+// Kích thước Ảnh thương hiệu. Mặc định 148.0 * 20.0 (chiều rộng * chiều cao)
+@property (nonatomic) CGFloat widthLogo;
+
+// Kích thước Ảnh thương hiệu. Mặc định 148.0 * 20.0 (chiều rộng * chiều cao)
+@property (nonatomic) CGFloat heightLogo;
+
+// Màu nền của các màn hình dạng cảnh báo. Mặc định FFFFFF
+@property (nonatomic) UIColor *backgroundColorPopup;
+
+// Màu chữ của các màn hình dạng cảnh báo. Mặc định 142730
+@property (nonatomic) UIColor *textColorContentPopup;
+
+
+
+#pragma mark - Các phương thức gọi trực tiếp từ ICEkycCameraViewController
+
+/**
+ * Phương thức ĐĂNG KÝ THÔNG TIN KHUÔN MẶT
+ * Phương thực được gọi từ phía ngoài ứng dụng.
+ * Sử dụng đối tượng của ICEkycCameraViewController để gọi vào thực hiện đăng ký dữ liệu khuôn mặt
+ *
+ * @param object - Thông tin được dùng để đăng ký dữ liệu khuôn mặt lên phía máy chủ. Kiểu dữ liệu ICEkycAddFace
+ * Dữ liệu sau khi ĐĂNG KÝ THÔNG TIN KHUÔN MẶT được trả về ở phương thức icEkycGetResult
  */
-- (void) addFaceWithObject:(NSDictionary *)object;
+- (void) addFaceOutsideWithObject:(ICEkycAddFace *)object;
 
-/** Phương thức thực hiện tìm kiếm THÔNG TIN CÁ NHÂN dựa vào Mã ảnh chân dung
- @param hashImage - là mã ảnh chân dung
- Dữ liệu được trả về thông qua phương thức icEkycGetResult
+
+/**
+ * Phương thức ĐĂNG KÝ THÔNG TIN THẺ
+ * Phương thực được gọi từ phía ngoài ứng dụng.
+ * Sử dụng đối tượng của ICEkycCameraViewController để gọi vào thực hiện đăng ký dữ liệu thẻ
+ *
+ * @param object - Thông tin được dùng để đăng ký dữ liệu thẻ lên phía máy chủ. Kiểu dữ liệu ICEkycAddInformation
+ * Dữ liệu sau khi ĐĂNG KÝ THÔNG TIN THẺ được trả về ở phương thức icEkycGetResult
  */
-- (void) searchFaceWithImage:(NSString *)hashImage;
+- (void) addInformationOutsideWithObject:(ICEkycAddInformation *)object;
+
+
+/**
+ * Phương thức Phương thức TÌM KIẾM KHUÔN MẶT
+ * Phương thực được gọi từ phía ngoài ứng dụng.
+ * Sử dụng đối tượng của ICEkycCameraViewController để gọi vào thực hiện tìm kiếm khuôn mặt
+ *
+ * @param object - Thông tin để tìm kiếm khuôn mặt. Kiểu dữ liệu ICEkycSearchFace
+ * Dữ liệu sau khi TÌM KIẾM KHUÔN MẶT được trả về ở phương thức icEkycGetResult
+ */
+- (void) searchFaceOutsideWithObject:(ICEkycSearchFace *)object;
+
+
+/**
+ * Phương thức XÁC THỰC KHUÔN MẶT VÀ SỐ GIẤY TỜ
+ * Phương thực được gọi từ phía ngoài ứng dụng.
+ * Sử dụng đối tượng của ICEkycCameraViewController để gọi vào thực hiện xác thực khuôn mặt
+ *
+ * @param object - Thông tin để xác thực khuôn mặt. Kiểu dữ liệu ICEkycVerifyFace
+ * Dữ liệu sau khi XÁC THỰC KHUÔN MẶT VÀ SỐ GIẤY TỜ được trả về ở phương thức icEkycGetResult
+ */
+- (void) verifyFaceOutsideWithObject:(ICEkycVerifyFace *)object;
+
+
+/**
+ * Phương thức SO SÁNH FACE & CARD
+ * Thực hiện so sánh khuôn mặt và ảnh giấy tờ chứa khuôn mặt
+ * Phương thực được gọi từ phía ngoài ứng dụng.
+ * Sử dụng đối tượng của ICEkycCameraViewController để gọi vào thực hiện SO SÁNH khuôn mặt và giấy tờ
+ *
+ * @param hashImageCard     Mã ảnh giấy tờ chứa khuôn mặt
+ * @param hashFace                Mã ảnh chân dung
+ * Dữ liệu sau khi XÁC THỰC KHUÔN MẶT VÀ ẢNH GIẤY TỜ được trả về ở phương thức icEkycGetResult
+ */
+- (void) compareOutsideWithHashImageCard:(NSString *)hashImageCard hashFace:(NSString *)hashFace;
+
+
+/**
+ * Phương thức SO SÁNH FACE & FACE - GENERAL→
+ * Thực hiện so sánh khuôn mặt người dùng và ảnh thẻ hoặc ảnh khuôn mặt
+ * Phương thực được gọi từ phía ngoài ứng dụng.
+ * Sử dụng đối tượng của ICEkycCameraViewController để gọi vào thực hiện SO SÁNH nhiều khuôn mặt
+ *
+ * @param hashFaceOne      Mã ảnh khuôn mặt thứ nhất.
+ * @param hashFaceTwo      Mã ảnh khuôn mặt thứ hai.
+ * @param thresLevel        Thông tin đơn vị của khách hàng. Giá trị này đi kèm với thông tin tài khoản.
+ * Dữ liệu sau khi XÁC THỰC NHIỀU KHUÔN MẶT được trả về ở phương thức icEkycGetResult
+ */
+- (void) compareGeneralOutsideWithHashFaceOne:(NSString *)hashFaceOne hashFaceTwo:(NSString *)hashFaceTwo thresLevel:(NSString *)thresLevel;
+
+
+/**
+ * Phương thức trả về thông tin phiên bản của SDK
+ * Phương thức được gọi từ phía ngoài ứng dụng.
+ */
++ (NSString *)getVersionSDK;
+
 
 @end
 

@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:vnpt_smartca_module/configs/injector/injector.dart';
 import 'package:vnpt_smartca_module/method_channel_handler.dart';
 
 import '../../configs/app_config.dart';
-import '../../configs/injector/injector.dart';
-import '../../method_channel_handler.dart';
 import '../models/app/ekyc_method_names.dart';
 
 class EKYCService {
@@ -17,7 +14,6 @@ class EKYCService {
   }
 
   Future _configeKYC() async {
-
     await hostMethodChannelHandler.send(method: MethodChannelNames.activeEKYC);
 
     final Map<String, dynamic> data = {
@@ -66,7 +62,8 @@ class EKYCService {
         "isVersion": "normal",
         "documentType": -1,
       };
-      var dataReturn = await _channel.invokeMethod(EKYCMethods.ocrFrontAndBack, data);
+      var dataReturn =
+          await _channel.invokeMethod(EKYCMethods.ocrFrontAndBack, data);
       return dataReturn;
     } catch (e) {
       print(e);

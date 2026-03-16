@@ -9,7 +9,7 @@ part of 'asset_level_three.dart';
 AssetLevelThreeModel _$AssetLevelThreeModelFromJson(
         Map<String, dynamic> json) =>
     AssetLevelThreeModel(
-      assetLevelThreeId: json['assetLevelThreeId'] as int?,
+      assetLevelThreeId: (json['assetLevelThreeId'] as num?)?.toInt(),
       assetLevelThreeName: json['assetLevelThreeName'] as String?,
       assetLevelTwoId: json['assetLevelTwoId'] as String?,
     );

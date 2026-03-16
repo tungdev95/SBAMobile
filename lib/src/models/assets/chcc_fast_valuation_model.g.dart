@@ -10,7 +10,7 @@ CHCCFastValModel _$CHCCFastValModelFromJson(Map<String, dynamic> json) =>
     CHCCFastValModel(
       building: json['building'] as String?,
       apartmentCode: json['apartmentCode'] as String?,
-      floorNo: json['floorNo'] as int?,
+      floorNo: (json['floorNo'] as num?)?.toInt(),
       facades: json['facades'] as String?,
       furniture: json['furniture'] as String?,
       otherFactor: json['otherFactor'] as String?,
@@ -19,14 +19,14 @@ CHCCFastValModel _$CHCCFastValModelFromJson(Map<String, dynamic> json) =>
       buildupArea: (json['buildupArea'] as num?)?.toDouble(),
       extendArea: (json['extendArea'] as num?)?.toDouble(),
       unitPrice: (json['unitPrice'] as num?)?.toDouble(),
-      bedrooms: json['bedrooms'] as int?,
-      surfaces: json['surfaces'] as int? ?? 1,
-      toilets: json['toilets'] as int?,
-      totalFloor: json['totalFloor'] as int?,
+      bedrooms: (json['bedrooms'] as num?)?.toInt(),
+      surfaces: (json['surfaces'] as num?)?.toInt() ?? 1,
+      toilets: (json['toilets'] as num?)?.toInt(),
+      totalFloor: (json['totalFloor'] as num?)?.toInt(),
       appraisalUnit: json['appraisalUnit'] as String?,
       numberApartment: json['numberApartment'] as String?,
       singlePriceExchangeArea: json['singlePriceExchangeArea'] as String?,
-      kitchens: json['kitchens'] as int?,
+      kitchens: (json['kitchens'] as num?)?.toInt(),
       addressProvinceName: json['addressProvinceName'] as String?,
       addressDistrictName: json['addressDistrictName'] as String?,
       addressWardName: json['addressWardName'] as String?,
@@ -82,7 +82,7 @@ CHCCFastValModel _$CHCCFastValModelFromJson(Map<String, dynamic> json) =>
       ..areaInplan = (json['areaInplan'] as num?)?.toDouble()
       ..areaUnplan = (json['areaUnplan'] as num?)?.toDouble()
       ..facadeLength = (json['facadeLength'] as num?)?.toDouble()
-      ..numberOfFacade = json['numberOfFacade'] as int?
+      ..numberOfFacade = (json['numberOfFacade'] as num?)?.toInt()
       ..shape = json['shape'] as String?
       ..widthToMainRoad = (json['widthToMainRoad'] as num?)?.toDouble()
       ..distanceToMainRoad = (json['distanceToMainRoad'] as num?)?.toDouble()
@@ -118,7 +118,7 @@ CHCCFastValModel _$CHCCFastValModelFromJson(Map<String, dynamic> json) =>
       ..approved = json['approved'] as bool?
       ..sentiment = json['sentiment']
       ..sentimentApproved = json['sentimentApproved']
-      ..storedTypeId = json['storedTypeId'] as int?
+      ..storedTypeId = (json['storedTypeId'] as num?)?.toInt()
       ..storedType = json['storedType'] as String?
       ..customerName = json['customerName'] as String?
       ..customerIdentity = json['customerIdentity'] as String?
@@ -155,10 +155,10 @@ CHCCFastValModel _$CHCCFastValModelFromJson(Map<String, dynamic> json) =>
       ..provinceId = json['provinceId'] as String?
       ..districtId = json['districtId'] as String?
       ..wardId = json['wardId'] as String?
-      ..positionId = json['positionId'] as int?
-      ..usingPurposeId = json['usingPurposeId'] as int?
-      ..dataSourceId = json['dataSourceId'] as int?
-      ..infoSourceId = json['infoSourceId'] as int?
+      ..positionId = (json['positionId'] as num?)?.toInt()
+      ..usingPurposeId = (json['usingPurposeId'] as num?)?.toInt()
+      ..dataSourceId = (json['dataSourceId'] as num?)?.toInt()
+      ..infoSourceId = (json['infoSourceId'] as num?)?.toInt()
       ..areaUnPlanPrice = (json['areaUnPlanPrice'] as num?)?.toDouble()
       ..areaInPlanPrice = (json['areaInPlanPrice'] as num?)?.toDouble()
       ..areaInPlanValue = (json['areaInPlanValue'] as num?)?.toDouble()
@@ -339,7 +339,7 @@ CHCCFastValuationDetail _$CHCCFastValuationDetailFromJson(
       projectName: json['projectName'] as String?,
       building: json['building'],
       apartmentCode: json['apartmentCode'] as String?,
-      floorNo: json['floorNo'] as int?,
+      floorNo: (json['floorNo'] as num?)?.toInt(),
       facades: json['facades'],
       furniture: json['furniture'] as String?,
       businessAdvantage: json['businessAdvantage'] as String?,
@@ -350,7 +350,7 @@ CHCCFastValuationDetail _$CHCCFastValuationDetailFromJson(
       extendArea: (json['extendArea'] as num?)?.toDouble(),
       transactionPrice: (json['transactionPrice'] as num?)?.toDouble(),
       estimatePrice: (json['estimatePrice'] as num?)?.toDouble(),
-      unitPrice: json['unitPrice'] as int?,
+      unitPrice: (json['unitPrice'] as num?)?.toInt(),
       whoCreate: json['whoCreate'] as String?,
       dateCreate: json['dateCreate'] == null
           ? null
@@ -361,7 +361,7 @@ CHCCFastValuationDetail _$CHCCFastValuationDetailFromJson(
       coordinate: json['coordinate'] == null
           ? null
           : Coordinate.fromJson(json['coordinate'] as Map<String, dynamic>),
-      storedTypeId: json['storedTypeId'] as int?,
+      storedTypeId: (json['storedTypeId'] as num?)?.toInt(),
       storedTypeName: json['storedTypeName'],
       storedType: json['storedType'] as String?,
       customerName: json['customerName'],
@@ -380,10 +380,10 @@ CHCCFastValuationDetail _$CHCCFastValuationDetailFromJson(
       wards: json['wards'] == null
           ? null
           : Wards.fromJson(json['wards'] as Map<String, dynamic>),
-      bedrooms: json['bedrooms'] as int?,
+      bedrooms: (json['bedrooms'] as num?)?.toInt(),
       surfaces: (json['surfaces'] as num?)?.toDouble(),
       toilets: (json['toilets'] as num?)?.toDouble(),
-      totalFloor: json['totalFloor'] as int?,
+      totalFloor: (json['totalFloor'] as num?)?.toInt(),
       totalValue: (json['totalValue'] as num?)?.toDouble(),
       description: json['description'],
       appraisalUnit: json['appraisalUnit'],
@@ -399,10 +399,10 @@ CHCCFastValuationDetail _$CHCCFastValuationDetailFromJson(
       addressWardName: json['addressWardName'],
       positionId: json['positionId'],
       usingPurposeId: json['usingPurposeId'],
-      dataSourceId: json['dataSourceId'] as int?,
-      infoSourceId: json['infoSourceId'] as int?,
-      optimizePrice: json['optimizePrice'] as int?,
-      adjustPrice: json['adjustPrice'] as int?,
+      dataSourceId: (json['dataSourceId'] as num?)?.toInt(),
+      infoSourceId: (json['infoSourceId'] as num?)?.toInt(),
+      optimizePrice: (json['optimizePrice'] as num?)?.toInt(),
+      adjustPrice: (json['adjustPrice'] as num?)?.toInt(),
       priceOwnerApartment: json['priceOwnerApartment'] as String?,
       optimizePrices: json['optimizePrices'],
       utilities: json['utilities'] as String?,

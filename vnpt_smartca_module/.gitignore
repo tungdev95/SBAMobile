@@ -51,3 +51,6 @@ app.*.map.json
 
 ios_framework
 ios_framework/
+
+# FVM Version Cache
+.fvm/

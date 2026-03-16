@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vnpt_smartca_module/views/pages/privacy_policy/index.dart';
 import '../../controller/home_controller.dart';
 import '../../pages/account_information/index.dart';
 import '../../pages/certificate/select_cert_screen.dart';
@@ -30,6 +31,7 @@ class MainMenu extends StatelessWidget {
 
   final authController = Get.find<AuthController>();
   final appController = Get.find<AppController>();
+  final homeController = Get.find<HomeController>();
 
   final menuItem = (String title,
           {Function()? onTap, Widget? icon, Widget? trailing}) =>
@@ -154,32 +156,36 @@ class MainMenu extends StatelessWidget {
                     icon:
                         Icon(Icons.person_2_outlined, color: Color(0xff0D75D6)),
                     onTap: () {
-                      Get.to(AccountInformationPage());
+                      Get.to(() => AccountInformationPage());
                     },
                   ),
+                  
                   // NOTE: ---- Hệ thống liên kết -----
-                  menuItem(
-                    AppLocalizations.current.linkSystem,
-                    icon: Assets.images.icLinkSystem.image(height: 24),
-                    onTap: () {
-                      final homeController = Get.find<HomeController>();
-                      final listCert =
-                          homeController.listCertificate.value ?? [];
-                      List<CertificateModel> listCertOK = listCert
-                          .where((i) =>
-                              i.status == 0 && i.certProfile?.isEseal() == true)
-                          .toList();
+                  Obx(() {
+                    final listCert = homeController.listCertificate.value ?? [];
+                    List<CertificateModel> listCertOK = listCert
+                        .where((i) =>
+                            i.status == 0 && i.certProfile?.isEseal() == true)
+                        .toList();
+                    if (listCertOK.isNotEmpty) {
+                      return menuItem(
+                        AppLocalizations.current.linkSystem,
+                        icon: Assets.images.icLinkSystem.image(height: 20),
+                        onTap: () {
+                          print("PhucbvLogCheck: ${listCertOK.length}");
+                          if (listCertOK.length == 1) {
+                            Get.to(() => ListSystemLinkPage(
+                                idCert: listCertOK.first.id));
+                          } else {
+                            Get.to(() => SelectCertScreen(isSystemLink: true));
+                          }
+                        },
+                      );
+                    } else {
+                      return SizedBox(height: 0);
+                    }
+                  }),
 
-                      if (listCertOK.length == 0) {
-                        showNotifyModal(AppLocalizations.current.notUseeSeal);
-                        return;
-                      } else if (listCertOK.length == 1) {
-                        Get.to(ListSystemLinkPage(idCert: listCertOK.first.id));
-                      } else {
-                        Get.to(SelectCertScreen(isSystemLink: true));
-                      }
-                    },
-                  ),
                   //NOTE: ----- Danh sách đơn hàng -----
                   menuItem(AppLocalizations.current.orderList,
                       icon: Icon(Icons.shopping_cart_outlined,
@@ -202,18 +208,34 @@ class MainMenu extends StatelessWidget {
                     final homeController = Get.find<HomeController>();
                     final listCert = homeController.listCertificate.value ?? [];
                     List<CertificateModel> listCertOK = listCert
-                        .where((i) => (i.typeStatus == StatusCertEnum.VALID ||
-                            i.typeStatus ==
-                                StatusCertEnum.WAITING_SIGN_ACCEPTANCE))
+                        .where((i) =>
+                            i.identity?.source != 8 &&
+                            (i.typeStatus == StatusCertEnum.VALID ||
+                                i.typeStatus ==
+                                    StatusCertEnum.WAITING_SIGN_ACCEPTANCE))
                         .toList();
 
                     if (listCertOK.length == 1) {
-                      Get.to(CertificateDetail(
-                        title: AppLocalizations.current.certDetail,
-                        certificateModel: listCertOK.first,
-                      ));
+                      Get.to(() => CertificateDetail(
+                            title: AppLocalizations.current.certDetail,
+                            certificateModel: listCertOK.first,
+                          ));
                     } else {
-                      Get.to(SelectCertScreen());
+                      Get.to(() => SelectCertScreen());
+                    }
+                  }),
+                  //NOTE: ----- Chính sách bảo vệ dữ liệu cá nhân  -----
+                  Obx(() {
+                    if (authController.currentUser.value?.accType != 1) {
+                      return menuItem(AppLocalizations.current.policyTitle,
+                          icon: Icon(Icons.lock_person_outlined,
+                              color: Color(0xff0D75D6), size: 20), onTap: () {
+                        Get.to(() => PrivacyPolicy(
+                              fromScreen: null,
+                            ));
+                      });
+                    } else {
+                      return SizedBox(height: 0);
                     }
                   }),
                   //NOTE: ----- FAQ -----
@@ -245,7 +267,8 @@ class MainMenu extends StatelessWidget {
                       elevation: 0.0,
                       shape: RoundedRectangleBorder(
                         side: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(6), // <-- Radius
+                        borderRadius: BorderRadius.circular(
+                            AppConfig.borderRadiusBtn ?? 6), // <-- Radius
                       ),
                     ),
                     child: Text(AppLocalizations.current.signOut,

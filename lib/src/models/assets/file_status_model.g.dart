@@ -8,7 +8,7 @@ part of 'file_status_model.dart';
 
 FileStatusModel _$FileStatusModelFromJson(Map<String, dynamic> json) =>
     FileStatusModel(
-      filesStatusId: json['filesStatusId'] as int,
+      filesStatusId: (json['filesStatusId'] as num).toInt(),
       filesStatus: json['filesStatus'] as String,
     );
 

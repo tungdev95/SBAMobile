@@ -88,7 +88,8 @@ class DigitalSignPageController extends BaseController<DigitalSignState> {
         );
     hideLoading();
     if (await handleResponse(result, (p0) => null)) {
-      final signResult = await DigitalSign.instance.startSign(result.data);
+      final signResult =
+          await DigitalSign.instance.getWaitingTransaction(result.data);
 
       if (signResult != null && signResult.statusDesc.isNotEmpty) {
         if (signResult.statusDesc == 'REJECTED_SUCCESS') {

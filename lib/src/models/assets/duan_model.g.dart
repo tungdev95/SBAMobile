@@ -78,7 +78,7 @@ Map<String, dynamic> _$DuAnModelToJson(DuAnModel instance) => <String, dynamic>{
 
 AssetProjectInfo _$AssetProjectInfoFromJson(Map<String, dynamic> json) =>
     AssetProjectInfo(
-      assetProjectInforId: json['assetProjectInforId'] as int?,
+      assetProjectInforId: (json['assetProjectInforId'] as num?)?.toInt(),
       assetId: json['assetId'] as String?,
       provinceCode: json['provinceCode'] as String?,
       provinceName: json['provinceName'] as String?,

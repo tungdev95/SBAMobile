@@ -42,15 +42,15 @@ Map<String, dynamic> _$SubmissionDetailModelToJson(
 
 AssetMethodModel _$AssetMethodModelFromJson(Map<String, dynamic> json) =>
     AssetMethodModel(
-      assetValuationMethodId: json['assetValuationMethodId'] as int?,
+      assetValuationMethodId: (json['assetValuationMethodId'] as num?)?.toInt(),
       appraisalFileId: json['appraisalFileId'] as String?,
       assetId: json['assetId'] as String?,
       assetName: json['assetName'] as String?,
-      assetChildId: json['assetChildId'] as int?,
+      assetChildId: (json['assetChildId'] as num?)?.toInt(),
       assetChildName: json['assetChildName'] as String?,
-      assetGrandChildId: json['assetGrandChildId'] as int?,
+      assetGrandChildId: (json['assetGrandChildId'] as num?)?.toInt(),
       assetGrandChildName: json['assetGrandChildName'] as String?,
-      assetLevelTwoId: json['assetLevelTwoId'] as int?,
+      assetLevelTwoId: (json['assetLevelTwoId'] as num?)?.toInt(),
       valuationMethodDetails: (json['valuationMethodDetails'] as List<dynamic>?)
               ?.map((e) => MethodItemModel.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -73,11 +73,12 @@ Map<String, dynamic> _$AssetMethodModelToJson(AssetMethodModel instance) =>
 
 MethodItemModel _$MethodItemModelFromJson(Map<String, dynamic> json) =>
     MethodItemModel(
-      valuationMethodDetailId: json['valuationMethodDetailId'] as int?,
-      assetValuationMethodId: json['assetValuationMethodId'] as int?,
-      valuationMethodId: json['valuationMethodId'] as int?,
-      unitPriceInPlan: json['unitPriceInPlan'] as int?,
-      unitPriceUnPlan: json['unitPriceUnPlan'] as int?,
+      valuationMethodDetailId:
+          (json['valuationMethodDetailId'] as num?)?.toInt(),
+      assetValuationMethodId: (json['assetValuationMethodId'] as num?)?.toInt(),
+      valuationMethodId: (json['valuationMethodId'] as num?)?.toInt(),
+      unitPriceInPlan: (json['unitPriceInPlan'] as num?)?.toInt(),
+      unitPriceUnPlan: (json['unitPriceUnPlan'] as num?)?.toInt(),
       unitPrice: (json['unitPrice'] as num?)?.toDouble(),
       isCurrent: json['isCurrent'] as bool?,
       appendixAssetValues: json['appendixAssetValues'] as List<dynamic>? ?? [],
@@ -98,24 +99,25 @@ Map<String, dynamic> _$MethodItemModelToJson(MethodItemModel instance) =>
     };
 
 KQDatModel _$KQDatModelFromJson(Map<String, dynamic> json) => KQDatModel(
-      valuationResultLandEstateId: json['valuationResultLandEstateId'] as int?,
+      valuationResultLandEstateId:
+          (json['valuationResultLandEstateId'] as num?)?.toInt(),
       appraisalFileId: json['appraisalFileId'] as String?,
       assetId: json['assetId'] as String?,
-      assetChildId: json['assetChildId'] as int?,
-      assetGrandChildId: json['assetGrandChildId'] as int?,
+      assetChildId: (json['assetChildId'] as num?)?.toInt(),
+      assetGrandChildId: (json['assetGrandChildId'] as num?)?.toInt(),
       name: json['name'] as String?,
-      type: json['type'] as int?,
+      type: (json['type'] as num?)?.toInt(),
       totalArea: (json['totalArea'] as num?)?.toDouble(),
       totalAreaApprovaled: (json['totalAreaApprovaled'] as num?)?.toDouble(),
-      unitPrice: json['unitPrice'] as int?,
-      totalValue: json['totalValue'] as int?,
-      unitPriceApprovaled: json['unitPriceApprovaled'] as int?,
-      totalValueApprovaled: json['totalValueApprovaled'] as int?,
-      realCommonMachine: json['realCommonMachine'] as int?,
+      unitPrice: (json['unitPrice'] as num?)?.toInt(),
+      totalValue: (json['totalValue'] as num?)?.toInt(),
+      unitPriceApprovaled: (json['unitPriceApprovaled'] as num?)?.toInt(),
+      totalValueApprovaled: (json['totalValueApprovaled'] as num?)?.toInt(),
+      realCommonMachine: (json['realCommonMachine'] as num?)?.toInt(),
       valuationResultWaterwayVehicleId:
-          json['valuationResultWaterwayVehicleId'] as int?,
+          (json['valuationResultWaterwayVehicleId'] as num?)?.toInt(),
       valuationResultRoadVehicleId:
-          json['valuationResultRoadVehicleId'] as int?,
+          (json['valuationResultRoadVehicleId'] as num?)?.toInt(),
       productLineName: json['productLineName'] as String?,
       isValuationResultProject: json['isValuationResultProject'] as bool?,
     );
@@ -144,16 +146,17 @@ Map<String, dynamic> _$KQDatModelToJson(KQDatModel instance) =>
     };
 
 TongModel _$TongModelFromJson(Map<String, dynamic> json) => TongModel(
-      totalValueLandEstateId: json['totalValueLandEstateId'] as int?,
+      totalValueLandEstateId: (json['totalValueLandEstateId'] as num?)?.toInt(),
       appraisalFileId: json['appraisalFileId'] as String?,
-      landValue: json['landValue'] as int?,
-      constructionValue: json['constructionValue'] as int?,
-      constructionReferValue: json['constructionReferValue'] as int?,
-      constructionFutureValue: json['constructionFutureValue'] as int?,
+      landValue: (json['landValue'] as num?)?.toInt(),
+      constructionValue: (json['constructionValue'] as num?)?.toInt(),
+      constructionReferValue: (json['constructionReferValue'] as num?)?.toInt(),
+      constructionFutureValue:
+          (json['constructionFutureValue'] as num?)?.toInt(),
       constructionFutureValueApprovaled:
-          json['constructionFutureValueApprovaled'] as int?,
-      totalValue: json['totalValue'] as int?,
-      totalValueRounded: json['totalValueRounded'] as int?,
+          (json['constructionFutureValueApprovaled'] as num?)?.toInt(),
+      totalValue: (json['totalValue'] as num?)?.toInt(),
+      totalValueRounded: (json['totalValueRounded'] as num?)?.toInt(),
       note: json['note'] as String?,
     );
 
@@ -172,31 +175,32 @@ Map<String, dynamic> _$TongModelToJson(TongModel instance) => <String, dynamic>{
     };
 
 KQCTXDModel _$KQCTXDModelFromJson(Map<String, dynamic> json) => KQCTXDModel(
-      constructionId: json['constructionId'] as int?,
-      assetLandInforId: json['assetLandInforId'] as int?,
-      constructionTypeId: json['constructionTypeId'] as int?,
+      constructionId: (json['constructionId'] as num?)?.toInt(),
+      assetLandInforId: (json['assetLandInforId'] as num?)?.toInt(),
+      constructionTypeId: (json['constructionTypeId'] as num?)?.toInt(),
       constructionType: json['constructionType'] == null
           ? null
           : ConstructionType.fromJson(
               json['constructionType'] as Map<String, dynamic>),
-      constructionNameId: json['constructionNameId'] as int?,
+      constructionNameId: (json['constructionNameId'] as num?)?.toInt(),
       constructionName: json['constructionName'] == null
           ? null
           : ConstructionName.fromJson(
               json['constructionName'] as Map<String, dynamic>),
       constructionArea: (json['constructionArea'] as num?)?.toDouble(),
-      constructionLegalTypeId: json['constructionLegalTypeId'] as int?,
+      constructionLegalTypeId:
+          (json['constructionLegalTypeId'] as num?)?.toInt(),
       floors: (json['floors'] as num?)?.toDouble(),
       baseFloors: (json['baseFloors'] as num?)?.toDouble(),
       furnitures: json['furnitures'] as String?,
-      constructionYear: json['constructionYear'] as int?,
-      repairYear: json['repairYear'] as int?,
+      constructionYear: (json['constructionYear'] as num?)?.toInt(),
+      repairYear: (json['repairYear'] as num?)?.toInt(),
       remainingQuality: (json['remainingQuality'] as num?)?.toDouble(),
       mdht: (json['mdht'] as num?)?.toDouble(),
-      unitPrice: json['unitPrice'] as int?,
-      totalValue: json['totalValue'] as int?,
-      unitPriceApprovaled: json['unitPriceApprovaled'] as int?,
-      totalValueApprovaled: json['totalValueApprovaled'] as int?,
+      unitPrice: (json['unitPrice'] as num?)?.toInt(),
+      totalValue: (json['totalValue'] as num?)?.toInt(),
+      unitPriceApprovaled: (json['unitPriceApprovaled'] as num?)?.toInt(),
+      totalValueApprovaled: (json['totalValueApprovaled'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$KQCTXDModelToJson(KQCTXDModel instance) =>

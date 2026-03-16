@@ -40,7 +40,7 @@ FastValuationModel _$FastValuationModelFromJson(Map<String, dynamic> json) =>
           const SafeDoubleFormatConverter().fromJson(json['areaUnplan']),
       facadeLength:
           const SafeDoubleFormatConverter().fromJson(json['facadeLength']),
-      numberOfFacade: json['numberOfFacade'] as int?,
+      numberOfFacade: (json['numberOfFacade'] as num?)?.toInt(),
       shape: json['shape'] as String?,
       widthToMainRoad:
           const SafeDoubleFormatConverter().fromJson(json['widthToMainRoad']),
@@ -85,7 +85,7 @@ FastValuationModel _$FastValuationModelFromJson(Map<String, dynamic> json) =>
       approved: json['approved'] as bool?,
       sentiment: json['sentiment'],
       sentimentApproved: json['sentimentApproved'],
-      storedTypeId: json['storedTypeId'] as int?,
+      storedTypeId: (json['storedTypeId'] as num?)?.toInt(),
       storedType: json['storedType'] as String?,
       customerName: json['customerName'] as String?,
       customerIdentity: json['customerIdentity'] as String?,
@@ -135,10 +135,10 @@ FastValuationModel _$FastValuationModelFromJson(Map<String, dynamic> json) =>
       provinceId: json['provinceId'] as String?,
       districtId: json['districtId'] as String?,
       wardId: json['wardId'] as String?,
-      positionId: json['positionId'] as int?,
-      usingPurposeId: json['usingPurposeId'] as int?,
-      dataSourceId: json['dataSourceId'] as int?,
-      infoSourceId: json['infoSourceId'] as int?,
+      positionId: (json['positionId'] as num?)?.toInt(),
+      usingPurposeId: (json['usingPurposeId'] as num?)?.toInt(),
+      dataSourceId: (json['dataSourceId'] as num?)?.toInt(),
+      infoSourceId: (json['infoSourceId'] as num?)?.toInt(),
       areaUnPlanPrice:
           const SafeDoubleFormatConverter().fromJson(json['areaUnPlanPrice']),
       areaInPlanPrice:
@@ -285,8 +285,8 @@ Provinces _$ProvincesFromJson(Map<String, dynamic> json) => Provinces(
       fullName: json['fullName'] as String?,
       fullNameEn: json['fullNameEn'] as String?,
       codeName: json['codeName'] as String?,
-      administrativeUnitId: json['administrativeUnitId'] as int?,
-      administrativeRegionId: json['administrativeRegionId'] as int?,
+      administrativeUnitId: (json['administrativeUnitId'] as num?)?.toInt(),
+      administrativeRegionId: (json['administrativeRegionId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ProvincesToJson(Provinces instance) => <String, dynamic>{
@@ -308,7 +308,7 @@ Districts _$DistrictsFromJson(Map<String, dynamic> json) => Districts(
       fullNameEn: json['fullNameEn'] as String?,
       codeName: json['codeName'] as String?,
       provinceCode: json['provinceCode'] as String?,
-      administrativeUnitId: json['administrativeUnitId'] as int?,
+      administrativeUnitId: (json['administrativeUnitId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$DistrictsToJson(Districts instance) => <String, dynamic>{
@@ -330,7 +330,7 @@ Wards _$WardsFromJson(Map<String, dynamic> json) => Wards(
       fullNameEn: json['fullNameEn'] as String?,
       codeName: json['codeName'] as String?,
       districtCode: json['districtCode'] as String?,
-      administrativeUnitId: json['administrativeUnitId'] as int?,
+      administrativeUnitId: (json['administrativeUnitId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$WardsToJson(Wards instance) => <String, dynamic>{
@@ -347,7 +347,7 @@ Map<String, dynamic> _$WardsToJson(Wards instance) => <String, dynamic>{
 OptimizePrices _$OptimizePricesFromJson(Map<String, dynamic> json) =>
     OptimizePrices(
       assetId: json['assetId'] as String? ?? '',
-      optimizePrice: json['optimizePrice'] as int?,
+      optimizePrice: (json['optimizePrice'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$OptimizePricesToJson(OptimizePrices instance) =>
@@ -391,8 +391,8 @@ Map<String, dynamic> _$FastValueConstructionToJson(
 ConstructionProps _$ConstructionPropsFromJson(Map<String, dynamic> json) =>
     ConstructionProps(
       constructionName: json['constructionName'] as String?,
-      constructionNameId: json['constructionNameId'] as int?,
-      constructionTypeId: json['constructionTypeId'] as int?,
+      constructionNameId: (json['constructionNameId'] as num?)?.toInt(),
+      constructionTypeId: (json['constructionTypeId'] as num?)?.toInt(),
       highPrice: (json['highPrice'] as num?)?.toDouble(),
       lowPrice: (json['lowPrice'] as num?)?.toDouble(),
     );

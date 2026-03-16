@@ -8,7 +8,7 @@ part of 'attachment_file.dart';
 
 AttachmentFile _$AttachmentFileFromJson(Map<String, dynamic> json) =>
     AttachmentFile(
-      size: json['size'] as int?,
+      size: (json['size'] as num?)?.toInt(),
       path: json['path'] as String?,
       name: json['name'] as String?,
     );
@@ -32,8 +32,8 @@ Map<String, dynamic> _$$PreparingImplToJson(_$PreparingImpl instance) =>
 
 _$InProgressImpl _$$InProgressImplFromJson(Map<String, dynamic> json) =>
     _$InProgressImpl(
-      uploaded: json['uploaded'] as int,
-      total: json['total'] as int,
+      uploaded: (json['uploaded'] as num).toInt(),
+      total: (json['total'] as num).toInt(),
       $type: json['runtimeType'] as String?,
     );
 

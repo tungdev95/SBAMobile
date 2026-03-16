@@ -10,7 +10,7 @@ CustomerModel _$CustomerModelFromJson(Map<String, dynamic> json) =>
     CustomerModel(
       customerId: json['customerId'] as String?,
       customerName: json['customerName'] as String?,
-      customerTypeId: json['customerTypeId'] as int?,
+      customerTypeId: (json['customerTypeId'] as num?)?.toInt(),
       customerType: json['customerType'] == null
           ? null
           : CustomerType.fromJson(json['customerType'] as Map<String, dynamic>),
@@ -26,7 +26,7 @@ CustomerModel _$CustomerModelFromJson(Map<String, dynamic> json) =>
       dateModify: json['dateModify'] == null
           ? null
           : DateTime.parse(json['dateModify'] as String),
-      status: json['status'] as int?,
+      status: (json['status'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$CustomerModelToJson(CustomerModel instance) =>
@@ -47,7 +47,7 @@ Map<String, dynamic> _$CustomerModelToJson(CustomerModel instance) =>
     };
 
 CustomerType _$CustomerTypeFromJson(Map<String, dynamic> json) => CustomerType(
-      customerTypeId: json['customerTypeId'] as int?,
+      customerTypeId: (json['customerTypeId'] as num?)?.toInt(),
       customerTypeName: json['customerTypeName'] as String?,
       description: json['description'] as String?,
     );

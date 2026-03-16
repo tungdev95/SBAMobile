@@ -8,14 +8,12 @@ import '../../widgets/zoom_drawer.dart';
 import '../../widgets/zoom_drawer_config.dart';
 
 import '../../../gen/assets.gen.dart';
-import '../../controller/home_controller.dart';
 import 'main_menu.dart';
 
 final drawerController = ZoomDrawerController();
 
 class MainPage extends StatelessWidget {
   MainPage({super.key});
-  final homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {

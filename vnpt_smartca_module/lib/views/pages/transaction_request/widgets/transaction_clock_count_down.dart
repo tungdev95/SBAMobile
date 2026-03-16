@@ -12,6 +12,7 @@ class TransactionClockCountDown extends StatelessWidget {
       required this.model,
       required this.onComplete,
       required this.countDownController,
+      this.fontSize,
       required this.isShowResult})
       : super(key: key);
 
@@ -19,6 +20,7 @@ class TransactionClockCountDown extends StatelessWidget {
   final Function onComplete;
   final CountDownController countDownController;
   final bool isShowResult;
+  final double? fontSize;
 
   final double _iconSize = 60.0;
 
@@ -44,7 +46,7 @@ class TransactionClockCountDown extends StatelessWidget {
 
       // Text Style for Countdown Text.
       textStyle: TextStyle(
-          fontSize: 14.0,
+          fontSize: fontSize ?? 14.0,
           color: HexColor("#FF9843"),
           fontWeight: FontWeight.w500),
 

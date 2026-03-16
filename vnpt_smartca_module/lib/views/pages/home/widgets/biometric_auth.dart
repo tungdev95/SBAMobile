@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../controller/auth_controller.dart';
 import '../../../i18n/generated_locales/l10n.dart';
 
@@ -15,11 +17,11 @@ class BiometricAuthWidget extends GetView<AuthController> {
   Widget build(BuildContext context) {
     return Container(
         padding: EdgeInsets.all(10),
-        height: Get.height * 0.26,
+        height: Get.height * 0.3,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Assets.images.faceId.svg(color: Color(0xff0D75D6), height: 52),
+            Assets.images.faceId.svg(color: HexColor(AppConfig.colorPrimaryBtn), height: 52),
             SizedBox(height: 10),
             BaseText(AppLocalizations.current.biometricAuthDesc,
                 fontSize: 14.5, fontWeight: FontWeight.w500),
@@ -29,9 +31,15 @@ class BiometricAuthWidget extends GetView<AuthController> {
                 Expanded(
                     child: AppButtonWidget(
                   label: AppLocalizations.current.skip,
-                  backgroundColor: Colors.white,
-                  labelColor: Colors.black,
-                  border: Border.all(color: Color(0xff0D75D6)),
+                  // backgroundColor: Colors.white,
+                  // labelColor: Colors.black,
+                  // border: Border.all(color: Color(0xff0D75D6)),
+                  labelColor: HexColor(AppConfig.colorPrimaryBtn),
+                  backgroundColor: HexColor(AppConfig.colorSecondBtn),
+                  border: AppConfig.colorPrimaryBtn == "#0D75D6"
+                      ? null
+                      : Border.all(
+                          width: 1.5, color: HexColor(AppConfig.colorPrimaryBtn)),
                   onTap: () {
                     controller.toggleAuthBiometrics(
                         value: false, authRequired: false);
@@ -42,6 +50,7 @@ class BiometricAuthWidget extends GetView<AuthController> {
                 Expanded(
                     child: AppButtonWidget(
                   label: AppLocalizations.current.agree,
+                  backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                   onTap: () {
                     controller.toggleAuthBiometrics(value: true);
                     Get.back();

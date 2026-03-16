@@ -18,8 +18,10 @@ class AppLocalizations {
   static AppLocalizations? _current;
 
   static AppLocalizations get current {
-    assert(_current != null,
-        'No instance of AppLocalizations was loaded. Try to initialize the AppLocalizations delegate before accessing AppLocalizations.current.');
+    assert(
+      _current != null,
+      'No instance of AppLocalizations was loaded. Try to initialize the AppLocalizations delegate before accessing AppLocalizations.current.',
+    );
     return _current!;
   }
 
@@ -41,8 +43,10 @@ class AppLocalizations {
 
   static AppLocalizations of(BuildContext context) {
     final instance = AppLocalizations.maybeOf(context);
-    assert(instance != null,
-        'No instance of AppLocalizations present in the widget tree. Did you add AppLocalizations.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of AppLocalizations present in the widget tree. Did you add AppLocalizations.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -52,38 +56,23 @@ class AppLocalizations {
 
   /// `Đăng nhập`
   String get signIn {
-    return Intl.message(
-      'Đăng nhập',
-      name: 'signIn',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đăng nhập', name: 'signIn', desc: '', args: []);
   }
 
   /// `Tên đăng nhập`
   String get username {
-    return Intl.message(
-      'Tên đăng nhập',
-      name: 'username',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tên đăng nhập', name: 'username', desc: '', args: []);
   }
 
   /// `Mật khẩu`
   String get password {
-    return Intl.message(
-      'Mật khẩu',
-      name: 'password',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mật khẩu', name: 'password', desc: '', args: []);
   }
 
-  /// `Không có kết nối mạng.`
+  /// `Vui lòng kiểm tra lại kết nối mạng của bạn.`
   String get noInternet {
     return Intl.message(
-      'Không có kết nối mạng.',
+      'Vui lòng kiểm tra lại kết nối mạng của bạn.',
       name: 'noInternet',
       desc: '',
       args: [],
@@ -92,12 +81,7 @@ class AppLocalizations {
 
   /// `Trang chủ`
   String get home {
-    return Intl.message(
-      'Trang chủ',
-      name: 'home',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trang chủ', name: 'home', desc: '', args: []);
   }
 
   /// `Chứng thư số`
@@ -112,12 +96,7 @@ class AppLocalizations {
 
   /// `Khác`
   String get other {
-    return Intl.message(
-      'Khác',
-      name: 'other',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Khác', name: 'other', desc: '', args: []);
   }
 
   /// `Nhập số CCCD/HC/Mã số thuế`
@@ -192,22 +171,12 @@ class AppLocalizations {
 
   /// `Đóng`
   String get close {
-    return Intl.message(
-      'Đóng',
-      name: 'close',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đóng', name: 'close', desc: '', args: []);
   }
 
   /// `Ký số`
   String get digitalSignature {
-    return Intl.message(
-      'Ký số',
-      name: 'digitalSignature',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ký số', name: 'digitalSignature', desc: '', args: []);
   }
 
   /// `CCCD/HC/MST: {number}`
@@ -232,12 +201,7 @@ class AppLocalizations {
 
   /// `Xem thêm`
   String get viewMore {
-    return Intl.message(
-      'Xem thêm',
-      name: 'viewMore',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xem thêm', name: 'viewMore', desc: '', args: []);
   }
 
   /// `Mua\nlượt ký`
@@ -252,12 +216,7 @@ class AppLocalizations {
 
   /// `Gia hạn`
   String get extend {
-    return Intl.message(
-      'Gia hạn',
-      name: 'extend',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Gia hạn', name: 'extend', desc: '', args: []);
   }
 
   /// `Thay đổi\nthông tin`
@@ -272,12 +231,7 @@ class AppLocalizations {
 
   /// `Thu hồi`
   String get recall {
-    return Intl.message(
-      'Thu hồi',
-      name: 'recall',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thu hồi', name: 'recall', desc: '', args: []);
   }
 
   /// `Cấu hình mẫu chữ ký`
@@ -292,22 +246,12 @@ class AppLocalizations {
 
   /// `Số serial`
   String get serialNumber {
-    return Intl.message(
-      'Số serial',
-      name: 'serialNumber',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Số serial', name: 'serialNumber', desc: '', args: []);
   }
 
   /// `Đang hoạt động`
   String get active {
-    return Intl.message(
-      'Đang hoạt động',
-      name: 'active',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang hoạt động', name: 'active', desc: '', args: []);
   }
 
   /// `Chờ kích hoạt`
@@ -322,12 +266,7 @@ class AppLocalizations {
 
   /// `Hết thời hạn`
   String get expired {
-    return Intl.message(
-      'Hết thời hạn',
-      name: 'expired',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hết thời hạn', name: 'expired', desc: '', args: []);
   }
 
   /// `Nhập {anything}`
@@ -362,12 +301,7 @@ class AppLocalizations {
 
   /// `Cá nhân`
   String get personal {
-    return Intl.message(
-      'Cá nhân',
-      name: 'personal',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cá nhân', name: 'personal', desc: '', args: []);
   }
 
   /// `Lịch sử giao dịch`
@@ -412,62 +346,32 @@ class AppLocalizations {
 
   /// `Số điện thoại`
   String get phone {
-    return Intl.message(
-      'Số điện thoại',
-      name: 'phone',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Số điện thoại', name: 'phone', desc: '', args: []);
   }
 
   /// `Địa chỉ email`
   String get email {
-    return Intl.message(
-      'Địa chỉ email',
-      name: 'email',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Địa chỉ email', name: 'email', desc: '', args: []);
   }
 
   /// `Giới tính`
   String get gender {
-    return Intl.message(
-      'Giới tính',
-      name: 'gender',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Giới tính', name: 'gender', desc: '', args: []);
   }
 
   /// `Địa chỉ`
   String get address {
-    return Intl.message(
-      'Địa chỉ',
-      name: 'address',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Địa chỉ', name: 'address', desc: '', args: []);
   }
 
   /// `Ngày sinh`
   String get dateOfBirth {
-    return Intl.message(
-      'Ngày sinh',
-      name: 'dateOfBirth',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ngày sinh', name: 'dateOfBirth', desc: '', args: []);
   }
 
   /// `Đăng xuất`
   String get signOut {
-    return Intl.message(
-      'Đăng xuất',
-      name: 'signOut',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đăng xuất', name: 'signOut', desc: '', args: []);
   }
 
   /// `Thông tin giao dịch`
@@ -522,22 +426,12 @@ class AppLocalizations {
 
   /// `Quay lại`
   String get back {
-    return Intl.message(
-      'Quay lại',
-      name: 'back',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quay lại', name: 'back', desc: '', args: []);
   }
 
   /// `Không xác định`
   String get unknown {
-    return Intl.message(
-      'Không xác định',
-      name: 'unknown',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Không xác định', name: 'unknown', desc: '', args: []);
   }
 
   /// `Ký số thành công`
@@ -552,72 +446,37 @@ class AppLocalizations {
 
   /// `Hủy bỏ`
   String get canceled {
-    return Intl.message(
-      'Hủy bỏ',
-      name: 'canceled',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hủy bỏ', name: 'canceled', desc: '', args: []);
   }
 
   /// `Trình ký`
   String get signer {
-    return Intl.message(
-      'Trình ký',
-      name: 'signer',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trình ký', name: 'signer', desc: '', args: []);
   }
 
   /// `Ký tất cả`
   String get sign {
-    return Intl.message(
-      'Ký tất cả',
-      name: 'sign',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ký tất cả', name: 'sign', desc: '', args: []);
   }
 
   /// `Ký thất bại`
   String get signFailed {
-    return Intl.message(
-      'Ký thất bại',
-      name: 'signFailed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ký thất bại', name: 'signFailed', desc: '', args: []);
   }
 
   /// `Ký hash`
   String get hashSign {
-    return Intl.message(
-      'Ký hash',
-      name: 'hashSign',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ký hash', name: 'hashSign', desc: '', args: []);
   }
 
   /// `Xác thực`
   String get authentication {
-    return Intl.message(
-      'Xác thực',
-      name: 'authentication',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xác thực', name: 'authentication', desc: '', args: []);
   }
 
   /// `Nghiệm thu`
   String get acceptance {
-    return Intl.message(
-      'Nghiệm thu',
-      name: 'acceptance',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nghiệm thu', name: 'acceptance', desc: '', args: []);
   }
 
   /// `Kích hoạt thành công`
@@ -640,10 +499,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Ký biên bản nghiệm thu`
+  /// `Xác nhận nghiệm thu`
   String get activateButton {
     return Intl.message(
-      'Ký biên bản nghiệm thu',
+      'Xác nhận nghiệm thu',
       name: 'activateButton',
       desc: '',
       args: [],
@@ -722,22 +581,12 @@ class AppLocalizations {
 
   /// `Trạng thái`
   String get status {
-    return Intl.message(
-      'Trạng thái',
-      name: 'status',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trạng thái', name: 'status', desc: '', args: []);
   }
 
   /// `Đã kích hoạt`
   String get activated {
-    return Intl.message(
-      'Đã kích hoạt',
-      name: 'activated',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đã kích hoạt', name: 'activated', desc: '', args: []);
   }
 
   /// `Chờ sinh cặp khóa`
@@ -760,10 +609,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Chờ ký Biên bản nghiệm thu`
+  /// `Chờ Xác nhận nghiệm thu`
   String get waitingSignAcceptanceMinutes {
     return Intl.message(
-      'Chờ ký Biên bản nghiệm thu',
+      'Chờ Xác nhận nghiệm thu',
       name: 'waitingSignAcceptanceMinutes',
       desc: '',
       args: [],
@@ -782,22 +631,12 @@ class AppLocalizations {
 
   /// `Đang tạm dừng`
   String get suspended {
-    return Intl.message(
-      'Đang tạm dừng',
-      name: 'suspended',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang tạm dừng', name: 'suspended', desc: '', args: []);
   }
 
   /// `Đã thu hồi`
   String get revoked {
-    return Intl.message(
-      'Đã thu hồi',
-      name: 'revoked',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đã thu hồi', name: 'revoked', desc: '', args: []);
   }
 
   /// `Kích hoạt cặp khóa`
@@ -872,22 +711,12 @@ class AppLocalizations {
 
   /// `Tên file`
   String get fileName {
-    return Intl.message(
-      'Tên file',
-      name: 'fileName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tên file', name: 'fileName', desc: '', args: []);
   }
 
   /// `Mô tả`
   String get transactionDesc {
-    return Intl.message(
-      'Mô tả',
-      name: 'transactionDesc',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mô tả', name: 'transactionDesc', desc: '', args: []);
   }
 
   /// `Xác nhận ký số`
@@ -982,12 +811,7 @@ class AppLocalizations {
 
   /// `Bước {step}`
   String noStep(Object step) {
-    return Intl.message(
-      'Bước $step',
-      name: 'noStep',
-      desc: '',
-      args: [step],
-    );
+    return Intl.message('Bước $step', name: 'noStep', desc: '', args: [step]);
   }
 
   /// `Nhập thông tin tài khoản`
@@ -1022,12 +846,7 @@ class AppLocalizations {
 
   /// `Tiếp theo`
   String get next {
-    return Intl.message(
-      'Tiếp theo',
-      name: 'next',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tiếp theo', name: 'next', desc: '', args: []);
   }
 
   /// `Mật khẩu không khớp`
@@ -1102,22 +921,12 @@ class AppLocalizations {
 
   /// `Cảnh báo`
   String get warning {
-    return Intl.message(
-      'Cảnh báo',
-      name: 'warning',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cảnh báo', name: 'warning', desc: '', args: []);
   }
 
   /// `Thông báo`
   String get Notice {
-    return Intl.message(
-      'Thông báo',
-      name: 'Notice',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thông báo', name: 'Notice', desc: '', args: []);
   }
 
   /// `Sử dụng sinh trắc học để tăng cường tính bảo mật, bạn có đồng ý?`
@@ -1132,22 +941,12 @@ class AppLocalizations {
 
   /// `Từ chối`
   String get reject {
-    return Intl.message(
-      'Từ chối',
-      name: 'reject',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Từ chối', name: 'reject', desc: '', args: []);
   }
 
   /// `Đồng ý`
   String get agree {
-    return Intl.message(
-      'Đồng ý',
-      name: 'agree',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đồng ý', name: 'agree', desc: '', args: []);
   }
 
   /// `Tài khoản chưa được kích hoạt cặp khóa`
@@ -1170,20 +969,20 @@ class AppLocalizations {
     );
   }
 
-  /// `Ký biên bản nghiệm thu`
+  /// `Xác nhận nghiệm thu`
   String get signBbnt {
     return Intl.message(
-      'Ký biên bản nghiệm thu',
+      'Xác nhận nghiệm thu',
       name: 'signBbnt',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tiếp theo: Ký biên bản nghiệm thu`
+  /// `Tiếp theo: Xác nhận nghiệm thu`
   String get nextSignBbnt {
     return Intl.message(
-      'Tiếp theo: Ký biên bản nghiệm thu',
+      'Tiếp theo: Xác nhận nghiệm thu',
       name: 'nextSignBbnt',
       desc: '',
       args: [],
@@ -1202,22 +1001,12 @@ class AppLocalizations {
 
   /// `Kích thước`
   String get size {
-    return Intl.message(
-      'Kích thước',
-      name: 'size',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Kích thước', name: 'size', desc: '', args: []);
   }
 
   /// `Thời gian`
   String get time {
-    return Intl.message(
-      'Thời gian',
-      name: 'time',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thời gian', name: 'time', desc: '', args: []);
   }
 
   /// `Xem thông tin giao dịch`
@@ -1242,12 +1031,7 @@ class AppLocalizations {
 
   /// `Tiếp tục`
   String get Continue {
-    return Intl.message(
-      'Tiếp tục',
-      name: 'Continue',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tiếp tục', name: 'Continue', desc: '', args: []);
   }
 
   /// `Không thể xác thực ứng dụng.`
@@ -1332,32 +1116,17 @@ class AppLocalizations {
 
   /// `Nam`
   String get male {
-    return Intl.message(
-      'Nam',
-      name: 'male',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nam', name: 'male', desc: '', args: []);
   }
 
   /// `Nữ`
   String get female {
-    return Intl.message(
-      'Nữ',
-      name: 'female',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nữ', name: 'female', desc: '', args: []);
   }
 
   /// `Doanh nghiệp`
   String get business {
-    return Intl.message(
-      'Doanh nghiệp',
-      name: 'business',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Doanh nghiệp', name: 'business', desc: '', args: []);
   }
 
   /// `Cá nhân trong doanh nghiệp`
@@ -1392,12 +1161,7 @@ class AppLocalizations {
 
   /// `Lịch sử`
   String get history {
-    return Intl.message(
-      'Lịch sử',
-      name: 'history',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lịch sử', name: 'history', desc: '', args: []);
   }
 
   /// `{anything}`
@@ -1420,10 +1184,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Chứng thư chưa được đăng ký trên thiết bị. Bạn có muốn đăng ký chứng thư số trên thiết bị này không?`
+  /// `Chứng thư chưa được đăng ký trên thiết bị/ứng dụng này. Bạn có muốn Kích hoạt lại chứng thư số không?`
   String get KAKNotFound {
     return Intl.message(
-      'Chứng thư chưa được đăng ký trên thiết bị. Bạn có muốn đăng ký chứng thư số trên thiết bị này không?',
+      'Chứng thư chưa được đăng ký trên thiết bị/ứng dụng này. Bạn có muốn Kích hoạt lại chứng thư số không?',
       name: 'KAKNotFound',
       desc: '',
       args: [],
@@ -1492,12 +1256,7 @@ class AppLocalizations {
 
   /// `Ký lỗi`
   String get signError {
-    return Intl.message(
-      'Ký lỗi',
-      name: 'signError',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ký lỗi', name: 'signError', desc: '', args: []);
   }
 
   /// `Hủy bỏ lỗi`
@@ -1550,10 +1309,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Sử dụng 8-30 ký tự bao gồm chữ hoa, chữ thường, số, ký tự đặc biệt ~!@#$%^&*_-+='|(){}[]:;”<>,.?/`
+  /// `- Sử dụng 8-30 ký tự bao gồm chữ hoa, chữ thường, số, ký tự đặc biệt ~!@#$%^&*_-+='|(){}[]:;”<>,.?/ \n- Không bao gồm các số trùng nhau hoặc liên tiếp nhau như 1111, 12345, 9876, ...\n- Không bao gồm các từ có liên quan đến thông tin cá nhân hoặc tên viết tắt đơn vị như VNPT, Admin, Root, Quantri, ...`
   String get strongPasswordValid {
     return Intl.message(
-      'Sử dụng 8-30 ký tự bao gồm chữ hoa, chữ thường, số, ký tự đặc biệt ~!@#\$%^&*_-+=`|(){}[]:;”<>,.?/',
+      '- Sử dụng 8-30 ký tự bao gồm chữ hoa, chữ thường, số, ký tự đặc biệt ~!@#\$%^&*_-+=`|(){}[]:;”<>,.?/ \n- Không bao gồm các số trùng nhau hoặc liên tiếp nhau như 1111, 12345, 9876, ...\n- Không bao gồm các từ có liên quan đến thông tin cá nhân hoặc tên viết tắt đơn vị như VNPT, Admin, Root, Quantri, ...',
       name: 'strongPasswordValid',
       desc: '',
       args: [],
@@ -1562,62 +1321,32 @@ class AppLocalizations {
 
   /// `Cài đặt chung`
   String get settings {
-    return Intl.message(
-      'Cài đặt chung',
-      name: 'settings',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cài đặt chung', name: 'settings', desc: '', args: []);
   }
 
   /// `Ngôn ngữ`
   String get language {
-    return Intl.message(
-      'Ngôn ngữ',
-      name: 'language',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ngôn ngữ', name: 'language', desc: '', args: []);
   }
 
   /// `English`
   String get english {
-    return Intl.message(
-      'English',
-      name: 'english',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('English', name: 'english', desc: '', args: []);
   }
 
   /// `Tiếng Việt`
   String get vietnamese {
-    return Intl.message(
-      'Tiếng Việt',
-      name: 'vietnamese',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tiếng Việt', name: 'vietnamese', desc: '', args: []);
   }
 
   /// `Cập nhật`
   String get update {
-    return Intl.message(
-      'Cập nhật',
-      name: 'update',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cập nhật', name: 'update', desc: '', args: []);
   }
 
   /// `Để sau`
   String get maybeLater {
-    return Intl.message(
-      'Để sau',
-      name: 'maybeLater',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Để sau', name: 'maybeLater', desc: '', args: []);
   }
 
   /// `Cập nhật phiên bản mới`
@@ -1652,42 +1381,22 @@ class AppLocalizations {
 
   /// `Chủ thể`
   String get subject {
-    return Intl.message(
-      'Chủ thể',
-      name: 'subject',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chủ thể', name: 'subject', desc: '', args: []);
   }
 
   /// `Nhà phát hành`
   String get issuer {
-    return Intl.message(
-      'Nhà phát hành',
-      name: 'issuer',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nhà phát hành', name: 'issuer', desc: '', args: []);
   }
 
   /// `Số sê-ri`
   String get serial {
-    return Intl.message(
-      'Số sê-ri',
-      name: 'serial',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Số sê-ri', name: 'serial', desc: '', args: []);
   }
 
   /// `Hiệu lực`
   String get validity {
-    return Intl.message(
-      'Hiệu lực',
-      name: 'validity',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hiệu lực', name: 'validity', desc: '', args: []);
   }
 
   /// `Bạn có chắc chắn muốn đăng xuất khỏi thiết bị này không?`
@@ -1702,12 +1411,7 @@ class AppLocalizations {
 
   /// `MST`
   String get taxCode {
-    return Intl.message(
-      'MST',
-      name: 'taxCode',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('MST', name: 'taxCode', desc: '', args: []);
   }
 
   /// `Đang lấy thông tin chứng thư...`
@@ -1772,12 +1476,7 @@ class AppLocalizations {
 
   /// `Mật khẩu cũ`
   String get oldPassword {
-    return Intl.message(
-      'Mật khẩu cũ',
-      name: 'oldPassword',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mật khẩu cũ', name: 'oldPassword', desc: '', args: []);
   }
 
   /// `Mật khẩu mới`
@@ -1812,12 +1511,7 @@ class AppLocalizations {
 
   /// `Đã sao chép.`
   String get copied {
-    return Intl.message(
-      'Đã sao chép.',
-      name: 'copied',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đã sao chép.', name: 'copied', desc: '', args: []);
   }
 
   /// `Mật khẩu mới trùng với mật khẩu cũ.`
@@ -1862,12 +1556,7 @@ class AppLocalizations {
 
   /// `Đang tải...`
   String get loading {
-    return Intl.message(
-      'Đang tải...',
-      name: 'loading',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang tải...', name: 'loading', desc: '', args: []);
   }
 
   /// `Kéo lên để tải thêm`
@@ -1940,11 +1629,11 @@ class AppLocalizations {
     );
   }
 
-  /// `Đang xử lý, vui lòng đợi trong giây lát...`
-  String get progressProcessing {
+  /// `Hệ thống đang xử lý`
+  String get processing {
     return Intl.message(
-      'Đang xử lý, vui lòng đợi trong giây lát...',
-      name: 'progressProcessing',
+      'Hệ thống đang xử lý',
+      name: 'processing',
       desc: '',
       args: [],
     );
@@ -1952,12 +1641,7 @@ class AppLocalizations {
 
   /// `Hotline`
   String get hotline {
-    return Intl.message(
-      'Hotline',
-      name: 'hotline',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hotline', name: 'hotline', desc: '', args: []);
   }
 
   /// `Chờ xác nhận`
@@ -2012,12 +1696,7 @@ class AppLocalizations {
 
   /// `Tài khoản`
   String get account {
-    return Intl.message(
-      'Tài khoản',
-      name: 'account',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tài khoản', name: 'account', desc: '', args: []);
   }
 
   /// `Thời gian kết nối quá lâu.`
@@ -2062,12 +1741,7 @@ class AppLocalizations {
 
   /// `Mã PIN`
   String get pinCode {
-    return Intl.message(
-      'Mã PIN',
-      name: 'pinCode',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mã PIN', name: 'pinCode', desc: '', args: []);
   }
 
   /// `Có lỗi trong quá trình làm mới token.`
@@ -2132,22 +1806,12 @@ class AppLocalizations {
 
   /// `Đang hoạt động`
   String get activing {
-    return Intl.message(
-      'Đang hoạt động',
-      name: 'activing',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang hoạt động', name: 'activing', desc: '', args: []);
   }
 
   /// `Làm mới`
   String get clear {
-    return Intl.message(
-      'Làm mới',
-      name: 'clear',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Làm mới', name: 'clear', desc: '', args: []);
   }
 
   /// `Vẽ chữ ký của bạn`
@@ -2172,12 +1836,7 @@ class AppLocalizations {
 
   /// `Mã thiết bị`
   String get deviceId {
-    return Intl.message(
-      'Mã thiết bị',
-      name: 'deviceId',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mã thiết bị', name: 'deviceId', desc: '', args: []);
   }
 
   /// `Ký số theo QĐ-769-BTTTT`
@@ -2200,10 +1859,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Không hỗ trợ xem tài liệu Ký hash!`
+  /// `Không xem được tài liệu ký số\nđã được mã hóa`
   String get viewFileHash {
     return Intl.message(
-      'Không hỗ trợ xem tài liệu Ký hash!',
+      'Không xem được tài liệu ký số\nđã được mã hóa',
       name: 'viewFileHash',
       desc: '',
       args: [],
@@ -2362,82 +2021,37 @@ class AppLocalizations {
 
   /// `Họ tên`
   String get fullName {
-    return Intl.message(
-      'Họ tên',
-      name: 'fullName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Họ tên', name: 'fullName', desc: '', args: []);
   }
 
   /// `Xác nhận`
   String get confirm {
-    return Intl.message(
-      'Xác nhận',
-      name: 'confirm',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xác nhận', name: 'confirm', desc: '', args: []);
   }
 
   /// `Quốc tịch`
   String get nationality {
-    return Intl.message(
-      'Quốc tịch',
-      name: 'nationality',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quốc tịch', name: 'nationality', desc: '', args: []);
   }
 
   /// `Tỉnh/TP`
   String get province {
-    return Intl.message(
-      'Tỉnh/TP',
-      name: 'province',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tỉnh/TP', name: 'province', desc: '', args: []);
   }
 
   /// `Quận/Huyện`
   String get district {
-    return Intl.message(
-      'Quận/Huyện',
-      name: 'district',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quận/Huyện', name: 'district', desc: '', args: []);
   }
 
   /// `Phường/Xã`
   String get wards {
-    return Intl.message(
-      'Phường/Xã',
-      name: 'wards',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Phiếu yêu cầu cung cấp dịch vụ`
-  String get serviceRequestForm {
-    return Intl.message(
-      'Phiếu yêu cầu cung cấp dịch vụ',
-      name: 'serviceRequestForm',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Phường/Xã', name: 'wards', desc: '', args: []);
   }
 
   /// `Ký xác nhận`
   String get signConfirm {
-    return Intl.message(
-      'Ký xác nhận',
-      name: 'signConfirm',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ký xác nhận', name: 'signConfirm', desc: '', args: []);
   }
 
   /// `Gửi yêu cầu cấp Chứng thư số thành công. Vui lòng kiểm tra email sau ít phút để kích hoạt dịch vụ.`
@@ -2452,32 +2066,17 @@ class AppLocalizations {
 
   /// `Ngày cấp`
   String get issueDate {
-    return Intl.message(
-      'Ngày cấp',
-      name: 'issueDate',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ngày cấp', name: 'issueDate', desc: '', args: []);
   }
 
   /// `Nơi cấp`
   String get placeOfIssue {
-    return Intl.message(
-      'Nơi cấp',
-      name: 'placeOfIssue',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nơi cấp', name: 'placeOfIssue', desc: '', args: []);
   }
 
   /// `Thôn/Xóm`
   String get streetName {
-    return Intl.message(
-      'Thôn/Xóm',
-      name: 'streetName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thôn/Xóm', name: 'streetName', desc: '', args: []);
   }
 
   /// `Không có dữ liệu`
@@ -2492,12 +2091,7 @@ class AppLocalizations {
 
   /// `Chọn dữ liệu`
   String get selectData {
-    return Intl.message(
-      'Chọn dữ liệu',
-      name: 'selectData',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chọn dữ liệu', name: 'selectData', desc: '', args: []);
   }
 
   /// `Yêu cầu xác thực`
@@ -2592,12 +2186,7 @@ class AppLocalizations {
 
   /// `Tên gói:`
   String get product_name {
-    return Intl.message(
-      'Tên gói:',
-      name: 'product_name',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tên gói:', name: 'product_name', desc: '', args: []);
   }
 
   /// `Số lượng:`
@@ -2612,12 +2201,7 @@ class AppLocalizations {
 
   /// `Đơn giá:`
   String get product_price {
-    return Intl.message(
-      'Đơn giá:',
-      name: 'product_price',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đơn giá:', name: 'product_price', desc: '', args: []);
   }
 
   /// `Thành tiền:`
@@ -2672,12 +2256,7 @@ class AppLocalizations {
 
   /// `Thanh toán`
   String get btnPayment {
-    return Intl.message(
-      'Thanh toán',
-      name: 'btnPayment',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thanh toán', name: 'btnPayment', desc: '', args: []);
   }
 
   /// `Trạng thái:`
@@ -2832,32 +2411,17 @@ class AppLocalizations {
 
   /// `Đã hủy`
   String get order_canceled {
-    return Intl.message(
-      'Đã hủy',
-      name: 'order_canceled',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đã hủy', name: 'order_canceled', desc: '', args: []);
   }
 
   /// `Chờ khởi tạo`
   String get order_paid {
-    return Intl.message(
-      'Chờ khởi tạo',
-      name: 'order_paid',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chờ khởi tạo', name: 'order_paid', desc: '', args: []);
   }
 
   /// `Chờ khởi tạo`
   String get order_new {
-    return Intl.message(
-      'Chờ khởi tạo',
-      name: 'order_new',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chờ khởi tạo', name: 'order_new', desc: '', args: []);
   }
 
   /// `Vui lòng chọn gói lượt ký để tiếp tục`
@@ -2972,12 +2536,7 @@ class AppLocalizations {
 
   /// `Chụp lại`
   String get Retake {
-    return Intl.message(
-      'Chụp lại',
-      name: 'Retake',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chụp lại', name: 'Retake', desc: '', args: []);
   }
 
   /// `Thay đổi mật khẩu thành công`
@@ -3080,11 +2639,31 @@ class AppLocalizations {
     );
   }
 
-  /// `Chứng thư số cá nhân`
+  /// `Chứng thư số Cá nhân`
   String get ctsPersonal {
     return Intl.message(
-      'Chứng thư số cá nhân',
+      'Chứng thư số Cá nhân',
       name: 'ctsPersonal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chứng thư số Doanh nghiệp`
+  String get ctsOrg {
+    return Intl.message(
+      'Chứng thư số Doanh nghiệp',
+      name: 'ctsOrg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chứng thư số Cá nhân thuộc tổ chức`
+  String get ctsPersonalInOrg {
+    return Intl.message(
+      'Chứng thư số Cá nhân thuộc tổ chức',
+      name: 'ctsPersonalInOrg',
       desc: '',
       args: [],
     );
@@ -3152,12 +2731,7 @@ class AppLocalizations {
 
   /// `Đổi email`
   String get changeEmail {
-    return Intl.message(
-      'Đổi email',
-      name: 'changeEmail',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đổi email', name: 'changeEmail', desc: '', args: []);
   }
 
   /// `Người dùng vui lòng đặt tên chứng thư số để phân biệt dễ dàng các chứng thư số khi người dùng sử dụng hai chứng thư số trở lên.`
@@ -3172,22 +2746,12 @@ class AppLocalizations {
 
   /// `Hủy`
   String get cancel {
-    return Intl.message(
-      'Hủy',
-      name: 'cancel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hủy', name: 'cancel', desc: '', args: []);
   }
 
   /// `Đặt tên`
   String get nameFor {
-    return Intl.message(
-      'Đặt tên',
-      name: 'nameFor',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đặt tên', name: 'nameFor', desc: '', args: []);
   }
 
   /// `Chứng thư số`
@@ -3212,12 +2776,7 @@ class AppLocalizations {
 
   /// `Đổi PIN`
   String get changePIN {
-    return Intl.message(
-      'Đổi PIN',
-      name: 'changePIN',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đổi PIN', name: 'changePIN', desc: '', args: []);
   }
 
   /// `Lịch sử cập nhật`
@@ -3232,22 +2791,12 @@ class AppLocalizations {
 
   /// `Phiên bản`
   String get version {
-    return Intl.message(
-      'Phiên bản',
-      name: 'version',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Phiên bản', name: 'version', desc: '', args: []);
   }
 
   /// `Câu hỏi thường gặp`
   String get faq {
-    return Intl.message(
-      'Câu hỏi thường gặp',
-      name: 'faq',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Câu hỏi thường gặp', name: 'faq', desc: '', args: []);
   }
 
   /// `Vui lòng nhập {anything}`
@@ -3332,12 +2881,7 @@ class AppLocalizations {
 
   /// `Tên đăng nhập`
   String get userName {
-    return Intl.message(
-      'Tên đăng nhập',
-      name: 'userName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tên đăng nhập', name: 'userName', desc: '', args: []);
   }
 
   /// `Nhập lại mật khẩu`
@@ -3390,10 +2934,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Thiết lập PIN`
+  /// `Thiết lập PIN chứng thư số`
   String get setupPinCode {
     return Intl.message(
-      'Thiết lập PIN',
+      'Thiết lập PIN chứng thư số',
       name: 'setupPinCode',
       desc: '',
       args: [],
@@ -3512,32 +3056,17 @@ class AppLocalizations {
 
   /// `Hỗ trợ`
   String get support {
-    return Intl.message(
-      'Hỗ trợ',
-      name: 'support',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hỗ trợ', name: 'support', desc: '', args: []);
   }
 
   /// `Thử lại`
   String get retry {
-    return Intl.message(
-      'Thử lại',
-      name: 'retry',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thử lại', name: 'retry', desc: '', args: []);
   }
 
   /// `Tôi đã hiểu`
   String get iUnderstand {
-    return Intl.message(
-      'Tôi đã hiểu',
-      name: 'iUnderstand',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tôi đã hiểu', name: 'iUnderstand', desc: '', args: []);
   }
 
   /// `Đang xác minh thông tin`
@@ -3570,10 +3099,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Khởi tạo cặp khóa`
+  /// `Hệ thống đang cấp chứng thư số`
   String get generateCerKey {
     return Intl.message(
-      'Khởi tạo cặp khóa',
+      'Hệ thống đang cấp chứng thư số',
       name: 'generateCerKey',
       desc: '',
       args: [],
@@ -3642,12 +3171,7 @@ class AppLocalizations {
 
   /// `Quét mã QR`
   String get scanQRCode {
-    return Intl.message(
-      'Quét mã QR',
-      name: 'scanQRCode',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quét mã QR', name: 'scanQRCode', desc: '', args: []);
   }
 
   /// `Vui lòng quét QR Code trên Căn cước \ncông dân để lấy thông tin`
@@ -3672,12 +3196,7 @@ class AppLocalizations {
 
   /// `Bỏ qua`
   String get skip {
-    return Intl.message(
-      'Bỏ qua',
-      name: 'skip',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Bỏ qua', name: 'skip', desc: '', args: []);
   }
 
   /// `Mã QR không hợp lệ`
@@ -3772,22 +3291,12 @@ class AppLocalizations {
 
   /// `Về trang chính`
   String get goHome {
-    return Intl.message(
-      'Về trang chính',
-      name: 'goHome',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Về trang chính', name: 'goHome', desc: '', args: []);
   }
 
   /// `Về trang chủ`
   String get goHomeTC {
-    return Intl.message(
-      'Về trang chủ',
-      name: 'goHomeTC',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Về trang chủ', name: 'goHomeTC', desc: '', args: []);
   }
 
   /// `Chứng thư số đã được kích hoạt`
@@ -3840,10 +3349,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Chứng thư số không được đăng ký trên thiết bị này. Vui lòng sử dụng thiết bị đã đăng ký để tiếp tục Kích hoạt chứng thư số.\nTrường hợp Mất hoặc Đổi thiết bị, bấm Xác nhận để kích hoạt chứng thư số trên thiết bị mới!`
+  /// `Chứng thư số không được đăng ký trên thiết bị/ứng dụng này. Vui lòng sử dụng thiết bị đã đăng ký để tiếp tục Kích hoạt chứng thư số.\nTrường hợp Mất hoặc Đổi thiết bị, bấm Xác nhận để kích hoạt chứng thư số trên thiết bị mới!`
   String get notifActiveCerOtherDevice {
     return Intl.message(
-      'Chứng thư số không được đăng ký trên thiết bị này. Vui lòng sử dụng thiết bị đã đăng ký để tiếp tục Kích hoạt chứng thư số.\nTrường hợp Mất hoặc Đổi thiết bị, bấm Xác nhận để kích hoạt chứng thư số trên thiết bị mới!',
+      'Chứng thư số không được đăng ký trên thiết bị/ứng dụng này. Vui lòng sử dụng thiết bị đã đăng ký để tiếp tục Kích hoạt chứng thư số.\nTrường hợp Mất hoặc Đổi thiết bị, bấm Xác nhận để kích hoạt chứng thư số trên thiết bị mới!',
       name: 'notifActiveCerOtherDevice',
       desc: '',
       args: [],
@@ -3892,12 +3401,7 @@ class AppLocalizations {
 
   /// `giây`
   String get second {
-    return Intl.message(
-      'giây',
-      name: 'second',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('giây', name: 'second', desc: '', args: []);
   }
 
   /// `Bạn chưa nhận được mã? `
@@ -3952,22 +3456,12 @@ class AppLocalizations {
 
   /// `Tìm kiếm`
   String get search {
-    return Intl.message(
-      'Tìm kiếm',
-      name: 'search',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tìm kiếm', name: 'search', desc: '', args: []);
   }
 
   /// `Kết quả`
   String get result {
-    return Intl.message(
-      'Kết quả',
-      name: 'result',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Kết quả', name: 'result', desc: '', args: []);
   }
 
   /// `({total} giao dịch)`
@@ -3982,42 +3476,22 @@ class AppLocalizations {
 
   /// `Tên văn bản`
   String get nameDoc {
-    return Intl.message(
-      'Tên văn bản',
-      name: 'nameDoc',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tên văn bản', name: 'nameDoc', desc: '', args: []);
   }
 
   /// `Từ ngày`
   String get fromDate {
-    return Intl.message(
-      'Từ ngày',
-      name: 'fromDate',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Từ ngày', name: 'fromDate', desc: '', args: []);
   }
 
   /// `Chọn ngày`
   String get selectDate {
-    return Intl.message(
-      'Chọn ngày',
-      name: 'selectDate',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chọn ngày', name: 'selectDate', desc: '', args: []);
   }
 
   /// `Đến ngày`
   String get toDate {
-    return Intl.message(
-      'Đến ngày',
-      name: 'toDate',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đến ngày', name: 'toDate', desc: '', args: []);
   }
 
   /// `Chọn chứng thư số`
@@ -4042,22 +3516,12 @@ class AppLocalizations {
 
   /// `Mua ngay`
   String get buyNow {
-    return Intl.message(
-      'Mua ngay',
-      name: 'buyNow',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mua ngay', name: 'buyNow', desc: '', args: []);
   }
 
   /// `Kích hoạt`
   String get activate {
-    return Intl.message(
-      'Kích hoạt',
-      name: 'activate',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Kích hoạt', name: 'activate', desc: '', args: []);
   }
 
   /// `Thông tin đăng ký chứng thư số`
@@ -4072,12 +3536,7 @@ class AppLocalizations {
 
   /// `Quét QR`
   String get scanQR {
-    return Intl.message(
-      'Quét QR',
-      name: 'scanQR',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quét QR', name: 'scanQR', desc: '', args: []);
   }
 
   /// `Vui lòng kiểm tra chính xác các thông tin: `
@@ -4140,10 +3599,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Địa chỉ liên hệ`
+  /// `Địa chỉ đăng ký chứng thư số`
   String get addressInfo {
     return Intl.message(
-      'Địa chỉ liên hệ',
+      'Địa chỉ đăng ký chứng thư số',
       name: 'addressInfo',
       desc: '',
       args: [],
@@ -4172,12 +3631,7 @@ class AppLocalizations {
 
   /// `Email`
   String get emailOnly {
-    return Intl.message(
-      'Email',
-      name: 'emailOnly',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Email', name: 'emailOnly', desc: '', args: []);
   }
 
   /// `Tỉnh/Thành phố`
@@ -4362,7 +3816,7 @@ class AppLocalizations {
 
   /// `Số CCCD/CMND`
   String
-      get certificate_package_user_form_info_item_identitycard_number_label_text {
+  get certificate_package_user_form_info_item_identitycard_number_label_text {
     return Intl.message(
       'Số CCCD/CMND',
       name:
@@ -4374,7 +3828,7 @@ class AppLocalizations {
 
   /// `Nhập chính xác số CCCD/CMND`
   String
-      get certificate_package_user_form_info_item_identitycard_number_hint_text {
+  get certificate_package_user_form_info_item_identitycard_number_hint_text {
     return Intl.message(
       'Nhập chính xác số CCCD/CMND',
       name:
@@ -4386,7 +3840,7 @@ class AppLocalizations {
 
   /// `Loại giấy tờ chứng thực`
   String
-      get certificate_package_user_form_info_item_identitycard_type_label_text {
+  get certificate_package_user_form_info_item_identitycard_type_label_text {
     return Intl.message(
       'Loại giấy tờ chứng thực',
       name:
@@ -4468,7 +3922,7 @@ class AppLocalizations {
 
   /// `Tỉnh/Thành phố`
   String
-      get certificate_packageuser_form_contact_info_item_province_label_text {
+  get certificate_packageuser_form_contact_info_item_province_label_text {
     return Intl.message(
       'Tỉnh/Thành phố',
       name:
@@ -4480,7 +3934,7 @@ class AppLocalizations {
 
   /// `Quận/Huyện`
   String
-      get certificate_packageuser_form_contact_info_item_districts_label_text {
+  get certificate_packageuser_form_contact_info_item_districts_label_text {
     return Intl.message(
       'Quận/Huyện',
       name:
@@ -4522,7 +3976,7 @@ class AppLocalizations {
 
   /// `Thông tin liên hệ sử dụng chứng thư số`
   String
-      get certificate_packageuser_form_contact_certificate_info_item_text_group {
+  get certificate_packageuser_form_contact_certificate_info_item_text_group {
     return Intl.message(
       'Thông tin liên hệ sử dụng chứng thư số',
       name:
@@ -4534,7 +3988,7 @@ class AppLocalizations {
 
   /// `Vui lòng kiểm tra kỹ số điện thoại, email chính xác để nhận thông tin kích hoạt dịch vụ.`
   String
-      get certificate_packageuser_form_contact_certificate_info_item_text_group_desc {
+  get certificate_packageuser_form_contact_certificate_info_item_text_group_desc {
     return Intl.message(
       'Vui lòng kiểm tra kỹ số điện thoại, email chính xác để nhận thông tin kích hoạt dịch vụ.',
       name:
@@ -4546,7 +4000,7 @@ class AppLocalizations {
 
   /// `Email`
   String
-      get certificate_packageuser_form_contact_certificate_info_item_email_label_text {
+  get certificate_packageuser_form_contact_certificate_info_item_email_label_text {
     return Intl.message(
       'Email',
       name:
@@ -4558,7 +4012,7 @@ class AppLocalizations {
 
   /// `Nhập email`
   String
-      get certificate_packageuser_form_contact_certificate_info_item_email_hint_text {
+  get certificate_packageuser_form_contact_certificate_info_item_email_hint_text {
     return Intl.message(
       'Nhập email',
       name:
@@ -4570,7 +4024,7 @@ class AppLocalizations {
 
   /// `Số điện thoại`
   String
-      get certificate_packageuser_form_contact_certificate_info_item_phone_label_text {
+  get certificate_packageuser_form_contact_certificate_info_item_phone_label_text {
     return Intl.message(
       'Số điện thoại',
       name:
@@ -4582,7 +4036,7 @@ class AppLocalizations {
 
   /// `Nhập số điện thoại`
   String
-      get certificate_packageuser_form_contact_certificate_info_item_phone_hint_text {
+  get certificate_packageuser_form_contact_certificate_info_item_phone_hint_text {
     return Intl.message(
       'Nhập số điện thoại',
       name:
@@ -4864,12 +4318,7 @@ class AppLocalizations {
 
   /// `Tất cả`
   String get all {
-    return Intl.message(
-      'Tất cả',
-      name: 'all',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tất cả', name: 'all', desc: '', args: []);
   }
 
   /// `Theo lượt ký`
@@ -4914,12 +4363,7 @@ class AppLocalizations {
 
   /// `Chọn tất cả`
   String get selectAll {
-    return Intl.message(
-      'Chọn tất cả',
-      name: 'selectAll',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chọn tất cả', name: 'selectAll', desc: '', args: []);
   }
 
   /// `Thời gian sử dụng`
@@ -4974,32 +4418,17 @@ class AppLocalizations {
 
   /// `Chu kỳ`
   String get cycle {
-    return Intl.message(
-      'Chu kỳ',
-      name: 'cycle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chu kỳ', name: 'cycle', desc: '', args: []);
   }
 
   /// `Áp dụng`
   String get apply {
-    return Intl.message(
-      'Áp dụng',
-      name: 'apply',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Áp dụng', name: 'apply', desc: '', args: []);
   }
 
   /// `Miễn phí`
   String get free {
-    return Intl.message(
-      'Miễn phí',
-      name: 'free',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Miễn phí', name: 'free', desc: '', args: []);
   }
 
   /// `Không có gói nào phù hợp\nvới điều kiện lọc`
@@ -5024,22 +4453,12 @@ class AppLocalizations {
 
   /// `Miễn phí`
   String get order_free {
-    return Intl.message(
-      'Miễn phí',
-      name: 'order_free',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Miễn phí', name: 'order_free', desc: '', args: []);
   }
 
   /// `Tháng`
   String get month_text {
-    return Intl.message(
-      'Tháng',
-      name: 'month_text',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tháng', name: 'month_text', desc: '', args: []);
   }
 
   /// `Kết quả ({numberPackages})`
@@ -5084,12 +4503,7 @@ class AppLocalizations {
 
   /// `Gói`
   String get package {
-    return Intl.message(
-      'Gói',
-      name: 'package',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Gói', name: 'package', desc: '', args: []);
   }
 
   /// `Đã bao gồm 10% VAT`
@@ -5114,32 +4528,17 @@ class AppLocalizations {
 
   /// `Số lượng`
   String get quantity {
-    return Intl.message(
-      'Số lượng',
-      name: 'quantity',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Số lượng', name: 'quantity', desc: '', args: []);
   }
 
   /// `Đơn giá`
   String get price {
-    return Intl.message(
-      'Đơn giá',
-      name: 'price',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đơn giá', name: 'price', desc: '', args: []);
   }
 
   /// `Thành tiền`
   String get money {
-    return Intl.message(
-      'Thành tiền',
-      name: 'money',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thành tiền', name: 'money', desc: '', args: []);
   }
 
   /// `Thông tin xuất hóa đơn`
@@ -5174,12 +4573,7 @@ class AppLocalizations {
 
   /// `Lưu ý`
   String get certPackNoteLabel {
-    return Intl.message(
-      'Lưu ý',
-      name: 'certPackNoteLabel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lưu ý', name: 'certPackNoteLabel', desc: '', args: []);
   }
 
   /// `Chứng thư số chưa bao gồm lượt ký. Số lượt ký sẽ theo gói lượt ký mua riêng.`
@@ -5214,32 +4608,17 @@ class AppLocalizations {
 
   /// `Thanh toán`
   String get pay {
-    return Intl.message(
-      'Thanh toán',
-      name: 'pay',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thanh toán', name: 'pay', desc: '', args: []);
   }
 
   /// `{number} lượt`
   String turn(Object number) {
-    return Intl.message(
-      '$number lượt',
-      name: 'turn',
-      desc: '',
-      args: [number],
-    );
+    return Intl.message('$number lượt', name: 'turn', desc: '', args: [number]);
   }
 
   /// `{number} VNĐ`
   String vnd(Object number) {
-    return Intl.message(
-      '$number VNĐ',
-      name: 'vnd',
-      desc: '',
-      args: [number],
-    );
+    return Intl.message('$number VNĐ', name: 'vnd', desc: '', args: [number]);
   }
 
   /// `Đang khởi tạo dịch vụ`
@@ -5284,12 +4663,7 @@ class AppLocalizations {
 
   /// `Kích hoạt`
   String get Activated {
-    return Intl.message(
-      'Kích hoạt',
-      name: 'Activated',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Kích hoạt', name: 'Activated', desc: '', args: []);
   }
 
   /// `Khởi tạo dịch vụ`
@@ -5364,12 +4738,7 @@ class AppLocalizations {
 
   /// `Thu gọn`
   String get collapse {
-    return Intl.message(
-      'Thu gọn',
-      name: 'collapse',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thu gọn', name: 'collapse', desc: '', args: []);
   }
 
   /// `Chọn chứng thư số cần đổi thiết bị`
@@ -5394,12 +4763,7 @@ class AppLocalizations {
 
   /// `Mua\nchứng thư`
   String get buyCTS {
-    return Intl.message(
-      'Mua\nchứng thư',
-      name: 'buyCTS',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mua\nchứng thư', name: 'buyCTS', desc: '', args: []);
   }
 
   /// `Xác minh thông tin không thành công!`
@@ -5494,12 +4858,7 @@ class AppLocalizations {
 
   /// `•`
   String get bulletDot {
-    return Intl.message(
-      '•',
-      name: 'bulletDot',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('•', name: 'bulletDot', desc: '', args: []);
   }
 
   /// `Tồn tại yêu cầu đăng ký chứng thư số trước đó, Bạn có muốn tiếp tục hay đăng ký mới?`
@@ -5564,22 +4923,12 @@ class AppLocalizations {
 
   /// `Hoàn thành`
   String get completed {
-    return Intl.message(
-      'Hoàn thành',
-      name: 'completed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hoàn thành', name: 'completed', desc: '', args: []);
   }
 
   /// `Đang xử lý`
   String get inProgress {
-    return Intl.message(
-      'Đang xử lý',
-      name: 'inProgress',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang xử lý', name: 'inProgress', desc: '', args: []);
   }
 
   /// `Vui lòng liên hệ Tổng đài (18001260) nhánh 1 nếu đơn hàng ở các trạng thái:`
@@ -5664,22 +5013,12 @@ class AppLocalizations {
 
   /// `Mã đơn hàng`
   String get orderCode {
-    return Intl.message(
-      'Mã đơn hàng',
-      name: 'orderCode',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mã đơn hàng', name: 'orderCode', desc: '', args: []);
   }
 
   /// `Ngày tạo`
   String get orderDate {
-    return Intl.message(
-      'Ngày tạo',
-      name: 'orderDate',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ngày tạo', name: 'orderDate', desc: '', args: []);
   }
 
   /// `Chờ xác thực eKYC`
@@ -5854,22 +5193,12 @@ class AppLocalizations {
 
   /// `Hoàn thành`
   String get orderDONE {
-    return Intl.message(
-      'Hoàn thành',
-      name: 'orderDONE',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hoàn thành', name: 'orderDONE', desc: '', args: []);
   }
 
   /// `Đã hủy`
   String get orderCANCELED {
-    return Intl.message(
-      'Đã hủy',
-      name: 'orderCANCELED',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đã hủy', name: 'orderCANCELED', desc: '', args: []);
   }
 
   /// `Chờ khởi tạo cặp khóa`
@@ -5904,12 +5233,7 @@ class AppLocalizations {
 
   /// `Nhận tư vấn`
   String get getAdvice {
-    return Intl.message(
-      'Nhận tư vấn',
-      name: 'getAdvice',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nhận tư vấn', name: 'getAdvice', desc: '', args: []);
   }
 
   /// `Vui lòng cung cấp thông tin để nhân viên VNPT hỗ trợ thủ tục đăng ký chứng thư số cho Tổ chức Doanh nghiệp!`
@@ -6024,12 +5348,7 @@ class AppLocalizations {
 
   /// `Hộ chiếu`
   String get passport {
-    return Intl.message(
-      'Hộ chiếu',
-      name: 'passport',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hộ chiếu', name: 'passport', desc: '', args: []);
   }
 
   /// `Giấy đăng ký kinh doanh`
@@ -6042,10 +5361,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Tài khoản đã được đăng ký thành công. \nVui lòng Đăng nhập để tiếp tục!`
+  /// `Số giấy tờ đã được đăng ký. \nVui lòng Đăng nhập để tiếp tục!`
   String get accountRegisteredSuccessfully {
     return Intl.message(
-      'Tài khoản đã được đăng ký thành công. \nVui lòng Đăng nhập để tiếp tục!',
+      'Số giấy tờ đã được đăng ký. \nVui lòng Đăng nhập để tiếp tục!',
       name: 'accountRegisteredSuccessfully',
       desc: '',
       args: [],
@@ -6102,10 +5421,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Tỉnh/Thành phố, Quận/Huyện, Phường/Xã`
+  /// `Tỉnh/Thành phố, Phường/Xã`
   String get addressFullLabel {
     return Intl.message(
-      'Tỉnh/Thành phố, Quận/Huyện, Phường/Xã',
+      'Tỉnh/Thành phố, Phường/Xã',
       name: 'addressFullLabel',
       desc: '',
       args: [],
@@ -6144,12 +5463,7 @@ class AppLocalizations {
 
   /// `Hoàn thành`
   String get complete {
-    return Intl.message(
-      'Hoàn thành',
-      name: 'complete',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hoàn thành', name: 'complete', desc: '', args: []);
   }
 
   /// `Tuỳ chọn địa chỉ`
@@ -6484,12 +5798,7 @@ class AppLocalizations {
 
   /// `tại đây`
   String get here {
-    return Intl.message(
-      'tại đây',
-      name: 'here',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('tại đây', name: 'here', desc: '', args: []);
   }
 
   /// `Chính sách bảo vệ dữ liệu cá nhân`
@@ -6514,12 +5823,7 @@ class AppLocalizations {
 
   /// `Chi tiết`
   String get detail {
-    return Intl.message(
-      'Chi tiết',
-      name: 'detail',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chi tiết', name: 'detail', desc: '', args: []);
   }
 
   /// `Tạo giao dịch ký`
@@ -6564,12 +5868,7 @@ class AppLocalizations {
 
   /// `Số giấy tờ`
   String get idNumber {
-    return Intl.message(
-      'Số giấy tờ',
-      name: 'idNumber',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Số giấy tờ', name: 'idNumber', desc: '', args: []);
   }
 
   /// `Chi tiết chứng thư số`
@@ -6744,32 +6043,17 @@ class AppLocalizations {
 
   /// `giao dịch`
   String get giao_dich {
-    return Intl.message(
-      'giao dịch',
-      name: 'giao_dich',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('giao dịch', name: 'giao_dich', desc: '', args: []);
   }
 
   /// `Ký tất cả`
   String get ky_tat_ca {
-    return Intl.message(
-      'Ký tất cả',
-      name: 'ky_tat_ca',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ký tất cả', name: 'ky_tat_ca', desc: '', args: []);
   }
 
   /// `Hủy tất cả`
   String get huy_tat_ca {
-    return Intl.message(
-      'Hủy tất cả',
-      name: 'huy_tat_ca',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hủy tất cả', name: 'huy_tat_ca', desc: '', args: []);
   }
 
   /// `Chọn tài liệu`
@@ -6784,32 +6068,17 @@ class AppLocalizations {
 
   /// `Chọn tệp`
   String get chon_tep {
-    return Intl.message(
-      'Chọn tệp',
-      name: 'chon_tep',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chọn tệp', name: 'chon_tep', desc: '', args: []);
   }
 
   /// `Chụp ảnh`
   String get chup_anh {
-    return Intl.message(
-      'Chụp ảnh',
-      name: 'chup_anh',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chụp ảnh', name: 'chup_anh', desc: '', args: []);
   }
 
   /// `Ký nâng cao`
   String get ky_nang_cao {
-    return Intl.message(
-      'Ký nâng cao',
-      name: 'ky_nang_cao',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ký nâng cao', name: 'ky_nang_cao', desc: '', args: []);
   }
 
   /// `Chạm vị trí bất kỳ để chọn chữ ký`
@@ -6844,12 +6113,7 @@ class AppLocalizations {
 
   /// `Thêm chữ ký`
   String get them_chu_ky {
-    return Intl.message(
-      'Thêm chữ ký',
-      name: 'them_chu_ky',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thêm chữ ký', name: 'them_chu_ky', desc: '', args: []);
   }
 
   /// `Tên chứng thư`
@@ -6864,32 +6128,17 @@ class AppLocalizations {
 
   /// `Vẽ`
   String get but_ve {
-    return Intl.message(
-      'Vẽ',
-      name: 'but_ve',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Vẽ', name: 'but_ve', desc: '', args: []);
   }
 
   /// `Nhập tên`
   String get nhap_ten {
-    return Intl.message(
-      'Nhập tên',
-      name: 'nhap_ten',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nhập tên', name: 'nhap_ten', desc: '', args: []);
   }
 
   /// `Tải lên`
   String get tai_anh_chu_ky {
-    return Intl.message(
-      'Tải lên',
-      name: 'tai_anh_chu_ky',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tải lên', name: 'tai_anh_chu_ky', desc: '', args: []);
   }
 
   /// `Tải lên hình nền`
@@ -6904,22 +6153,12 @@ class AppLocalizations {
 
   /// `Ký bởi`
   String get ky_boi {
-    return Intl.message(
-      'Ký bởi',
-      name: 'ky_boi',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ký bởi', name: 'ky_boi', desc: '', args: []);
   }
 
   /// `Ngày ký`
   String get ngay_ky {
-    return Intl.message(
-      'Ngày ký',
-      name: 'ngay_ky',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ngày ký', name: 'ngay_ky', desc: '', args: []);
   }
 
   /// `Tổ chức xác thực`
@@ -6994,42 +6233,22 @@ class AppLocalizations {
 
   /// `Căn lề`
   String get can_le {
-    return Intl.message(
-      'Căn lề',
-      name: 'can_le',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Căn lề', name: 'can_le', desc: '', args: []);
   }
 
   /// `Căn trái`
   String get can_trai {
-    return Intl.message(
-      'Căn trái',
-      name: 'can_trai',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Căn trái', name: 'can_trai', desc: '', args: []);
   }
 
   /// `Căn giữa`
   String get can_giua {
-    return Intl.message(
-      'Căn giữa',
-      name: 'can_giua',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Căn giữa', name: 'can_giua', desc: '', args: []);
   }
 
   /// `Căn phải`
   String get can_phai {
-    return Intl.message(
-      'Căn phải',
-      name: 'can_phai',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Căn phải', name: 'can_phai', desc: '', args: []);
   }
 
   /// `Kiểu hiển thị`
@@ -7072,30 +6291,30 @@ class AppLocalizations {
     );
   }
 
-  /// `2. Hiển thị text và logo bên trái`
+  /// `2. Hiển thị text và hình nền bên trái`
   String get hien_thi_text_logo_ben_trai {
     return Intl.message(
-      '2. Hiển thị text và logo bên trái',
+      '2. Hiển thị text và hình nền bên trái',
       name: 'hien_thi_text_logo_ben_trai',
       desc: '',
       args: [],
     );
   }
 
-  /// `3. Chỉ hiển thị logo`
+  /// `3. Chỉ hiển thị hình nền`
   String get chi_hien_thi_logo {
     return Intl.message(
-      '3. Chỉ hiển thị logo',
+      '3. Chỉ hiển thị hình nền',
       name: 'chi_hien_thi_logo',
       desc: '',
       args: [],
     );
   }
 
-  /// `4. Hiển thị text và logo phía trên`
+  /// `4. Hiển thị text và hình nền phía trên`
   String get hien_thi_text_logo_tren {
     return Intl.message(
-      '4. Hiển thị text và logo phía trên',
+      '4. Hiển thị text và hình nền phía trên',
       name: 'hien_thi_text_logo_tren',
       desc: '',
       args: [],
@@ -7112,10 +6331,10 @@ class AppLocalizations {
     );
   }
 
-  /// `6. Hiển thị text, logo bên trái và chữ ký`
+  /// `6. Hiển thị text, hình nền bên trái và chữ ký`
   String get hien_thi_text_logo_ben_trai_chu {
     return Intl.message(
-      '6. Hiển thị text, logo bên trái và chữ ký',
+      '6. Hiển thị text, hình nền bên trái và chữ ký',
       name: 'hien_thi_text_logo_ben_trai_chu',
       desc: '',
       args: [],
@@ -7234,12 +6453,7 @@ class AppLocalizations {
 
   /// `Gói tích hợp`
   String get esealType {
-    return Intl.message(
-      'Gói tích hợp',
-      name: 'esealType',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Gói tích hợp', name: 'esealType', desc: '', args: []);
   }
 
   /// `Chờ duyệt yêu cầu thay đổi\nthiết bị!`
@@ -7302,10 +6516,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Bạn không thể mua lượt ký.\nLý do: Không tồn tại Chứng thư số theo Lượt ký ở trạng thái Đang hoạt động.`
+  /// `Bạn không thể mua lượt ký.\nLý do: Không tồn tại Chứng thư số theo Lượt ký ở trạng thái Đang hoạt động.\n Vui lòng Kích hoạt/Gia hạn/Mua mới chứng thư.`
   String get youCanNotBuySignature {
     return Intl.message(
-      'Bạn không thể mua lượt ký.\nLý do: Không tồn tại Chứng thư số theo Lượt ký ở trạng thái Đang hoạt động.',
+      'Bạn không thể mua lượt ký.\nLý do: Không tồn tại Chứng thư số theo Lượt ký ở trạng thái Đang hoạt động.\n Vui lòng Kích hoạt/Gia hạn/Mua mới chứng thư.',
       name: 'youCanNotBuySignature',
       desc: '',
       args: [],
@@ -7374,12 +6588,7 @@ class AppLocalizations {
 
   /// `Gia hạn ngay`
   String get extend_now {
-    return Intl.message(
-      'Gia hạn ngay',
-      name: 'extend_now',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Gia hạn ngay', name: 'extend_now', desc: '', args: []);
   }
 
   /// `Tài liệu đã được thêm, Bạn có muốn tiếp tục?`
@@ -7444,12 +6653,7 @@ class AppLocalizations {
 
   /// `lượt`
   String get luot {
-    return Intl.message(
-      'lượt',
-      name: 'luot',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('lượt', name: 'luot', desc: '', args: []);
   }
 
   /// `Thông tin thuê bao`
@@ -7572,10 +6776,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Không có chứng thư số được kích hoạt trên thiết bị này. Vui lòng thực hiện Đổi thiết bị để thực hiện ký số.`
+  /// `Không có chứng thư số được kích hoạt trên thiết bị/ứng dụng này. Vui lòng thực hiện Đổi thiết bị để thực hiện ký số.`
   String get cant_not_certificate_active_in_device {
     return Intl.message(
-      'Không có chứng thư số được kích hoạt trên thiết bị này. Vui lòng thực hiện Đổi thiết bị để thực hiện ký số.',
+      'Không có chứng thư số được kích hoạt trên thiết bị/ứng dụng này. Vui lòng thực hiện Đổi thiết bị để thực hiện ký số.',
       name: 'cant_not_certificate_active_in_device',
       desc: '',
       args: [],
@@ -7662,10 +6866,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Địa chỉ trên giấy tờ`
+  /// `Địa chỉ Quê quán`
   String get addressOnDocuments {
     return Intl.message(
-      'Địa chỉ trên giấy tờ',
+      'Địa chỉ Quê quán',
       name: 'addressOnDocuments',
       desc: '',
       args: [],
@@ -7882,10 +7086,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Bạn có thể Kích hoạt lại chứng thư trên thiết bị khác khi muốn đổi, bị mất thiết hoặc mất thông tin khóa chứng thư`
+  /// `Bạn có thể Kích hoạt lại chứng thư trên thiết bị/ứng dụng khác khi muốn đổi, bị mất thiết hoặc mất thông tin khóa chứng thư`
   String get changeDeviceDetailIntro {
     return Intl.message(
-      'Bạn có thể Kích hoạt lại chứng thư trên thiết bị khác khi muốn đổi, bị mất thiết hoặc mất thông tin khóa chứng thư',
+      'Bạn có thể Kích hoạt lại chứng thư trên thiết bị/ứng dụng khác khi muốn đổi, bị mất thiết hoặc mất thông tin khóa chứng thư',
       name: 'changeDeviceDetailIntro',
       desc: '',
       args: [],
@@ -7904,12 +7108,7 @@ class AppLocalizations {
 
   /// `Chứng thư`
   String get cert {
-    return Intl.message(
-      'Chứng thư',
-      name: 'cert',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chứng thư', name: 'cert', desc: '', args: []);
   }
 
   /// `Mật khẩu hiện tại chưa chính xác`
@@ -7974,32 +7173,17 @@ class AppLocalizations {
 
   /// `Đang liên kết`
   String get linking {
-    return Intl.message(
-      'Đang liên kết',
-      name: 'linking',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang liên kết', name: 'linking', desc: '', args: []);
   }
 
   /// `Tạm dừng`
   String get pause {
-    return Intl.message(
-      'Tạm dừng',
-      name: 'pause',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tạm dừng', name: 'pause', desc: '', args: []);
   }
 
   /// `Cấu hình`
   String get config {
-    return Intl.message(
-      'Cấu hình',
-      name: 'config',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cấu hình', name: 'config', desc: '', args: []);
   }
 
   /// `Cấu hình ký tự động`
@@ -8064,22 +7248,12 @@ class AppLocalizations {
 
   /// `Mở`
   String get turnOn {
-    return Intl.message(
-      'Mở',
-      name: 'turnOn',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mở', name: 'turnOn', desc: '', args: []);
   }
 
   /// `Tắt`
   String get turnOff {
-    return Intl.message(
-      'Tắt',
-      name: 'turnOff',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tắt', name: 'turnOff', desc: '', args: []);
   }
 
   /// `Xoá hệ thống liên kết`
@@ -8114,12 +7288,7 @@ class AppLocalizations {
 
   /// `Hình nền`
   String get hinh_nen {
-    return Intl.message(
-      'Hình nền',
-      name: 'hinh_nen',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hình nền', name: 'hinh_nen', desc: '', args: []);
   }
 
   /// `Chưa có hệ thống nào được liên kết.\nVui lòng thực hiện theo hướng dẫn `
@@ -8234,12 +7403,7 @@ class AppLocalizations {
 
   /// `Gửi`
   String get send {
-    return Intl.message(
-      'Gửi',
-      name: 'send',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Gửi', name: 'send', desc: '', args: []);
   }
 
   /// `Cập nhật email, số điện thoại`
@@ -8404,12 +7568,7 @@ class AppLocalizations {
 
   /// `Sao chép`
   String get get_totp_copy {
-    return Intl.message(
-      'Sao chép',
-      name: 'get_totp_copy',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sao chép', name: 'get_totp_copy', desc: '', args: []);
   }
 
   /// `Mã TOTP ở trên dùng để tự động tạo mã OTP cho:`
@@ -8444,12 +7603,7 @@ class AppLocalizations {
 
   /// `Chia sẻ`
   String get get_totp_share {
-    return Intl.message(
-      'Chia sẻ',
-      name: 'get_totp_share',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chia sẻ', name: 'get_totp_share', desc: '', args: []);
   }
 
   /// `{number} Đơn hàng chờ thực hiện!`
@@ -8492,10 +7646,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Khóa chứng thư đã thay đổi. Bạn có muốn Kích hoạt lại chứng thư số trên thiết bị này không?`
+  /// `Khóa chứng thư đã thay đổi. Bạn có muốn Kích hoạt lại chứng thư số trên thiết bị/ứng dụng này không?`
   String get KAKChanged {
     return Intl.message(
-      'Khóa chứng thư đã thay đổi. Bạn có muốn Kích hoạt lại chứng thư số trên thiết bị này không?',
+      'Khóa chứng thư đã thay đổi. Bạn có muốn Kích hoạt lại chứng thư số trên thiết bị/ứng dụng này không?',
       name: 'KAKChanged',
       desc: '',
       args: [],
@@ -8514,12 +7668,7 @@ class AppLocalizations {
 
   /// `Hướng dẫn`
   String get searchFaq {
-    return Intl.message(
-      'Hướng dẫn',
-      name: 'searchFaq',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hướng dẫn', name: 'searchFaq', desc: '', args: []);
   }
 
   /// `Vui lòng Đăng nhập lại`
@@ -8527,6 +7676,794 @@ class AppLocalizations {
     return Intl.message(
       'Vui lòng Đăng nhập lại',
       name: 'reLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kích hoạt trên thiết bị/ứng dụng này`
+  String get activateOnThisDevice {
+    return Intl.message(
+      'Kích hoạt trên thiết bị/ứng dụng này',
+      name: 'activateOnThisDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kích hoạt trên thiết bị/ứng dụng khác`
+  String get activateOnAnotherDevice {
+    return Intl.message(
+      'Kích hoạt trên thiết bị/ứng dụng khác',
+      name: 'activateOnAnotherDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yêu cầu xác thực Quên mật khẩu sẽ được gửi qua:`
+  String get forgotPasswordNote {
+    return Intl.message(
+      'Yêu cầu xác thực Quên mật khẩu sẽ được gửi qua:',
+      name: 'forgotPasswordNote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đặt lại mật khẩu`
+  String get resetPassword {
+    return Intl.message(
+      'Đặt lại mật khẩu',
+      name: 'resetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mã xác nhận`
+  String get verificationCode {
+    return Intl.message(
+      'Mã xác nhận',
+      name: 'verificationCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mã xác nhận đặt lại mật khẩu đã được gửi về {any}.`
+  String pleaseCheckForgotPassword(Object any) {
+    return Intl.message(
+      'Mã xác nhận đặt lại mật khẩu đã được gửi về $any.',
+      name: 'pleaseCheckForgotPassword',
+      desc: '',
+      args: [any],
+    );
+  }
+
+  /// `Ký số Biên bản nghiệm thu không thành công. Quý khách vui lòng nhấn tiếp tục để thực hiện ký lại.`
+  String get reSignAcceptance {
+    return Intl.message(
+      'Ký số Biên bản nghiệm thu không thành công. Quý khách vui lòng nhấn tiếp tục để thực hiện ký lại.',
+      name: 'reSignAcceptance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ký Biên bản nghiệm thu thành công. Để tiếp tục sử dụng dịch vụ vui lòng thực hiện Kích hoạt chứng thư số.`
+  String get reSignAcceptanceSuccess {
+    return Intl.message(
+      'Ký Biên bản nghiệm thu thành công. Để tiếp tục sử dụng dịch vụ vui lòng thực hiện Kích hoạt chứng thư số.',
+      name: 'reSignAcceptanceSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Giao dịch của bạn đã hoàn thành Ký số/Hủy.`
+  String get transactionNotWaiting {
+    return Intl.message(
+      'Giao dịch của bạn đã hoàn thành Ký số/Hủy.',
+      name: 'transactionNotWaiting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xem thêm chứng thư số đã bị ẩn`
+  String get viewMoreCertHide {
+    return Intl.message(
+      'Xem thêm chứng thư số đã bị ẩn',
+      name: 'viewMoreCertHide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ẩn chứng thư số đã bị ẩn`
+  String get hideCertHide {
+    return Intl.message(
+      'Ẩn chứng thư số đã bị ẩn',
+      name: 'hideCertHide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hiển thị chứng thư số trên màn hình danh sách`
+  String get showCTSInListScreen {
+    return Intl.message(
+      'Hiển thị chứng thư số trên màn hình danh sách',
+      name: 'showCTSInListScreen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng Kích hoạt/Mua mới/Gia hạn chứng thư hoặc hoàn thành Đơn hàng để tiếp tục.`
+  String get newOrExtend {
+    return Intl.message(
+      'Vui lòng Kích hoạt/Mua mới/Gia hạn chứng thư hoặc hoàn thành Đơn hàng để tiếp tục.',
+      name: 'newOrExtend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hồ sơ của quý khách đang được duyệt. Kết quả duyệt sẽ được thông báo qua email. Quý khách vui lòng quay lại sau!`
+  String get waitingProviderCert {
+    return Intl.message(
+      'Hồ sơ của quý khách đang được duyệt. Kết quả duyệt sẽ được thông báo qua email. Quý khách vui lòng quay lại sau!',
+      name: 'waitingProviderCert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ký biên bản nghiệm thu thành công. Bây giờ bạn có thể xác thực các giao dịch tại mục Ký số.`
+  String get signBbntSuccess {
+    return Intl.message(
+      'Ký biên bản nghiệm thu thành công. Bây giờ bạn có thể xác thực các giao dịch tại mục Ký số.',
+      name: 'signBbntSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PIN quý khách đã tạo cho chứng thư số`
+  String get descriptionForPIN {
+    return Intl.message(
+      'PIN quý khách đã tạo cho chứng thư số',
+      name: 'descriptionForPIN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chức vụ`
+  String get positionInOrg {
+    return Intl.message('Chức vụ', name: 'positionInOrg', desc: '', args: []);
+  }
+
+  /// `Đơn vị`
+  String get unitInOrg {
+    return Intl.message('Đơn vị', name: 'unitInOrg', desc: '', args: []);
+  }
+
+  /// `Chờ xác nhận giao dịch`
+  String get waitingConfirmBySmartCAApp {
+    return Intl.message(
+      'Chờ xác nhận giao dịch',
+      name: 'waitingConfirmBySmartCAApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hoặc mở ứng dụng VNPT SmartCA trên thiết bị đã kích hoạt chứng thư trước đó và Xác nhận giao dịch, sau đó quay lại để tiếp tục.`
+  String get waitingConfirmBySmartCAAppSubtitle {
+    return Intl.message(
+      'Hoặc mở ứng dụng VNPT SmartCA trên thiết bị đã kích hoạt chứng thư trước đó và Xác nhận giao dịch, sau đó quay lại để tiếp tục.',
+      name: 'waitingConfirmBySmartCAAppSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mở ứng dụng VNPT SmartCA`
+  String get openVNPTSmartApp {
+    return Intl.message(
+      'Mở ứng dụng VNPT SmartCA',
+      name: 'openVNPTSmartApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng không tự đóng màn hình này.`
+  String get doNotCloseApp {
+    return Intl.message(
+      'Vui lòng không tự đóng màn hình này.',
+      name: 'doNotCloseApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hủy định danh`
+  String get certDeleteStatus {
+    return Intl.message(
+      'Hủy định danh',
+      name: 'certDeleteStatus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `VNPT đã tiếp nhận và đang xử lý yêu cầu đăng ký chứng thư số của Quý khách.`
+  String get await_approve_cert {
+    return Intl.message(
+      'VNPT đã tiếp nhận và đang xử lý yêu cầu đăng ký chứng thư số của Quý khách.',
+      name: 'await_approve_cert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gọi `
+  String get callNow {
+    return Intl.message('Gọi ', name: 'callNow', desc: '', args: []);
+  }
+
+  /// `Vui lòng liên hệ Tổng đài 18001260 (nhánh 1) \nmiễn phí để được hỗ trợ!`
+  String get contactHotline {
+    return Intl.message(
+      'Vui lòng liên hệ Tổng đài 18001260 (nhánh 1) \nmiễn phí để được hỗ trợ!',
+      name: 'contactHotline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng đợi trong giây lát...`
+  String get waitaMinute {
+    return Intl.message(
+      'Vui lòng đợi trong giây lát...',
+      name: 'waitaMinute',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tạo yêu cầu cấp chứng thư lỗi`
+  String get tao_yeu_cau_chungthu_loi {
+    return Intl.message(
+      'Tạo yêu cầu cấp chứng thư lỗi',
+      name: 'tao_yeu_cau_chungthu_loi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi yêu cầu lên OneBSS lỗi`
+  String get submit_onebss_er {
+    return Intl.message(
+      'Gửi yêu cầu lên OneBSS lỗi',
+      name: 'submit_onebss_er',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đồng bộ hồ sơ lên OneBSS lỗi`
+  String get sync_onebss_er {
+    return Intl.message(
+      'Đồng bộ hồ sơ lên OneBSS lỗi',
+      name: 'sync_onebss_er',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duyệt yêu cầu cấp chứng thư lỗi`
+  String get approve_request_er {
+    return Intl.message(
+      'Duyệt yêu cầu cấp chứng thư lỗi',
+      name: 'approve_request_er',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `đã`
+  String get da {
+    return Intl.message('đã', name: 'da', desc: '', args: []);
+  }
+
+  /// `sắp`
+  String get sap {
+    return Intl.message('sắp', name: 'sap', desc: '', args: []);
+  }
+
+  /// `Rất tiếc, chúng tôi không thể xác minh thông tin eKYC của bạn.`
+  String get ekycWrong {
+    return Intl.message(
+      'Rất tiếc, chúng tôi không thể xác minh thông tin eKYC của bạn.',
+      name: 'ekycWrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lưu ý:\n - Mật khẩu 8-12 ký tự. Bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt @,#,$,&,*,!.\n - Không bao gồm các số liên tiếp nhau hoặc trùng nhau, tên riêng và tên đơn vị.`
+  String get notice_type_password {
+    return Intl.message(
+      'Lưu ý:\n - Mật khẩu 8-12 ký tự. Bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt @,#,\$,&,*,!.\n - Không bao gồm các số liên tiếp nhau hoặc trùng nhau, tên riêng và tên đơn vị.',
+      name: 'notice_type_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Định dạng PDF, DOC, XML, PPT, TXT`
+  String get file_format {
+    return Intl.message(
+      'Định dạng PDF, DOC, XML, PPT, TXT',
+      name: 'file_format',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{number} thao tác chưa hoàn tất`
+  String numberActionNotComplete(Object number) {
+    return Intl.message(
+      '$number thao tác chưa hoàn tất',
+      name: 'numberActionNotComplete',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `{number} thao tác Chờ thanh toán chưa hoàn tất`
+  String numberPaymentNotComplete(Object number) {
+    return Intl.message(
+      '$number thao tác Chờ thanh toán chưa hoàn tất',
+      name: 'numberPaymentNotComplete',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `{number} thao tác Chờ eKYC chưa hoàn tất`
+  String numberEKYCNotComplete(Object number) {
+    return Intl.message(
+      '$number thao tác Chờ eKYC chưa hoàn tất',
+      name: 'numberEKYCNotComplete',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `{number} thao tác Chờ ký hợp đồng chưa hoàn tất`
+  String numberContractNotComplete(Object number) {
+    return Intl.message(
+      '$number thao tác Chờ ký hợp đồng chưa hoàn tất',
+      name: 'numberContractNotComplete',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `{number} thao tác đăng ký chưa hoàn tất`
+  String numberRegisterNotComplete(Object number) {
+    return Intl.message(
+      '$number thao tác đăng ký chưa hoàn tất',
+      name: 'numberRegisterNotComplete',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `Lưu ý: Chọn mẫu chữ ký chỉ dành cho file PDF!`
+  String get notice_create_transaction {
+    return Intl.message(
+      'Lưu ý: Chọn mẫu chữ ký chỉ dành cho file PDF!',
+      name: 'notice_create_transaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang xử lý, vui lòng đợi trong giây lát...`
+  String get progressProcessing {
+    return Intl.message(
+      'Đang xử lý, vui lòng đợi trong giây lát...',
+      name: 'progressProcessing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mật khẩu không hợp lệ`
+  String get passwordNotValid {
+    return Intl.message(
+      'Mật khẩu không hợp lệ',
+      name: 'passwordNotValid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông tin khách hàng`
+  String get customer_info {
+    return Intl.message(
+      'Thông tin khách hàng',
+      name: 'customer_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thiết lập mật khẩu tài khoản SmartCA`
+  String get setup_smart_ca_password {
+    return Intl.message(
+      'Thiết lập mật khẩu tài khoản SmartCA',
+      name: 'setup_smart_ca_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gói chứng thư số của bạn`
+  String get your_cert_package {
+    return Intl.message(
+      'Gói chứng thư số của bạn',
+      name: 'your_cert_package',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SmartCA cá nhân PS0 (Công dân)`
+  String get ps0_package_name {
+    return Intl.message(
+      'SmartCA cá nhân PS0 (Công dân)',
+      name: 'ps0_package_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn được ký miễn phí trên MyVNPT và Cổng dịch vụ Công`
+  String get ps0_package_note {
+    return Intl.message(
+      'Bạn được ký miễn phí trên MyVNPT và Cổng dịch vụ Công',
+      name: 'ps0_package_note',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thời gian sử dụng`
+  String get ps0_package_time_label {
+    return Intl.message(
+      'Thời gian sử dụng',
+      name: 'ps0_package_time_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `12 tháng`
+  String get ps0_package_time_content {
+    return Intl.message(
+      '12 tháng',
+      name: 'ps0_package_time_content',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phí dịch vụ`
+  String get ps0_package_fee_label {
+    return Intl.message(
+      'Phí dịch vụ',
+      name: 'ps0_package_fee_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Miễn phí`
+  String get ps0_package_fee_content {
+    return Intl.message(
+      'Miễn phí',
+      name: 'ps0_package_fee_content',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dùng cho các trường hợp: \n- Thiết bị kích hoạt chứng thư bị mất\n- Đổi sang thiết bị khác để ký số\n- Quên hoặc muốn thay đổi mã PIN\n- Kích hoạt lại chứng thư số khi bị lỗi`
+  String get changeDevicePurpose {
+    return Intl.message(
+      'Dùng cho các trường hợp: \n- Thiết bị kích hoạt chứng thư bị mất\n- Đổi sang thiết bị khác để ký số\n- Quên hoặc muốn thay đổi mã PIN\n- Kích hoạt lại chứng thư số khi bị lỗi',
+      name: 'changeDevicePurpose',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng cập nhật địa chỉ đăng ký theo Quy định về sáp nhập Tỉnh và Xã theo Luật Tổ chức chính quyền địa phương 2025 và Nghị quyết 1211/2016/UBTVQH13`
+  String get updateAddressNotice {
+    return Intl.message(
+      'Vui lòng cập nhật địa chỉ đăng ký theo Quy định về sáp nhập Tỉnh và Xã theo Luật Tổ chức chính quyền địa phương 2025 và Nghị quyết 1211/2016/UBTVQH13',
+      name: 'updateAddressNotice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sử dụng sinh trắc học`
+  String get use_bio {
+    return Intl.message(
+      'Sử dụng sinh trắc học',
+      name: 'use_bio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang hủy`
+  String get orderCanceling {
+    return Intl.message('Đang hủy', name: 'orderCanceling', desc: '', args: []);
+  }
+
+  /// `Hủy không thành công`
+  String get orderCANCEL_ERROR {
+    return Intl.message(
+      'Hủy không thành công',
+      name: 'orderCANCEL_ERROR',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cấp Chứng thư số thành công`
+  String get generateCertificateSuccess {
+    return Intl.message(
+      'Cấp Chứng thư số thành công',
+      name: 'generateCertificateSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tôi xác nhận Chứng thư số được cấp đúng với thông tin đăng ký`
+  String get ConfirmGenCert_Content {
+    return Intl.message(
+      'Tôi xác nhận Chứng thư số được cấp đúng với thông tin đăng ký',
+      name: 'ConfirmGenCert_Content',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phiếu đề nghị cung cấp dịch vụ`
+  String get serviceRequestForm {
+    return Intl.message(
+      'Phiếu đề nghị cung cấp dịch vụ',
+      name: 'serviceRequestForm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tôi đã đọc và đồng ý với `
+  String get desc_check1_serviceRequestForm {
+    return Intl.message(
+      'Tôi đã đọc và đồng ý với ',
+      name: 'desc_check1_serviceRequestForm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Điều khoản sử dụng dịch vụ, Chính sách bảo vệ dữ liệu cá nhân của VNPT`
+  String get subDesc_check1_serviceRequestForm {
+    return Intl.message(
+      'Điều khoản sử dụng dịch vụ, Chính sách bảo vệ dữ liệu cá nhân của VNPT',
+      name: 'subDesc_check1_serviceRequestForm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tôi đã đọc, đã hiểu và đồng ý bằng việc tích chọn và ấn Tiếp tục là việc ký `
+  String get desc_check2_serviceRequestForm {
+    return Intl.message(
+      'Tôi đã đọc, đã hiểu và đồng ý bằng việc tích chọn và ấn Tiếp tục là việc ký ',
+      name: 'desc_check2_serviceRequestForm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hợp đồng điện tử cung cấp dịch vụ `
+  String get desc_Electronic_Contract {
+    return Intl.message(
+      'Hợp đồng điện tử cung cấp dịch vụ ',
+      name: 'desc_Electronic_Contract',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `của VNPT`
+  String get of_VNPT {
+    return Intl.message('của VNPT', name: 'of_VNPT', desc: '', args: []);
+  }
+
+  /// `Thông tin Chứng thư số`
+  String get titleCertInfo {
+    return Intl.message(
+      'Thông tin Chứng thư số',
+      name: 'titleCertInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn có {listExpired} chứng thư số hết hạn. Vui lòng gia hạn.`
+  String yourCertExpiredNeedExtend(Object listExpired) {
+    return Intl.message(
+      'Bạn có $listExpired chứng thư số hết hạn. Vui lòng gia hạn.',
+      name: 'yourCertExpiredNeedExtend',
+      desc: '',
+      args: [listExpired],
+    );
+  }
+
+  /// `Bạn có {listValid} chứng thư số sắp hết hạn. Vui lòng gia hạn.`
+  String yourCertValidNeedExtend(Object listValid) {
+    return Intl.message(
+      'Bạn có $listValid chứng thư số sắp hết hạn. Vui lòng gia hạn.',
+      name: 'yourCertValidNeedExtend',
+      desc: '',
+      args: [listValid],
+    );
+  }
+
+  /// `Bạn có {listExpired} chứng thư số hết hạn, {listValid} chứng thư số sắp hết hạn. Vui lòng gia hạn.`
+  String yourCertExpiredAndValidNeedExtend(
+    Object listExpired,
+    Object listValid,
+  ) {
+    return Intl.message(
+      'Bạn có $listExpired chứng thư số hết hạn, $listValid chứng thư số sắp hết hạn. Vui lòng gia hạn.',
+      name: 'yourCertExpiredAndValidNeedExtend',
+      desc: '',
+      args: [listExpired, listValid],
+    );
+  }
+
+  /// `Chứng thư số gói __ của khách hàng __ __ hết hạn. Vui lòng Gia hạn để tiếp tục sử dụng dịch vụ.`
+  String get individualExtendCertMess {
+    return Intl.message(
+      'Chứng thư số gói __ của khách hàng __ __ hết hạn. Vui lòng Gia hạn để tiếp tục sử dụng dịch vụ.',
+      name: 'individualExtendCertMess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chứng thư số gói __ của khách hàng __ __ hết hạn. Vui lòng liên hệ VNPT gần nhất để thực hiện hoặc gọi đến 18001260 nhánh 1 để được hỗ trợ.`
+  String get enterpriseExtendCertMess {
+    return Intl.message(
+      'Chứng thư số gói __ của khách hàng __ __ hết hạn. Vui lòng liên hệ VNPT gần nhất để thực hiện hoặc gọi đến 18001260 nhánh 1 để được hỗ trợ.',
+      name: 'enterpriseExtendCertMess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chứng thư số sắp hết hạn`
+  String get extendCertDetailNotify1 {
+    return Intl.message(
+      'Chứng thư số sắp hết hạn',
+      name: 'extendCertDetailNotify1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chứng thư số đã hết hạn`
+  String get extendCertDetailNotify2 {
+    return Intl.message(
+      'Chứng thư số đã hết hạn',
+      name: 'extendCertDetailNotify2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hết hạn vào lúc {number}`
+  String expire_in(Object number) {
+    return Intl.message(
+      'Hết hạn vào lúc $number',
+      name: 'expire_in',
+      desc: '',
+      args: [number],
+    );
+  }
+
+  /// `ngày`
+  String get day {
+    return Intl.message('ngày', name: 'day', desc: '', args: []);
+  }
+
+  /// `Khách hàng được giao dịch ký số miễn phí trên Cổng dịch vụ Công Quốc gia, Bộ ngành, Tỉnh/ Thành phố và không bị trừ vào lượt ký trong gói đã đăng ký.`
+  String get extendNote1 {
+    return Intl.message(
+      'Khách hàng được giao dịch ký số miễn phí trên Cổng dịch vụ Công Quốc gia, Bộ ngành, Tỉnh/ Thành phố và không bị trừ vào lượt ký trong gói đã đăng ký.',
+      name: 'extendNote1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Số lượng lượt ký trong gói chỉ có thế sử dụng trong thời gian chứng thư số còn hiệu lực.`
+  String get extendNote2 {
+    return Intl.message(
+      'Số lượng lượt ký trong gói chỉ có thế sử dụng trong thời gian chứng thư số còn hiệu lực.',
+      name: 'extendNote2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lưu`
+  String get save {
+    return Intl.message('Lưu', name: 'save', desc: '', args: []);
+  }
+
+  /// `Chính sách bảo vệ\ndữ liệu cá nhân`
+  String get policyTitle {
+    return Intl.message(
+      'Chính sách bảo vệ\ndữ liệu cá nhân',
+      name: 'policyTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn có chứng thư số được cấp bù thời gian sử dụng. Vui lòng thực hiện Kích hoạt lại.`
+  String get certOvertimeDesc {
+    return Intl.message(
+      'Bạn có chứng thư số được cấp bù thời gian sử dụng. Vui lòng thực hiện Kích hoạt lại.',
+      name: 'certOvertimeDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn chứng thư số để cấp bù`
+  String get timeExtensionDescription {
+    return Intl.message(
+      'Chọn chứng thư số để cấp bù',
+      name: 'timeExtensionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chứng thư số cũ sau khi cấp bù thành công sẽ bị tạm dừng và không thể khôi phục`
+  String get timeExtensionNote {
+    return Intl.message(
+      'Chứng thư số cũ sau khi cấp bù thành công sẽ bị tạm dừng và không thể khôi phục',
+      name: 'timeExtensionNote',
       desc: '',
       args: [],
     );

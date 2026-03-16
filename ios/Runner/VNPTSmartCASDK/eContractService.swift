@@ -82,6 +82,14 @@ class EContractService {
 }
 
 extension EContractService: eContractDelegate {
+    func onRegisAccount() {
+        
+    }
+    
+    func onSign(tranId: String, accessToken: String, usernameSmartCa: String) {
+        
+    }
+    
     func onSuccess(contractId: String, signId: String, signerId: String, validDate: String?) {
         getResult(isSuccess: true)
     }

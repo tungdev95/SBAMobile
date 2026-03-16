@@ -8,7 +8,7 @@ extension DateTimeExt on DateTime {
     return DateFormat(format).format(value);
   }
 
-  dateFormatEN(value) => DateFormat('yyyy-MM-dd').format(value);
+  dateFormatEN() => DateFormat('yyyy-MM-dd').format(this);
 
   datetimeFormatVN({value, format = 'dd/MM/yyyy HH:mm:ss'}) {
     if (value != null && value is String) value = DateTime.parse(value);

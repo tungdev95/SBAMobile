@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
 import '../../controller/login_controller.dart';
 import '../../i18n/generated_locales/l10n.dart';
 import '../../widgets/dialog/common_dialog.dart';
@@ -12,6 +13,7 @@ class ListAccounts extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     final accounts = controller.userInfoList.value;
+    
     final itemBuilder = accounts.map<PopupMenuEntry<String>>((value) {
       return PopupMenuItem(
         value: value.uid,
@@ -31,8 +33,9 @@ class ListAccounts extends GetView<LoginController> {
           ),
         ]),
       );
-    }).toList()
-      ..add(PopupMenuItem(
+    }).toList();
+    if (AppConfig.customerId == "") {
+      itemBuilder.add(PopupMenuItem(
         value: AppLocalizations.of(context).addAccount,
         child: Row(children: [
           Icon(Icons.add_circle_outline),
@@ -40,6 +43,7 @@ class ListAccounts extends GetView<LoginController> {
           Text(AppLocalizations.of(context).addAccount)
         ]),
       ));
+    }
 
     return Container(
       alignment: Alignment.center,

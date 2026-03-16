@@ -63,28 +63,29 @@ class SandboxPaymentScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.3,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           iconSize: 20.0,
-          color: Colors.white,
+          // color: Colors.white,
           onPressed: () {
             Get.back();
           },
         ),
         title: Text(
           AppLocalizations.current.page_servive_pack_order_title,
-          style: Theme.of(context)
-              .textTheme
-              .headline6
-              ?.copyWith(color: Colors.white),
+          // style: Theme.of(context)
+          //     .textTheme
+          //     .headline6
+          //     ?.copyWith(color: Colors.white),
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
-        flexibleSpace: Image(
-          image: AssetImage("assets/images/account_tab_background.png", package: AppConfig.package),
-          fit: BoxFit.cover,
-        ),
-        backgroundColor: Colors.transparent,
+        // flexibleSpace: Image(
+        //   image: AssetImage("assets/images/account_tab_background.png", package: AppConfig.package),
+        //   fit: BoxFit.cover,
+        // ),
+        // backgroundColor: Colors.transparent,
       ),
       body: WebViewWidget(
         controller: webViewController,

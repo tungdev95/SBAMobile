@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
 import './base_text.dart';
 
 class AppButtonWidget extends StatelessWidget {
@@ -30,7 +31,7 @@ class AppButtonWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: doublePadding, horizontal: 6),
         decoration: BoxDecoration(
             color: backgroundColor,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppConfig.borderRadiusBtn ?? 8),
             border: border),
         child: BaseText(
           label,

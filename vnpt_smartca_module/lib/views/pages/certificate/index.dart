@@ -3,7 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/views/controller/policy_data_controller.dart';
 import 'package:vnpt_smartca_module/views/pages/certificate/setup_pin_code/index.dart';
+import 'package:vnpt_smartca_module/views/pages/privacy_policy/index.dart';
 
 import '../../../configs/app_config.dart';
 import '../../../core/models/response/certificate_model.dart';
@@ -27,18 +29,26 @@ import '../../../core/services/user_info_on_device.dart';
 import '../../controller/buy_certificate_controller.dart';
 import '../buy_signature/list_package_signature/index.dart';
 import '../buy_signature/select_cert/index.dart';
+import 'custom_listview_cert.dart';
 import 'extend/select_cert_to_extend_screen.dart';
+import '../../../views/controller/certificate_controller.dart';
 
 class CertificatePage extends StatelessWidget {
   final AppRefreshController appRefreshController = AppRefreshController();
 
-  final BuyCertificateController buyCertificateController =
-      Get.put(BuyCertificateController());
-  final ExtendCertificateController extendCertificateController =
-      Get.put(ExtendCertificateController());
-  final ChangeInfoCertificateController changeInfoCertificateController =
-      Get.put(ChangeInfoCertificateController());
+  final buyCertificateController =
+      Get.put(BuyCertificateController(), permanent: true);
+
+  final extendCertificateController =
+      Get.put(ExtendCertificateController(), permanent: true);
+
+  final changeInfoCertificateController =
+      Get.put(ChangeInfoCertificateController(), permanent: true);
+
   final secureStorage = getIt<SecureLocalStorageService>();
+
+  final certificateController =
+      Get.put(CertificateController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -70,15 +80,27 @@ class CertificatePage extends StatelessWidget {
                         label: AppLocalizations.current.buyCTS,
                         onTap: () async {
                           // kiem tra tai khoan ca nhan hay doanh nghiep
-                          bool isIndividualAccount =
-                              await extendCertificateController
-                                  .checkIndividualOrBusinessesAccount(
-                                      AppLocalizations.current.buyCTS);
-                          if (!isIndividualAccount) {
+                          bool isCheck = await extendCertificateController
+                              .checkBusinessesAccount(
+                                  AppLocalizations.current.buyCTS);
+                          if (!isCheck) {
                             return;
                           }
                           // dang ky lan dau, pass ekyc
-                          buyCertificateController.getListOrder(listCert);
+                          final privacyPolicyController =
+                              Get.put(PolicyDataController());
+                          await privacyPolicyController.getPolicy();
+                          if (privacyPolicyController.resultGetPolicy == null) {
+                            Get.to(() => PrivacyPolicy(
+                                  fromScreen: "buyCertificate",
+                                  callback: () {
+                                    buyCertificateController
+                                        .getListOrder(listCert);
+                                  },
+                                ));
+                          } else {
+                            buyCertificateController.getListOrder(listCert);
+                          }
                         }),
                     _CertificateMenuWidget(
                         asset: Assets.images.icBuySignatures.path,
@@ -145,6 +167,17 @@ class CertificatePage extends StatelessWidget {
                         asset: Assets.images.icChangeInfo.path,
                         label: AppLocalizations.current.changeInfo,
                         onTap: () async {
+                          Get.dialog(
+                            DialogNotification(
+                              content:
+                                  AppLocalizations.current.featureDevelopment,
+                              // image: image,
+                              onlyActionAccept: true,
+                              titleBtnAccept: AppLocalizations.current.agree,
+                            ),
+                          );
+                          return;
+
                           // kiem tra tai khoan ca nhan hay doanh nghiep
                           bool isIndividualAccount =
                               await extendCertificateController
@@ -223,6 +256,23 @@ class CertificatePage extends StatelessWidget {
                     },
                     listPadding: const EdgeInsets.only(bottom: 16),
                     wrapMargin: const EdgeInsets.only(top: 16),
+                    customListView: (value) {
+                      certificateController.pushListCert(value);
+                      return CustomListViewCert(
+                        data: certificateController.listCertShow.value,
+                        itemBuilder: (item) {
+                          if (item.canShowMaDonHang()) {
+                            return _CertificateItemWidgetV2(
+                                certificateModel: item,
+                                appRefreshController: appRefreshController);
+                          }
+                          return _CertificateItemWidget(
+                            certificateModel: item,
+                            appRefreshController: appRefreshController,
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
               ],
@@ -382,13 +432,16 @@ class _CertificateItemWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           image: DecorationImage(
-              image: AssetImage(_getBackgroundImage(), package: AppConfig.package), fit: BoxFit.cover),
+              image:
+                  AssetImage(_getBackgroundImage(), package: AppConfig.package),
+              fit: BoxFit.cover),
           // borderRadius: BorderRadius.circular(radius)
         ),
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage(Assets.images.icSignatureBackground.path, package: AppConfig.package),
+                image: AssetImage(Assets.images.icSignatureBackground.path,
+                    package: AppConfig.package),
                 fit: BoxFit.cover),
             // borderRadius: BorderRadius.circular(radius)
           ),
@@ -472,16 +525,39 @@ class _CertificateItemWidget extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 )
               ]),
-              // Row(
-              //   children: [
-              //     Expanded(child: Container()),
-              //     Assets.images.icArrowRight.image(
-              //         width: 16,
-              //         height: 16,
-              //         fit: BoxFit.fill,
-              //         color: Colors.white)
-              //   ],
-              // )
+              if (certificateModel.status == 7)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    margin: EdgeInsets.only(top: 4),
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          AppLocalizations.current.signBbnt,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xffFF9900),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Assets.images.icArrowRight.image(
+                          width: 16,
+                          height: 16,
+                          fit: BoxFit.fill,
+                          color: Color(0xffFF9900),
+                        )
+                      ],
+                    ),
+                  ),
+                )
             ],
           ),
         ),
@@ -594,13 +670,16 @@ class _CertificateItemWidgetV2 extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage(_getBackgroundImage(), package: AppConfig.package), fit: BoxFit.fill),
+              image:
+                  AssetImage(_getBackgroundImage(), package: AppConfig.package),
+              fit: BoxFit.fill),
           // borderRadius: BorderRadius.circular(radius)
         ),
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage(Assets.images.icSignatureBackground.path, package: AppConfig.package),
+                image: AssetImage(Assets.images.icSignatureBackground.path,
+                    package: AppConfig.package),
                 fit: BoxFit.fill),
             // borderRadius: BorderRadius.circular(radius)
           ),
@@ -623,19 +702,29 @@ class _CertificateItemWidgetV2 extends StatelessWidget {
                   Container(
                     // width: 100,
                     margin: EdgeInsets.only(left: 4),
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    padding: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     alignment: Alignment.center,
-                    child: BaseText(
-                      _getTextStatus(),
-                      color: _getTextStatusColor(),
-                      fontSize: 11,
-                      // height: 20 / 11,
-                      fontWeight: FontWeight.w600,
-                      textAlign: TextAlign.center,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        certificateModel.identity?.source != 8
+                            ? Assets.images.appIcon
+                                .image(width: 22, fit: BoxFit.fill)
+                            : Assets.images.vneid
+                                .svg(width: 22, fit: BoxFit.fill),
+                        SizedBox(width: 4),
+                        BaseText(
+                          _getTextStatus(),
+                          color: _getTextStatusColor(),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -662,16 +751,50 @@ class _CertificateItemWidgetV2 extends StatelessWidget {
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
               ),
-              Row(
-                children: [
-                  Expanded(child: Container()),
-                  Assets.images.icArrowRight.image(
-                      width: 16,
-                      height: 16,
-                      fit: BoxFit.fill,
-                      color: Colors.white)
-                ],
-              )
+              certificateModel.status == 2
+                  ? Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        margin: EdgeInsets.only(top: 4),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              AppLocalizations.current.activeNow,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xffFF9900),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Assets.images.icArrowRight.image(
+                              width: 16,
+                              height: 16,
+                              fit: BoxFit.fill,
+                              color: Color(0xffFF9900),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  : Row(
+                      children: [
+                        Expanded(child: Container()),
+                        Assets.images.icArrowRight.image(
+                            width: 16,
+                            height: 16,
+                            fit: BoxFit.fill,
+                            color: Colors.white)
+                      ],
+                    ),
             ],
           ),
         ),

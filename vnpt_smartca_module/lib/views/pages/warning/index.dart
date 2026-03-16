@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../configs/app_config.dart';
 import '../../../gen/assets.gen.dart';
 
@@ -48,7 +49,7 @@ class WarningScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8), // <-- Radius
                     ),
                     minimumSize: const Size.fromHeight(48),
-                    backgroundColor: Color(0xff0D75D6)),
+                    backgroundColor: HexColor(AppConfig.colorPrimaryBtn)),
                 child: Text(
                   AppLocalizations.current.handlingInstructions,
                   style:

@@ -16,107 +16,159 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (ICEKYCSavedData *)shared;
 
-@property (nonatomic) NSString *authorization; // bo SD : SDAuthorization => authorization
 
-@property (nonatomic) NSString *tokenId; // bo SD : SDTokenId => tokenId
-
-@property (nonatomic) NSString *tokenKey; // bo SD : SDTokenKey => tokenKey
-
-@property (nonatomic) BOOL isPrintLogRequest; // bo SD : SDTokenKey => tokenKey
+// Thuộc tính dùng để Bật/Tắt việc hiển thị LOG khi thực hiện eKYC
+@property (nonatomic) BOOL isPrintLogRequest;
 
 
+
+// Phương thức thực hiện khởi tạo hoặc Cài đặt lại giá trị cho các thuộc tính
 - (void) resetOrInitAllData;
 
 
-@property (nonatomic) NSString *ocrResult; // trả ra ngoài jsonInfo => infoResult (ocrResult)
 
-@property (nonatomic) NSString *cropedParam; // trả ra ngoài
+// Dữ liệu bóc tách thông tin giấy tờ OCR - Optical character recognition (Nhận dạng ký tự quang học)
+@property (nonatomic) NSString *ocrResult;
 
-@property (nonatomic) NSString *livenessCardFrontResult; // trả ra ngoài // jsonCheckLivenessFrontCard livenessCardFrontResult
 
-@property (nonatomic) NSString *livenessCardBackResult; // trả ra ngoài // jsonCheckLivenessBackCard livenessCardBackResult
+// Giá trị các ngưỡng cắt ảnh giấy tờ. Giá trị dạng (x,y) trong đó x là tỉ lệ từ TOP đến điểm cắt, y là tỉ lệ từ BOTTOM đến điểm cắt
+@property (nonatomic) NSString *cropParam;
 
-@property (nonatomic) NSString *scanQRCodeResult; // trả ra ngoài scanQRCode=>scanQRCodeResult
 
-@property (nonatomic) NSString *compareFaceResult; // trả ra ngoài // jsonCompareFace =>compareFaceResult
+// Dữ liệu kiểm tra ảnh giấy tờ MẶT TRƯỚC chụp trực tiếp hay không
+@property (nonatomic) NSString *livenessCardFrontResult;
 
-@property (nonatomic) NSString *livenessFaceResult; // trả ra ngoài //jsonLivenessFace livenessFaceResult
 
-@property (nonatomic) NSString *verifyFaceResult; // trả ra ngoài //jsonVerifyFace verifyFaceResult
+// Dữ liệu kiểm tra ảnh giấy tờ MẶT SAU chụp trực tiếp hay không
+@property (nonatomic) NSString *livenessCardBackResult;
 
-@property (nonatomic) NSString *maskedFaceResult; // trả ra ngoài // jsonCheckMask maskedFaceResult
 
-@property (nonatomic) NSString *addFaceResult; // trả ra ngoài //jsonAddFace addFaceResult
+// Dữ liệu việc QUÉT mã QR
+@property (nonatomic) NSString *qrCodeResult;
 
-@property (nonatomic) NSString *searchFaceResult; // trả ra ngoài //jsonSearchFace searchFaceResult
 
-@property (nonatomic) NSString *tokenWaterMark; // trả ra ngoài
+// Dữ liệu thực hiện SO SÁNH khuôn mặt (lấy từ mặt trước ảnh giấy tờ hoặc ảnh thẻ)
+@property (nonatomic) NSString *compareFaceResult;
 
-@property (nonatomic) NSString *clientSessionResult; // trả ra ngoài SDClientSession => clientSessionResult
 
-@property (nonatomic) NSString *versionICEkycSdk; // trả ra ngoài
+// Dữ liệu kiểm tra ảnh CHÂN DUNG chụp trực tiếp hay không
+@property (nonatomic) NSString *livenessFaceResult;
 
-@property (nonatomic) NSString *networkProblem; // trả ra ngoài
 
-// ảnh mã qr
-@property (nonatomic) UIImage *imageQRCode; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageQRCode; // trả ra ngoài
-@property (nonatomic) UIImage *imageCropedQRCode; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageCropedQRCode; // trả ra ngoài
-@property (nonatomic) NSString *hashImageQRCode; // trả ra ngoài
+// Dữ liệu XÁC THỰC ảnh CHÂN DUNG và SỐ GIẤY TỜ
+@property (nonatomic) NSString *verifyFaceResult;
 
-// ảnh mặt trước
-@property (nonatomic) UIImage *imageFront; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageFront; // trả ra ngoài
-@property (nonatomic) UIImage *imageCropedFront; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageCropedFront; // trả ra ngoài
-@property (nonatomic) NSString *hashImageFront; // trả ra ngoài
 
-// ảnh mặt sau
-@property (nonatomic) UIImage *imageBack; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageBack; // trả ra ngoài
-@property (nonatomic) UIImage *imageCropedBack; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageCropedBack; // trả ra ngoài
-@property (nonatomic) NSString *hashImageBack; // trả ra ngoài
+// Dữ liệu kiểm tra ảnh CHÂN DUNG có bị che mặt hay không
+@property (nonatomic) NSString *maskedFaceResult;
 
-// ảnh mặt thẳng
-@property (nonatomic) UIImage *imageFace; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageFace; // trả ra ngoài
-@property (nonatomic) UIImage *imageCropedFace; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageCropedFace; // trả ra ngoài
-@property (nonatomic) NSString *hashImageFace; // trả ra ngoài
 
-// ảnh mặt quay trái
-@property (nonatomic) UIImage *imageFaceLeft; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageFaceLeft; // trả ra ngoài
-@property (nonatomic) NSString *hashImageFaceLeft; // trả ra ngoài
+// Dữ liệu kết quả đăng ký thông tin KHUÔN MẶT
+@property (nonatomic) NSString *addFaceResult;
 
-// ảnh mặt quay phải
-@property (nonatomic) UIImage *imageFaceRight; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageFaceRight; // trả ra ngoài
-@property (nonatomic) NSString *hashImageFaceRight; // trả ra ngoài
 
-// ảnh xa
-@property (nonatomic) UIImage *imageFaceFar; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageFaceFar; // trả ra ngoài
-@property (nonatomic) UIImage *imageCropedFaceFar; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageCropedFaceFar; // trả ra ngoài
-@property (nonatomic) NSString *hashImageFar; // trả ra ngoài
+// Dữ liệu kết quả đăng ký thông tin THẺ
+@property (nonatomic) NSString *addCardIDResult;
 
-// ảnh gần
-@property (nonatomic) UIImage *imageFaceNear; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageFaceNear; // trả ra ngoài
-@property (nonatomic) UIImage *imageCropedFaceNear; // trả ra ngoài
-@property (nonatomic) NSURL *pathImageCropedFaceNear; // trả ra ngoài
-@property (nonatomic) NSString *hashImageNear; // trả ra ngoài
 
-// dữ liệu thực hiện quét chụp chân dung
-@property (nonatomic) NSString *hashLogData; // trả ra ngoài
+// Dữ liệu thực hiện TÌM KIẾM khuôn mặt
+@property (nonatomic) NSString *searchFaceResult;
 
-// record video
-@property (nonatomic) NSURL *pathVideoRecordScanQRCode; // trả ra ngoài
-@property (nonatomic) NSURL *pathVideoRecordDocument; // trả ra ngoài
-@property (nonatomic) NSURL *pathVideoRecordFace; // trả ra ngoài
+
+// Dữ liệu đoạn mã khi ứng dụng bật chức năng WaterMark
+@property (nonatomic) NSString *tokenWaterMarkResult;
+
+
+// Dữ liệu để xác định cách giao dịch (yêu cầu) cùng nằm trong cùng một phiên
+@property (nonatomic) NSString *clientSessionResult;
+
+
+// Trả ra kết quả khi kết nối mạng gặp Vấn đề phát sinh khi thực hiện eKYC
+@property (nonatomic) NSString *networkProblem;
+
+
+// [Thông tin ảnh ở bước quét mã QR]
+// Ảnh đầy đủ khi quét thành công mã QR
+@property (nonatomic) UIImage *imageQRCodeFull;
+// Đường dẫn Ảnh đầy đủ khi quét thành công mã QR
+@property (nonatomic) NSURL *pathImageQRCodeFull;
+// Ảnh [mã QR đã được cắt] khi quét thành công
+@property (nonatomic) UIImage *imageQRCodeCropped;
+// Đường dẫn Ảnh [mã QR đã được cắt] khi quét thành công
+@property (nonatomic) NSURL *pathImageQRCodeCropped;
+// Mã ảnh đầy đủ khi quét thành công mã QR sau khi tải lên máy chủ
+@property (nonatomic) NSString *hashImageQRCode;
+
+
+// [Thông tin ảnh mặt trước]
+// Ảnh đầy đủ khi chụp giấy tờ mặt trước
+@property (nonatomic) UIImage *imageFrontFull;
+// Đường dẫn Ảnh đầy đủ khi chụp giấy tờ mặt trước
+@property (nonatomic) NSURL *pathImageFrontFull;
+// Ảnh [chụp giấy tờ mặt trước] đã cắt được trả ra để ứng dụng hiển thị
+@property (nonatomic) UIImage *imageFrontCropped;
+// Đường dẫn Ảnh [chụp giấy tờ mặt trước] đã cắt được trả ra để ứng dụng hiển thị
+@property (nonatomic) NSURL *pathImageFrontCropped;
+// Mã ảnh giấy tờ mặt trước sau khi tải lên máy chủ
+@property (nonatomic) NSString *hashImageFront;
+
+
+// [Thông tin ảnh mặt sau]
+// Ảnh đầy đủ khi chụp giấy tờ mặt sau
+@property (nonatomic) UIImage *imageBackFull;
+// Đường dẫn Ảnh đầy đủ khi chụp giấy tờ mặt trước
+@property (nonatomic) NSURL *pathImageBackFull;
+// Ảnh [chụp giấy tờ mặt sau] đã cắt được trả ra để ứng dụng hiển thị
+@property (nonatomic) UIImage *imageBackCropped;
+// Đường dẫn Ảnh [chụp giấy tờ mặt trước] đã cắt được trả ra để ứng dụng hiển thị
+@property (nonatomic) NSURL *pathImageBackCropped;
+// Mã ảnh giấy tờ mặt sau sau khi tải lên máy chủ
+@property (nonatomic) NSString *hashImageBack;
+
+
+// [Thông tin ảnh chân dung chụp thẳng 01 hướng]
+// Ảnh đầy đủ khi chụp ảnh chân dung thẳng
+@property (nonatomic) UIImage *imageFaceFull;
+// Đường dẫn Ảnh đầy đủ khi chụp ảnh chân dung thẳng
+@property (nonatomic) NSURL *pathImageFaceFull;
+// Ảnh chân dung thẳng đã cắt được trả ra để ứng dụng hiển thị
+@property (nonatomic) UIImage *imageFaceCropped;
+// Đường dẫn Ảnh chân dung thẳng đã cắt được trả ra để ứng dụng hiển thị
+@property (nonatomic) NSURL *pathImageFaceCropped;
+// Mã ảnh chân dung chụp thẳng sau khi tải lên máy chủ
+@property (nonatomic) NSString *hashImageFace;
+
+
+// [Thông tin ảnh chân dung xa]
+// Ảnh đầy đủ khi chụp ảnh chân dung xa
+@property (nonatomic) UIImage *imageFaceFarFull;
+// Đường dẫn Ảnh đầy đủ khi chụp ảnh chân dung xa
+@property (nonatomic) NSURL *pathImageFaceFarFull;
+// Mã ảnh chân dung chụp xa sau khi tải lên máy chủ
+@property (nonatomic) NSString *hashImageFaceFar;
+
+
+// [Thông tin ảnh chân dung gần]
+// Ảnh đầy đủ khi chụp ảnh chân dung gần
+@property (nonatomic) UIImage *imageFaceNearFull;
+// Đường dẫn Ảnh đầy đủ khi chụp ảnh chân dung gần
+@property (nonatomic) NSURL *pathImageFaceNearFull;
+// Mã ảnh chân dung chụp gần sau khi tải lên máy chủ
+@property (nonatomic) NSString *hashImageFaceNear;
+
+
+// [Thông tin Dữ liệu quét khuôn mặt]
+// Dữ liệu quét khuôn mặt
+@property (nonatomic) NSData *dataScan3D;
+// Mã ảnh dữ liệu quét khuôn mặt sau khi tải lên máy chủ
+@property (nonatomic) NSString *hashDataScan3D;
+
+
+// [Đường dẫn VIDEO sau khi quay lại quá trình thao tác]
+// Đường dẫn VIDEO quay lại quá trình chụp ảnh giấy tờ
+@property (nonatomic) NSURL *pathVideoRecordDocument;
+// Đường dẫn VIDEO quay lại quá trình chụp ảnh chân dung xa gần
+@property (nonatomic) NSURL *pathVideoRecordFace;
 
 @end
 

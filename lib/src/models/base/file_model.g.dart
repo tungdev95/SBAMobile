@@ -10,7 +10,7 @@ FileModel _$FileModelFromJson(Map<String, dynamic> json) => FileModel(
       fileName: json['fileName'] as String?,
       fileDownloadUri: json['fileDownloadUri'] as String?,
       fileType: json['fileType'] as String?,
-      size: json['size'] as int?,
+      size: (json['size'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$FileModelToJson(FileModel instance) => <String, dynamic>{

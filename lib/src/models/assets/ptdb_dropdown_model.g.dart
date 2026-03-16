@@ -7,7 +7,7 @@ part of 'ptdb_dropdown_model.dart';
 // **************************************************************************
 
 WheelFormula _$WheelFormulaFromJson(Map<String, dynamic> json) => WheelFormula(
-      wheelFormulaId: json['wheelFormulaId'] as int? ?? -1,
+      wheelFormulaId: (json['wheelFormulaId'] as num?)?.toInt() ?? -1,
       wheelFormulaName: json['wheelFormulaName'] as String? ?? '',
     );
 
@@ -18,7 +18,7 @@ Map<String, dynamic> _$WheelFormulaToJson(WheelFormula instance) =>
     };
 
 GearBox _$GearBoxFromJson(Map<String, dynamic> json) => GearBox(
-      gearBoxId: json['gearBoxId'] as int? ?? -1,
+      gearBoxId: (json['gearBoxId'] as num?)?.toInt() ?? -1,
       gearBoxName: json['gearBoxName'] as String? ?? '',
     );
 
@@ -28,7 +28,7 @@ Map<String, dynamic> _$GearBoxToJson(GearBox instance) => <String, dynamic>{
     };
 
 Fuel _$FuelFromJson(Map<String, dynamic> json) => Fuel(
-      fuelId: json['fuelId'] as int? ?? -1,
+      fuelId: (json['fuelId'] as num?)?.toInt() ?? -1,
       fuelName: json['fuelName'] as String? ?? '',
     );
 
@@ -38,7 +38,7 @@ Map<String, dynamic> _$FuelToJson(Fuel instance) => <String, dynamic>{
     };
 
 Country _$CountryFromJson(Map<String, dynamic> json) => Country(
-      id: json['id'] as int? ?? -1,
+      id: (json['id'] as num?)?.toInt() ?? -1,
       vnName: json['vnName'] as String? ?? '',
     );
 
@@ -48,7 +48,7 @@ Map<String, dynamic> _$CountryToJson(Country instance) => <String, dynamic>{
     };
 
 Vehicle _$VehicleFromJson(Map<String, dynamic> json) => Vehicle(
-      roadVehicleBrandId: json['roadVehicleBrandId'] as int? ?? 0,
+      roadVehicleBrandId: (json['roadVehicleBrandId'] as num?)?.toInt() ?? 0,
       roadVehicleBrandName: json['roadVehicleBrandName'] as String? ?? '',
     );
 

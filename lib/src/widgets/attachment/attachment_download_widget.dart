@@ -65,6 +65,7 @@ class AttachmentDownloadWidget extends ConsumerWidget {
         // );
       },
     ).then((path) {
+      if (path == null) return;
       OpenFilex.open(path);
     }).catchError((e, stk) {});
   }

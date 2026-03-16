@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
 import 'package:vnpt_smartca_module/core/extensions/string.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 
 import '../../../../configs/injector/injector.dart';
 import '../../../core/services/secure_local_storage.dart';
@@ -134,9 +136,9 @@ class ChangePasswordPage extends StatelessWidget {
                                     errorText: AppLocalizations.current
                                         .maxLength(passwordMaxLength)),
                                 (value) {
-                                  if (!value!.isValidPassword) {
+                                  if (!value!.isValidPassword || !controller.isValidPasswordNumber(value) || !value.isValidPasswordHasNumber) {
                                     return AppLocalizations
-                                        .current.strongPasswordValid;
+                                        .current.passwordNotValid;
                                   } else if (value == password) {
                                     return AppLocalizations
                                         .current.passwordDuplicate;
@@ -196,19 +198,31 @@ class ChangePasswordPage extends StatelessWidget {
                               ]),
                             ),
                           ),
+                          SizedBox(height: 10),
+                          BaseText(
+                            AppLocalizations.current.notice_type_password,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xff5768A5),
+                          ),
                           SizedBox(height: 20),
                           AppButtonWidget(
                             label: AppLocalizations.current.changePassword,
+                            backgroundColor:
+                                HexColor(AppConfig.colorPrimaryBtn),
                             doublePadding: 15,
                             onTap: () {
                               controller.onFormSubmit();
                             },
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 15),
+                          // BaseText(
+                          //   AppLocalizations.current.strongPasswordValid,
+                          //   fontWeight: FontWeight.w400,
+                          //   color: Color(0xff08285C),
+                          // ),
                         ],
                       ),
                     ),
-                    // SizedBox(height: 15),
                   ],
                 ),
               ),

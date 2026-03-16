@@ -73,3 +73,5 @@
 -keep class com.vnptit.innovation.sample.model.** { *; }
 -keep class ai.icenter.face3d.native_lib.Face3DConfig { *; }
 -keep class ai.icenter.face3d.native_lib.CardConfig { *; }
+-dontwarn net.steamcrafted.loadtoast.**
+-keep class net.steamcrafted.loadtoast.** { *; }

@@ -1,8 +1,8 @@
 {
   "ABIRoot": {
     "kind": "Root",
-    "name": "TopLevel",
-    "printedName": "TopLevel",
+    "name": "NVActivityIndicatorView",
+    "printedName": "NVActivityIndicatorView",
     "children": [
       {
         "kind": "Import",
@@ -572,6 +572,22 @@
           "Final",
           "AccessControl",
           "RawDocComment"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
         ]
       },
       {
@@ -850,7 +866,23 @@
           "AccessControl",
           "RawDocComment"
         ],
-        "hasMissingDesignatedInitializers": true
+        "hasMissingDesignatedInitializers": true,
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
+        ]
       },
       {
         "kind": "Import",
@@ -2359,6 +2391,9 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "implicit": true,
+            "declAttributes": [
+              "Nonisolated"
+            ],
             "accessors": [
               {
                 "kind": "Accessor",
@@ -2400,6 +2435,20 @@
           "RawDocComment"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Equatable",
@@ -2469,10 +2518,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -2571,10 +2621,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -2673,10 +2724,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -2775,10 +2827,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -2877,10 +2930,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -2979,10 +3033,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -3081,10 +3136,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -3191,9 +3247,10 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
+              "Preconcurrency",
+              "Custom",
               "HasStorage",
               "AccessControl",
               "RawDocComment"
@@ -3309,10 +3366,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -3411,10 +3469,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -3513,10 +3572,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -3627,10 +3687,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -3789,10 +3850,11 @@
             "moduleName": "NVActivityIndicatorView",
             "static": true,
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
               "HasStorage",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "RawDocComment"
             ],
@@ -3962,9 +4024,10 @@
             "mangledName": "$s23NVActivityIndicatorViewAAC4typeAA0aB4TypeOvp",
             "moduleName": "NVActivityIndicatorView",
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
+              "Preconcurrency",
+              "Custom",
               "HasStorage",
               "AccessControl",
               "RawDocComment"
@@ -4062,6 +4125,7 @@
             "declAttributes": [
               "HasInitialValue",
               "Final",
+              "Preconcurrency",
               "Custom",
               "HasStorage",
               "AccessControl",
@@ -4164,6 +4228,7 @@
             "declAttributes": [
               "HasInitialValue",
               "Final",
+              "Preconcurrency",
               "Custom",
               "HasStorage",
               "AccessControl",
@@ -4265,8 +4330,9 @@
             "moduleName": "NVActivityIndicatorView",
             "deprecated": true,
             "declAttributes": [
-              "Custom",
               "Final",
+              "Preconcurrency",
+              "Custom",
               "AccessControl",
               "Available",
               "RawDocComment"
@@ -4312,9 +4378,10 @@
             "mangledName": "$s23NVActivityIndicatorViewAAC11isAnimatingSbvp",
             "moduleName": "NVActivityIndicatorView",
             "declAttributes": [
-              "Custom",
               "HasInitialValue",
               "Final",
+              "Preconcurrency",
+              "Custom",
               "HasStorage",
               "AccessControl",
               "SetterAccess",
@@ -4381,6 +4448,7 @@
             "declAttributes": [
               "Dynamic",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "Required",
               "AccessControl",
@@ -4456,6 +4524,7 @@
             "mangledName": "$s23NVActivityIndicatorViewAAC5frame4type5color7paddingABSo6CGRectV_AA0aB4TypeOSgSo7UIColorCSg12CoreGraphics7CGFloatVSgtcfc",
             "moduleName": "NVActivityIndicatorView",
             "declAttributes": [
+              "Preconcurrency",
               "Custom",
               "AccessControl",
               "RawDocComment"
@@ -4483,6 +4552,7 @@
             "declAttributes": [
               "Final",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "Override",
               "AccessControl",
@@ -4536,6 +4606,7 @@
             "declAttributes": [
               "Final",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "Override",
               "AccessControl"
@@ -4635,6 +4706,7 @@
             "mangledName": "$s23NVActivityIndicatorViewAAC14startAnimatingyyF",
             "moduleName": "NVActivityIndicatorView",
             "declAttributes": [
+              "Preconcurrency",
               "Custom",
               "Final",
               "AccessControl",
@@ -4658,6 +4730,7 @@
             "mangledName": "$s23NVActivityIndicatorViewAAC13stopAnimatingyyF",
             "moduleName": "NVActivityIndicatorView",
             "declAttributes": [
+              "Preconcurrency",
               "Custom",
               "Final",
               "AccessControl",
@@ -4693,6 +4766,7 @@
             "declAttributes": [
               "Dynamic",
               "ObjC",
+              "Preconcurrency",
               "Custom",
               "Override"
             ],
@@ -4704,6 +4778,7 @@
         "mangledName": "$s23NVActivityIndicatorViewAAC",
         "moduleName": "NVActivityIndicatorView",
         "declAttributes": [
+          "Preconcurrency",
           "Custom",
           "Final",
           "AccessControl",
@@ -4717,6 +4792,20 @@
           "ObjectiveC.NSObject"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Equatable",
@@ -4765,6 +4854,13 @@
             "printedName": "CustomDebugStringConvertible",
             "usr": "s:s28CustomDebugStringConvertibleP",
             "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP"
           },
           {
             "kind": "Conformance",
@@ -5116,6 +5212,22 @@
         "declAttributes": [
           "AccessControl",
           "RawDocComment"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
         ]
       }
     ],
@@ -5123,186 +5235,179 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
       "kind": "FloatLiteral",
       "offset": 1340,
       "length": 3,
       "value": "1.9"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
       "kind": "FloatLiteral",
       "offset": 1382,
       "length": 4,
       "value": "0.25"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
       "kind": "FloatLiteral",
       "offset": 1420,
       "length": 3,
       "value": "1.5"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
       "kind": "IntegerLiteral",
       "offset": 1477,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Animations\/NVActivityIndicatorAnimationOrbit.swift",
       "kind": "IntegerLiteral",
       "offset": 1512,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Presenter\/NVActivityIndicatorPresenter.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Presenter\/NVActivityIndicatorPresenter.swift",
       "kind": "StringLiteral",
       "offset": 8813,
       "length": 34,
       "value": "\"NVActivityIndicatorViewContainer\""
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Presenter\/NVActivityIndicatorPresenter.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Presenter\/NVActivityIndicatorPresenter.swift",
       "kind": "IntegerLiteral",
       "offset": 8989,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Presenter\/NVActivityIndicatorPresenter.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/Presenter\/NVActivityIndicatorPresenter.swift",
       "kind": "BooleanLiteral",
       "offset": 9049,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 12018,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 12167,
       "length": 2,
       "value": "60"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 12179,
       "length": 2,
       "value": "60"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 12709,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 13133,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "FloatLiteral",
       "offset": 13421,
       "length": 3,
       "value": "8.0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 13611,
       "length": 2,
       "value": "20"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 13798,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 13808,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 13817,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "FloatLiteral",
       "offset": 13827,
       "length": 3,
       "value": "0.5"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 13966,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "FloatLiteral",
       "offset": 14005,
       "length": 4,
       "value": "0.25"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 14038,
       "length": 1,
       "value": "1"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "FloatLiteral",
       "offset": 14221,
       "length": 4,
       "value": "0.25"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "IntegerLiteral",
       "offset": 14301,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
+      "filePath": "\/Users\/haphan\/Documents\/github\/it.kv3.econtract.ios.sdk\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
       "kind": "BooleanLiteral",
       "offset": 15403,
       "length": 5,
       "value": "false"
-    },
-    {
-      "filePath": "\/Users\/phanha\/Documents\/GitHub\/it.kv3.econtract.ios.sdk.vnp\/Pods\/NVActivityIndicatorView\/Source\/NVActivityIndicatorView\/NVActivityIndicatorView.swift",
-      "kind": "StringLiteral",
-      "offset": 11455,
-      "length": 23,
-      "value": "\"NVActivityIndicatorView.NVActivityIndicatorView\""
     }
   ]
 }

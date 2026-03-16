@@ -100,22 +100,22 @@ public enum MoyaError : Swift.Error {
   case requestMapping(Swift.String)
   case parameterEncoding(Swift.Error)
 }
-extension Moya.MoyaError {
+extension MoyaError {
   public var response: Moya.Response? {
     get
   }
 }
-extension Moya.MoyaError : Foundation.LocalizedError {
+extension MoyaError : Foundation.LocalizedError {
   public var errorDescription: Swift.String? {
     get
   }
 }
-extension Moya.MoyaError : Foundation.CustomNSError {
+extension MoyaError : Foundation.CustomNSError {
   public var errorUserInfo: [Swift.String : Any] {
     get
   }
 }
-public typealias Completion = (_ result: Result.Result<Moya.Response, Moya.MoyaError>) -> Swift.Void
+public typealias Completion = (_ result: Result.Result<Moya.Response, MoyaError>) -> Swift.Void
 public typealias ProgressBlock = (_ progress: Moya.ProgressResponse) -> Swift.Void
 public struct ProgressResponse {
   public let response: Moya.Response?
@@ -132,21 +132,21 @@ public protocol MoyaProviderType : AnyObject {
   associatedtype Target : Moya.TargetType
   func request(_ target: Self.Target, callbackQueue: Dispatch.DispatchQueue?, progress: Moya.ProgressBlock?, completion: @escaping Moya.Completion) -> Moya.Cancellable
 }
-open class MoyaProvider<Target> : Moya.MoyaProviderType where Target : Moya.TargetType {
+open class MoyaProvider<Target> : MoyaProviderType where Target : Moya.TargetType {
   public typealias EndpointClosure = (Target) -> Moya.Endpoint
-  public typealias RequestResultClosure = (Result.Result<Foundation.URLRequest, Moya.MoyaError>) -> Swift.Void
-  public typealias RequestClosure = (Moya.Endpoint, @escaping Moya.MoyaProvider<Target>.RequestResultClosure) -> Swift.Void
+  public typealias RequestResultClosure = (Result.Result<Foundation.URLRequest, MoyaError>) -> Swift.Void
+  public typealias RequestClosure = (Moya.Endpoint, @escaping MoyaProvider<Target>.RequestResultClosure) -> Swift.Void
   public typealias StubClosure = (Target) -> Moya.StubBehavior
-  final public let endpointClosure: Moya.MoyaProvider<Target>.EndpointClosure
-  final public let requestClosure: Moya.MoyaProvider<Target>.RequestClosure
-  final public let stubClosure: Moya.MoyaProvider<Target>.StubClosure
+  final public let endpointClosure: MoyaProvider<Target>.EndpointClosure
+  final public let requestClosure: MoyaProvider<Target>.RequestClosure
+  final public let stubClosure: MoyaProvider<Target>.StubClosure
   final public let manager: Moya.Manager
   final public let plugins: [Moya.PluginType]
   final public let trackInflights: Swift.Bool
   open var inflightRequests: [Moya.Endpoint : [Moya.Completion]] {
     get
   }
-  public init(endpointClosure: @escaping Moya.MoyaProvider<Target>.EndpointClosure = MoyaProvider.defaultEndpointMapping, requestClosure: @escaping Moya.MoyaProvider<Target>.RequestClosure = MoyaProvider.defaultRequestMapping, stubClosure: @escaping Moya.MoyaProvider<Target>.StubClosure = MoyaProvider.neverStub, callbackQueue: Dispatch.DispatchQueue? = nil, manager: Moya.Manager = MoyaProvider<Target>.defaultAlamofireManager(), plugins: [Moya.PluginType] = [], trackInflights: Swift.Bool = false)
+  public init(endpointClosure: @escaping MoyaProvider<Target>.EndpointClosure = MoyaProvider.defaultEndpointMapping, requestClosure: @escaping MoyaProvider<Target>.RequestClosure = MoyaProvider.defaultRequestMapping, stubClosure: @escaping MoyaProvider<Target>.StubClosure = MoyaProvider.neverStub, callbackQueue: Dispatch.DispatchQueue? = nil, manager: Moya.Manager = MoyaProvider<Target>.defaultAlamofireManager(), plugins: [Moya.PluginType] = [], trackInflights: Swift.Bool = false)
   open func endpoint(_ token: Target) -> Moya.Endpoint
   @discardableResult
   open func request(_ target: Target, callbackQueue: Dispatch.DispatchQueue? = .none, progress: Moya.ProgressBlock? = .none, completion: @escaping Moya.Completion) -> Moya.Cancellable
@@ -159,15 +159,15 @@ public enum StubBehavior {
   case immediate
   case delayed(seconds: Foundation.TimeInterval)
 }
-extension Moya.MoyaProvider {
+extension MoyaProvider {
   final public class func neverStub(_: Target) -> Moya.StubBehavior
   final public class func immediatelyStub(_: Target) -> Moya.StubBehavior
   final public class func delayedStub(_ seconds: Foundation.TimeInterval) -> (Target) -> Moya.StubBehavior
 }
-public func convertResponseToResult(_ response: Foundation.HTTPURLResponse?, request: Foundation.URLRequest?, data: Foundation.Data?, error: Swift.Error?) -> Result.Result<Moya.Response, Moya.MoyaError>
-extension Moya.MoyaProvider {
+public func convertResponseToResult(_ response: Foundation.HTTPURLResponse?, request: Foundation.URLRequest?, data: Foundation.Data?, error: Swift.Error?) -> Result.Result<Moya.Response, MoyaError>
+extension MoyaProvider {
   final public class func defaultEndpointMapping(for target: Target) -> Moya.Endpoint
-  final public class func defaultRequestMapping(for endpoint: Moya.Endpoint, closure: (Result.Result<Foundation.URLRequest, Moya.MoyaError>) -> Swift.Void)
+  final public class func defaultRequestMapping(for endpoint: Moya.Endpoint, closure: (Result.Result<Foundation.URLRequest, MoyaError>) -> Swift.Void)
   final public class func defaultAlamofireManager() -> Moya.Manager
 }
 extension Alamofire.HTTPMethod {
@@ -175,9 +175,9 @@ extension Alamofire.HTTPMethod {
     get
   }
 }
-extension Moya.MoyaProvider {
+extension MoyaProvider {
   public func requestNormal(_ target: Target, callbackQueue: Dispatch.DispatchQueue?, progress: Moya.ProgressBlock?, completion: @escaping Moya.Completion) -> Moya.Cancellable
-  public func cancelCompletion(_ completion: (_ result: Result.Result<Moya.Response, Moya.MoyaError>) -> Swift.Void, target: Target)
+  public func cancelCompletion(_ completion: (_ result: Result.Result<Moya.Response, MoyaError>) -> Swift.Void, target: Target)
   final public func createStubFunction(_ token: Moya.CancellableToken, forTarget target: Target, withCompletion completion: @escaping Moya.Completion, endpoint: Moya.Endpoint, plugins: [Moya.PluginType], request: Foundation.URLRequest) -> (() -> Swift.Void)
   final public func notifyPluginsOfImpendingStub(for request: Foundation.URLRequest, target: Target)
 }
@@ -233,7 +233,7 @@ final public class NetworkActivityPlugin : Moya.PluginType {
   public typealias NetworkActivityClosure = (_ change: Moya.NetworkActivityChangeType, _ target: Moya.TargetType) -> Swift.Void
   public init(networkActivityClosure: @escaping Moya.NetworkActivityPlugin.NetworkActivityClosure)
   final public func willSend(_ request: Moya.RequestType, target: Moya.TargetType)
-  final public func didReceive(_ result: Result.Result<Moya.Response, Moya.MoyaError>, target: Moya.TargetType)
+  final public func didReceive(_ result: Result.Result<Moya.Response, MoyaError>, target: Moya.TargetType)
   @objc deinit
 }
 final public class NetworkLoggerPlugin : Moya.PluginType {
@@ -241,20 +241,20 @@ final public class NetworkLoggerPlugin : Moya.PluginType {
   final public let cURL: Swift.Bool
   public init(verbose: Swift.Bool = false, cURL: Swift.Bool = false, output: ((_ separator: Swift.String, _ terminator: Swift.String, _ items: Any...) -> Swift.Void)? = nil, requestDataFormatter: ((Foundation.Data) -> (Swift.String))? = nil, responseDataFormatter: ((Foundation.Data) -> (Foundation.Data))? = nil)
   final public func willSend(_ request: Moya.RequestType, target: Moya.TargetType)
-  final public func didReceive(_ result: Result.Result<Moya.Response, Moya.MoyaError>, target: Moya.TargetType)
+  final public func didReceive(_ result: Result.Result<Moya.Response, MoyaError>, target: Moya.TargetType)
   @objc deinit
 }
 public protocol PluginType {
   func prepare(_ request: Foundation.URLRequest, target: Moya.TargetType) -> Foundation.URLRequest
   func willSend(_ request: Moya.RequestType, target: Moya.TargetType)
-  func didReceive(_ result: Result.Result<Moya.Response, Moya.MoyaError>, target: Moya.TargetType)
-  func process(_ result: Result.Result<Moya.Response, Moya.MoyaError>, target: Moya.TargetType) -> Result.Result<Moya.Response, Moya.MoyaError>
+  func didReceive(_ result: Result.Result<Moya.Response, MoyaError>, target: Moya.TargetType)
+  func process(_ result: Result.Result<Moya.Response, MoyaError>, target: Moya.TargetType) -> Result.Result<Moya.Response, MoyaError>
 }
 extension Moya.PluginType {
   public func prepare(_ request: Foundation.URLRequest, target: Moya.TargetType) -> Foundation.URLRequest
   public func willSend(_ request: Moya.RequestType, target: Moya.TargetType)
-  public func didReceive(_ result: Result.Result<Moya.Response, Moya.MoyaError>, target: Moya.TargetType)
-  public func process(_ result: Result.Result<Moya.Response, Moya.MoyaError>, target: Moya.TargetType) -> Result.Result<Moya.Response, Moya.MoyaError>
+  public func didReceive(_ result: Result.Result<Moya.Response, MoyaError>, target: Moya.TargetType)
+  public func process(_ result: Result.Result<Moya.Response, MoyaError>, target: Moya.TargetType) -> Result.Result<Moya.Response, MoyaError>
 }
 public protocol RequestType {
   var request: Foundation.URLRequest? { get }

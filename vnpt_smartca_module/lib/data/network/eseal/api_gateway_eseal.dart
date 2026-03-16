@@ -8,6 +8,7 @@ import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../core/models/app/eseal_api_config.dart';
+import '../../../core/models/app/exceptions.dart';
 import '../../../core/services/network_info_service.dart';
 import '../../../core/services/secure_local_storage.dart';
 import '../auth_interceptor.dart';
@@ -44,12 +45,14 @@ class ApiGatewayEseal<TData> {
     _dio = Dio(options);
     _dio
       ..interceptors.clear()
-      ..interceptors.add(AuthInterceptor(_secureLocalDataSource, _dio))
+      ..interceptors
+          .add(AuthInterceptor(_secureLocalDataSource, _dio, apiGWConfig))
       ..interceptors.add(LogInterceptor(
-          requestBody: kDebugMode,
-          requestHeader: kDebugMode,
-          responseBody: kDebugMode,
-          responseHeader: kDebugMode))
+        // requestBody: kDebugMode,
+        // requestHeader: kDebugMode,
+        responseBody: kDebugMode,
+        // responseHeader: kDebugMode,
+      ))
       ..interceptors.add(
         // [408,429,500,502,503,504,440,460,499,520,521,522,523,524,525,527,598,599]
         RetryInterceptor(
@@ -94,10 +97,10 @@ class ApiGatewayEseal<TData> {
 
   Future _processRequest(String path, {dynamic data, options}) async {
     try {
-      // return await _networkInfo.isConnected
-      //     ? await _dio.request(path, data: data, options: options)
-      //     : throw NoInternetException();
-      return await _dio.request(path, data: data, options: options);
+      return await _networkInfo.isConnected
+          ? await _dio.request(path, data: data, options: options)
+          : throw NoInternetException();
+      // return await _dio.request(path, data: data, options: options);
     } catch (e) {
       rethrow;
     }

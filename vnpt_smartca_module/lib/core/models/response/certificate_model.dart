@@ -35,35 +35,53 @@ class CertificateModel extends AppRefreshModel {
   String? refName;
   Identity? identity;
   Contract? contract;
+  int? overTime;
+  String? code;
 
   /// = 1 là loại lượt ký
   int? signType;
 
-  CertificateModel(
-      {required this.id,
-      this.reqCertId,
-      this.status,
-      this.statusDescription,
-      this.accountEmail,
-      this.certType,
-      this.subjectDN,
-      this.issuer,
-      this.validFrom,
-      this.validTo,
-      this.timeCreateRequest,
-      this.timeCreateWorker,
-      this.signatureAlg,
-      this.keyLength,
-      this.serial,
-      this.certStatus,
-      this.certStatusDesc,
-      this.certProfile,
-      this.device,
-      this.signType,
-      this.orderInfo,
-      this.servicePack,
-      this.refName, this.identity, this.contract})
-      : super(id);
+  CertificateModel({
+    required this.id,
+    this.reqCertId,
+    this.status,
+    this.statusDescription,
+    this.accountEmail,
+    this.certType,
+    this.subjectDN,
+    this.issuer,
+    this.validFrom,
+    this.validTo,
+    this.timeCreateRequest,
+    this.timeCreateWorker,
+    this.signatureAlg,
+    this.keyLength,
+    this.serial,
+    this.certStatus,
+    this.certStatusDesc,
+    this.certProfile,
+    this.device,
+    this.signType,
+    this.orderInfo,
+    this.servicePack,
+    this.refName,
+    this.identity,
+    this.contract,
+    this.overTime,
+    this.code,
+  }) : super(id) {
+    if (overTime != null) {
+      if (overTime! > 0) {
+        DateTime validToNew = DateTime.parse(validTo!);
+        validToNew = validToNew.add(Duration(days: overTime!));
+        validTo = validToNew.toIso8601String();
+      }
+    }
+    final exp = checkCertExpiration();
+    if (status == 0 && exp != null && exp <= 2) {
+      status = 4;
+    }
+  }
 
   // "            [Description(""Chờ sinh cặp khóa"")]
   // WAITING_GENERATE_KEYPAIR = 1,
@@ -117,6 +135,8 @@ class CertificateModel extends AppRefreshModel {
         return StatusCertEnum.SYNC_ACCEPTANCE_FAILED;
       case 11:
         return StatusCertEnum.WAITING_APPROVE;
+      case 12:
+        return StatusCertEnum.DELETED;
     }
     return null;
   }
@@ -126,7 +146,7 @@ class CertificateModel extends AppRefreshModel {
       StatusCertEnum.WAITING_GENERATE_KEYPAIR,
       StatusCertEnum.WAITING_ASSIGNED_TO_SIGNER,
       StatusCertEnum.WAITING_GENERATE_CERTIFICATE,
-      StatusCertEnum.WAITING_APPROVE
+      StatusCertEnum.WAITING_APPROVE,
     ].contains(typeStatus);
   }
 
@@ -145,7 +165,7 @@ class CertificateModel extends AppRefreshModel {
 
   bool countCertNeedNotificationExtendInHome() {
     // CTS đang hoạt động
-    if (typeStatus == StatusCertEnum.VALID) {
+    if (typeStatus == StatusCertEnum.VALID && validTo != null) {
       if (contract == null || contract?.validity == null) {
         return false;
       } else {
@@ -163,6 +183,14 @@ class CertificateModel extends AppRefreshModel {
           return true;
         }
       }
+    }
+    //CTS đã hết hạn
+    if (typeStatus == StatusCertEnum.EXPIRED) {
+      int numberValidDay = _getExpiresDay();
+      if (numberValidDay <= -60) {
+        return false;
+      }
+      return true;
     }
     return false;
   }
@@ -182,9 +210,40 @@ class CertificateModel extends AppRefreshModel {
     return num;
   }
 
+  bool isPS0Package() {
+    try {
+      return certProfile?.certificateProfileName ==
+          "SmartCA Personal App Sign Limit Std";
+    } catch (e) {
+      return false;
+    }
+  }
+
   isValidOrExpired() {
     return typeStatus == StatusCertEnum.VALID ||
         typeStatus == StatusCertEnum.EXPIRED;
+  }
+
+  isIndividualCert() {
+    return subjectDN?.contains("O=") == false &&
+        subjectDN?.contains("OU=") == false;
+  }
+
+  // Doanh nghiệp -> OID
+  // Cá nhân -> PID
+  // Cá nhận trong tổ chức -> SID
+  // Hộ kinh doanh -> BID
+  // Quản trị viên (VNPT) -> OPER
+  isPersonalCert() {
+    return code == "PID";
+  }
+
+  isPersonalInOrgCert() {
+    return code == "SID";
+  }
+
+  isOrgCert() {
+    return code == "OID";
   }
 
   isValid() {
@@ -299,6 +358,21 @@ class CertificateModel extends AppRefreshModel {
   // [Description(""Chờ duyệt"")]
   // WAITING_APPROVE = 11,"
 
+  checkCertExpiration() {
+    int? num;
+    try {
+      DatetimeFormat datetimeFormat = DatetimeFormat();
+      String date = datetimeFormat.formatDate(validTo.toString());
+      num = df.DatetimeFormat()
+          .parseStringToDate(date)
+          ?.difference(DateTime.now())
+          .inMinutes;
+    } catch (e) {
+      return null;
+    }
+    return num;
+  }
+
   String get statusDesc {
     // if (certExpired <= 0) return AppLocalizations.current.expired;
     switch (status) {
@@ -326,6 +400,8 @@ class CertificateModel extends AppRefreshModel {
         return AppLocalizations.current.syncBBNTFailure;
       case 11:
         return AppLocalizations.current.waitingApprove;
+      case 12:
+        return AppLocalizations.current.certDeleteStatus;
       default:
         return AppLocalizations.current.unknown;
     }
@@ -335,7 +411,8 @@ class CertificateModel extends AppRefreshModel {
     return prop(subjectDN!, 'UID');
   }
 
-  String get subjectCN {
+  String? get subjectCN {
+    if (subjectDN == null || subjectDN == "") return null;
     return prop(subjectDN!, 'CN');
   }
 
@@ -349,6 +426,37 @@ class CertificateModel extends AppRefreshModel {
 
   String get uIDValue {
     return getUid(subjectDN!, 'UID', 'value');
+  }
+
+  String getTenTinh() {
+    if (subjectDN == null || subjectDN == "") return "";
+    return newProp(subjectDN!, 'ST');
+  }
+
+  String getOrgName() {
+    if (subjectDN == null || subjectDN == "") return "";
+    return newProp(subjectDN!, 'O');
+  }
+
+  String getPositionInOrgName() {
+    if (subjectDN == null || subjectDN == "") return "";
+    return newProp(subjectDN!, 'T');
+  }
+
+  String getUnitInOrgName() {
+    if (subjectDN == null || subjectDN == "") return "";
+    return newProp(subjectDN!, 'OU');
+  }
+
+  newProp(String value, String key) {
+    List<String> splitData = value.split(",");
+    for (var data in splitData) {
+      String newData = "_$data";
+      if (newData.contains("_$key=")) {
+        return newData.replaceAll("_$key=", "");
+      }
+    }
+    return "";
   }
 
   String getUid(String value, String key, dynamic type) {
@@ -454,6 +562,21 @@ class CertificateModel extends AppRefreshModel {
     }
   }
 
+  getExpiresDay() {
+    int? num = 0;
+    try {
+      DatetimeFormat datetimeFormat = DatetimeFormat();
+      String date = datetimeFormat.formatDate(validTo.toString());
+      num = df.DatetimeFormat()
+          .parseStringToDate(date)
+          ?.difference(DateTime.now())
+          .inDays;
+    } catch (e) {
+      num = 0;
+    }
+    return num;
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -478,41 +601,54 @@ class CertificateModel extends AppRefreshModel {
       'signType': signType,
       'orderInfo': orderInfo,
       'servicePack': servicePack,
-      'refName': refName
+      'refName': refName,
+      'identity': identity,
+      'contract': contract,
+      'overTime': overTime,
+      'code': code,
     };
   }
 
   factory CertificateModel.fromMap(Map<String, dynamic> map) {
     CertificateModel certificateModel = CertificateModel(
-        id: map['id'] ?? '',
-        reqCertId: map['reqCertId'],
-        status: map['status']?.toInt(),
-        statusDescription: map['statusDescription'],
-        accountEmail: map['accountEmail'],
-        certType: map['certType']?.toInt(),
-        subjectDN: map['subject'],
-        issuer: map['issuer'],
-        validFrom: map['validFrom'],
-        validTo: map['validTo'],
-        timeCreateRequest: map['timeCreateRequest'],
-        timeCreateWorker: map['timeCreateWorker'],
-        signatureAlg: map['signatureAlg'],
-        keyLength: map['keyLength']?.toInt(),
-        serial: map['serial'],
-        certStatus: map['certStatus']?.toInt(),
-        certStatusDesc: map['certStatusDesc'],
-        certProfile: map['certProfile'] != null
-            ? CertProfile.fromJson(map['certProfile'])
-            : null,
-        device: map['device'] != null ? Device.fromJson(map['device']) : null,
-        orderInfo: map['orderInfo'] != null
-            ? OrderInfo.fromJson(map['orderInfo'])
-            : null,
-        servicePack: map['servicePack'] != null
-            ? NumberSignModel.fromJson(map['servicePack'])
-            : null,
-        refName: map["refName"],
-        signType: map['signType']?.toInt());
+      id: map['id'] ?? '',
+      reqCertId: map['reqCertId'],
+      status: map['status']?.toInt(),
+      statusDescription: map['statusDescription'],
+      accountEmail: map['accountEmail'],
+      certType: map['certType']?.toInt(),
+      subjectDN: map['subject'],
+      issuer: map['issuer'],
+      validFrom: map['validFrom'],
+      validTo: map['validTo'],
+      timeCreateRequest: map['timeCreateRequest'],
+      timeCreateWorker: map['timeCreateWorker'],
+      signatureAlg: map['signatureAlg'],
+      keyLength: map['keyLength']?.toInt(),
+      serial: map['serial'],
+      certStatus: map['certStatus']?.toInt(),
+      certStatusDesc: map['certStatusDesc'],
+      certProfile: map['certProfile'] != null
+          ? CertProfile.fromJson(map['certProfile'])
+          : null,
+      device: map['device'] != null ? Device.fromJson(map['device']) : null,
+      orderInfo: map['orderInfo'] != null
+          ? OrderInfo.fromJson(map['orderInfo'])
+          : null,
+      servicePack: map['servicePack'] != null
+          ? NumberSignModel.fromJson(map['servicePack'])
+          : null,
+      refName: map["refName"],
+      identity: map['identity'] != null
+          ? Identity.fromJson(map['identity'])
+          : null,
+      contract: map['contract'] != null
+          ? Contract.fromJson(map['contract'])
+          : null,
+      signType: map['signType']?.toInt(),
+      overTime: map['overTime'] ?? 0,
+      code: map['code'],
+    );
 
     return certificateModel;
   }
@@ -521,6 +657,40 @@ class CertificateModel extends AppRefreshModel {
 
   factory CertificateModel.fromJson(String source) =>
       CertificateModel.fromMap(json.decode(source));
+}
+
+class Contract {
+  String? number;
+  String? servicePack;
+  int? validity;
+  String? pricingCode;
+  String? serviceType;
+
+  Contract({
+    this.number,
+    this.servicePack,
+    this.validity,
+    this.pricingCode,
+    this.serviceType,
+  });
+
+  Contract.fromJson(Map<String, dynamic> json) {
+    number = json['number'];
+    servicePack = json['servicePack'];
+    validity = json['validity'];
+    pricingCode = json['pricingCode'];
+    serviceType = json['serviceType'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['number'] = this.number;
+    data['servicePack'] = this.servicePack;
+    data['validity'] = this.validity;
+    data['pricingCode'] = this.pricingCode;
+    data['serviceType'] = this.serviceType;
+    return data;
+  }
 }
 
 class CertificateListModel<T> {
@@ -546,7 +716,8 @@ class CertificateListModel<T> {
       pageCount: map['pageCount']?.toInt() ?? 0,
       totalItemCount: map['totalItemCount']?.toInt() ?? 0,
       items: List<CertificateModel>.from(
-          map['items']?.map((x) => CertificateModel.fromMap(x))),
+        map['items']?.map((x) => CertificateModel.fromMap(x)),
+      ),
     );
   }
 
@@ -564,13 +735,13 @@ class SADRequest {
   String otp;
 
   SADRequest.fromJson(Map<String, dynamic> json)
-      : authRequestId = json['authRequestId'],
-        challenge = json['challenge'],
-        challengeId = json['challengeId'],
-        sub = json['sub'],
-        audience = json['audience'],
-        data = json['data'],
-        otp = json['otp'];
+    : authRequestId = json['authRequestId'],
+      challenge = json['challenge'],
+      challengeId = json['challengeId'],
+      sub = json['sub'],
+      audience = json['audience'],
+      data = json['data'],
+      otp = json['otp'];
 
   Map<String, dynamic> toMap() {
     return {
@@ -580,7 +751,7 @@ class SADRequest {
       'sub': sub,
       'audience': audience,
       'data': data,
-      'otp': otp
+      'otp': otp,
     };
   }
 
@@ -598,12 +769,13 @@ class CertProfile {
     return serviceType == "Eseal";
   }
 
-  CertProfile(
-      {this.serviceType,
-      this.pricingCode,
-      this.pricingName,
-      this.endEntityProfileName,
-      this.certificateProfileName});
+  CertProfile({
+    this.serviceType,
+    this.pricingCode,
+    this.pricingName,
+    this.endEntityProfileName,
+    this.certificateProfileName,
+  });
 
   CertProfile.fromJson(Map<String, dynamic> json) {
     serviceType = json['serviceType'];
@@ -632,15 +804,18 @@ class Device {
   String? osVersion;
   String? branch;
   String? registerDate;
+  String? appVersion;
 
-  Device(
-      {this.deviceID,
-      this.deviceName,
-      this.userId,
-      this.osName,
-      this.osVersion,
-      this.branch,
-      this.registerDate});
+  Device({
+    this.deviceID,
+    this.deviceName,
+    this.userId,
+    this.osName,
+    this.osVersion,
+    this.branch,
+    this.registerDate,
+    this.appVersion,
+  });
 
   Device.fromJson(Map<String, dynamic> json) {
     deviceID = json['deviceID'];
@@ -650,6 +825,7 @@ class Device {
     osVersion = json['osVersion'];
     branch = json['branch'];
     registerDate = json['registerDate'];
+    appVersion = json['appVersion'];
   }
 
   Map<String, dynamic> toJson() {
@@ -661,6 +837,7 @@ class Device {
     data['osVersion'] = this.osVersion;
     data['branch'] = this.branch;
     data['registerDate'] = this.registerDate;
+    data['appVersion'] = this.appVersion;
     return data;
   }
 }
@@ -671,13 +848,18 @@ class OrderInfo {
   String? certificateProfileName;
   String? pricingName;
   int? signType;
+  int? certOrderVersion;
+  int? orderType;
 
-  OrderInfo(
-      {this.paymentId,
-      this.createdDate,
-      this.certificateProfileName,
-      this.pricingName,
-      this.signType});
+  OrderInfo({
+    this.paymentId,
+    this.createdDate,
+    this.certificateProfileName,
+    this.pricingName,
+    this.signType,
+    this.certOrderVersion,
+    this.orderType,
+  });
 
   OrderInfo.fromJson(Map<String, dynamic> json) {
     paymentId = json['paymentId'];
@@ -685,6 +867,7 @@ class OrderInfo {
     certificateProfileName = json['certificateProfileName'];
     pricingName = json['pricingName'];
     signType = json['signType'];
+    certOrderVersion = json['certOrderVersion'];
   }
 
   Map<String, dynamic> toJson() {
@@ -694,10 +877,10 @@ class OrderInfo {
     data['certificateProfileName'] = this.certificateProfileName;
     data['pricingName'] = this.pricingName;
     data['signType'] = this.signType;
+    data['certOrderVersion'] = this.certOrderVersion;
     return data;
   }
 }
-
 
 class Identity {
   String? id;
@@ -712,15 +895,23 @@ class Identity {
   String? dhsxkdSubcriptionCode;
   String? localityCode;
   String? refName;
+  int? source;
 
-  Identity(
-      {this.id,
-        this.mstDN,
-        this.uid,
-        this.email,
-        this.username,
-        this.phone,
-        this.name, this.createdByClientName, this.createdByClientId, this.dhsxkdSubcriptionCode, this.localityCode, this.refName});
+  Identity({
+    this.id,
+    this.mstDN,
+    this.uid,
+    this.email,
+    this.username,
+    this.phone,
+    this.name,
+    this.createdByClientName,
+    this.createdByClientId,
+    this.dhsxkdSubcriptionCode,
+    this.localityCode,
+    this.source,
+    this.refName,
+  });
 
   Identity.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -735,6 +926,7 @@ class Identity {
     dhsxkdSubcriptionCode = json['dhsxkdSubcriptionCode'];
     localityCode = json['localityCode'];
     refName = json['refName'];
+    source = json['source'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -751,40 +943,7 @@ class Identity {
     data['dhsxkdSubcriptionCode'] = dhsxkdSubcriptionCode;
     data['localityCode'] = localityCode;
     data['refName'] = refName;
-    return data;
-  }
-}
-
-
-class Contract {
-  String? number;
-  String? servicePack;
-  int? validity;
-  String? pricingCode;
-  String? serviceType;
-
-  Contract(
-      {this.number,
-        this.servicePack,
-        this.validity,
-        this.pricingCode,
-        this.serviceType});
-
-  Contract.fromJson(Map<String, dynamic> json) {
-    number = json['number'];
-    servicePack = json['servicePack'];
-    validity = json['validity'];
-    pricingCode = json['pricingCode'];
-    serviceType = json['serviceType'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['number'] = this.number;
-    data['servicePack'] = this.servicePack;
-    data['validity'] = this.validity;
-    data['pricingCode'] = this.pricingCode;
-    data['serviceType'] = this.serviceType;
+    data['source'] = source;
     return data;
   }
 }

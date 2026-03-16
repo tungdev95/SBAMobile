@@ -44,7 +44,8 @@ class EKYCService: NSObject {
         objCamera.versionSdk = ProOval
         objCamera.isShowTutorial = true
         objCamera.documentType = IdentityCard
-        objCamera.isShowTrademark = false
+//        objCamera.isShowTrademark = false
+        objCamera.isShowLogo = false
         objCamera.isValidatePostcode = false
         objCamera.languageSdk = arguments?["languageApplication"] as? String ?? "vi"
         objCamera.isEnableGotIt = arguments?["isSkipVoiceVideo"] as? Bool ?? true
@@ -61,22 +62,23 @@ class EKYCService: NSObject {
         objCamera.flowType = full
         objCamera.isRecordVideoFace = true
         objCamera.isRecordVideoDocument = true
-        objCamera.modelHelpCard = HelpV2
+//        objCamera.modelHelpCard = HelpV2
+        objCamera.modelHelpFace = HelpVideoAudioText
         self.rootView?.showDetailViewController(objCamera, sender: nil)
     }
     
     func getResulteKYC() {
         let result: [String: Any?] = [
-            "IdFront": ICEKYCSavedData.shared().imageCropedFront.jpegData(compressionQuality: 0.95),
-            "IdFrontFull": ICEKYCSavedData.shared().imageFront.jpegData(compressionQuality: 0.95),
+            "IdFront": ICEKYCSavedData.shared().imageFrontCropped.jpegData(compressionQuality: 0.95),
+            "IdFrontFull": ICEKYCSavedData.shared().imageFrontFull.jpegData(compressionQuality: 0.95),
             
-            "IdBack": ICEKYCSavedData.shared().imageCropedBack.jpegData(compressionQuality: 0.95),
-            "IdBackFull": ICEKYCSavedData.shared().imageBack.jpegData(compressionQuality: 0.95),
+            "IdBack": ICEKYCSavedData.shared().imageBackCropped.jpegData(compressionQuality: 0.95),
+            "IdBackFull": ICEKYCSavedData.shared().imageBackFull.jpegData(compressionQuality: 0.95),
             
-            "NearPortrait": ICEKYCSavedData.shared().imageFaceNear.jpegData(compressionQuality: 0.95),
-            "FarPortrait": ICEKYCSavedData.shared().imageFaceFar.jpegData(compressionQuality: 0.95),
-            "imageCropedFaceFar": ICEKYCSavedData.shared().imageCropedFaceFar.jpegData(compressionQuality: 0.95),
-            "imageCropedFaceNear": ICEKYCSavedData.shared().imageCropedFaceNear.jpegData(compressionQuality: 0.95),
+            "NearPortrait": ICEKYCSavedData.shared().imageFaceNearFull.jpegData(compressionQuality: 0.95),
+            "FarPortrait": ICEKYCSavedData.shared().imageFaceFarFull.jpegData(compressionQuality: 0.95),
+            "imageCropedFaceFar": ICEKYCSavedData.shared().imageFaceFull.jpegData(compressionQuality: 0.95),
+            "imageCropedFaceNear": ICEKYCSavedData.shared().imageFaceCropped.jpegData(compressionQuality: 0.95),
             "FaceVideo": ICEKYCSavedData.shared().pathVideoRecordFace.path,
             "OcrIdVideo": ICEKYCSavedData.shared().pathVideoRecordDocument.path,
         ]

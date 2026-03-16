@@ -9,7 +9,7 @@ class BaseLoading<T extends BaseController> extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<T>();
     return Obx(() {
-      if (controller.isLoading.value == true) {
+      if (controller?.isLoading.value == true) {
         return const BaseLoadingWidget();
       }
       return const SizedBox();

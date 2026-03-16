@@ -67,4 +67,33 @@ class ChangePasswordController extends BaseController {
       showErrorModal(exceptionHandler(GenericException(error: e, stack: s)));
     }
   }
+
+  bool isValidPasswordNumber(String password) {
+    List<RegExpMatch>  passwordNumbers = [];
+    RegExp isValidNumber = RegExp(r'\d+');
+    var req = "0123456789";
+    var req1 = "9876543210";
+    var req2 = ["Vnpt", "admin", "root", "quantri"];
+    passwordNumbers = isValidNumber.allMatches(password).toList();
+    for (var passwordNumber in passwordNumbers) {
+      String stringNumber = passwordNumber.group(0).toString();
+      String temp = "";
+      for (var number in stringNumber.characters) {
+        temp += "1";
+      }
+      if(stringNumber.length > 3 && int.parse(stringNumber) % int.parse(temp) == 0) {
+        return false;
+      }
+      if(stringNumber.length > 3 && (req.contains(stringNumber) || req1.contains(stringNumber))) {
+        return false;
+      }
+      for (var reqString in req2) {
+        if(password.toLowerCase().contains(reqString.toLowerCase())) {
+          return false;
+        }
+        else {continue;}
+      }
+    }
+    return true;
+  }
 }

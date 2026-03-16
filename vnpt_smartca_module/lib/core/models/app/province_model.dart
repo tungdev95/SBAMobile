@@ -1,8 +1,8 @@
 import 'category_model.dart';
 
 class ProvinceModel extends CategoryModel {
-  final int provinceId;
-  final String provinceName;
+  int provinceId;
+  String provinceName;
   final String? provinceCode;
   final int? provinceRegionId;
   final int? provinceOrder;

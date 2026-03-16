@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -7,34 +9,30 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import '../../../../configs/app_config.dart';
 import '../../../../core/extensions/string.dart';
-import '../../../pages/register_account/otp_verify/index.dart';
+import '../../../utils/color.dart';
 import '../../../widgets/base_screen.dart';
 import '../../../widgets/base_text.dart';
 
-import '../../../../configs/injector/injector.dart';
-import '../../../../../core/models/request/ekyc_result_model.dart';
-import '../../../../../core/services/device_info.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../controller/register_account_controller.dart';
 import '../../../i18n/generated_locales/l10n.dart';
-import '../../../utils/common.dart';
 import '../../../utils/config_input_decoration.dart';
 import '../../../widgets/app_button_widget.dart';
 import '../../../widgets/base_loading.dart';
 import '../../../widgets/bottom_contact.dart';
 import '../../../widgets/custom_dropdown.dart';
-import '../../../widgets/dialog_notification.dart';
 import '../tutorial_register_account/index.dart';
+
+StreamSubscription? checkUidResponse;
 
 class RegisterAccountPage extends StatelessWidget {
   final controller = Get.put(RegisterAccountController());
 
-  final _deviceInfoService = getIt<DeviceInfoService>();
   final passwordMaxLength = 250;
   final maxLength12 = 12;
   final maxLength10 = 10;
   final maxLength8 = 8;
-  int maxLengthIdentifier = 12;
+  int maxLengthIdentifier = 16;
   int minLengthIdentifier = 12;
   int indexDropDownSelected = 0;
 
@@ -42,113 +40,7 @@ class RegisterAccountPage extends StatelessWidget {
   Widget build(BuildContext context) {
     controller.txtTypeCardController.text =
         AppLocalizations.current.citizenIdentification;
-    controller.checkUidResponse.listen((model) async {
-      if (model != null) {
-        if (model.code == 60000) {
-          // TAI KHOAN DA TON TAI
-          Get.dialog(DialogNotification(
-            content: AppLocalizations.current.accountRegisteredSuccessfully,
-            titleBtnAccept: AppLocalizations.current.signIn,
-            actionAccept: () {
-              Get.back();
-            },
-          ));
-        } else {
-          var deviceInfo = await _deviceInfoService.getDeviceInfo();
-          var checkUidModel = model.content;
-          OcrResult ocrResult = OcrResult(
-            id: checkUidModel?.uid ?? controller.identifierTEC.value.text,
-            name: checkUidModel?.fullName ?? "",
-            originLocation: "",
-            recentlyLocation: checkUidModel?.address?.streetName ?? "",
-            issuePlace: checkUidModel?.noiCap ?? "",
-            issueDate: checkUidModel?.ngayCap ?? "",
-            gender: "",
-            validDate: "",
-            city: checkUidModel?.provinceName ?? "",
-            district: checkUidModel?.districtName ?? "",
-            ward: checkUidModel?.wardName ?? "",
-            street: checkUidModel?.address?.streetName ?? "",
-            cardType: "",
-            cityId: checkUidModel?.address?.provinceId ?? "",
-            districtId: checkUidModel?.address?.districtId ?? "",
-            wardId: checkUidModel?.address?.wardId ?? "",
-          );
-          EkycResponseModel ekycResponseModel = EkycResponseModel(
-            ekycCode: checkUidModel?.ekycCode ?? "",
-            ekycExpiredTime: "",
-            ocrResult: ocrResult,
-            loaiGiayTo: controller.txtTypeCardController.text ==
-                    AppLocalizations.current.businessRegistrationCertificate
-                ? "mst"
-                : (controller.txtTypeCardController.text ==
-                        AppLocalizations.current.passport
-                    ? "hc"
-                    : "cccd"),
-            password: controller.passwordTEC.text,
-            phone: controller.phoneTEC.text,
-            deviceId: deviceInfo.deviceId,
-            email: checkUidModel?.email,
-          );
-          if (model.code == 0) {
-            // TAI KHOAN MOI
-            if (controller.txtTypeCardController.text !=
-                AppLocalizations.current.citizenIdentification) {
-              // SHOW POPUP HOTLINE
-              Get.dialog(DialogNotification(
-                image: Assets.images.icDialogFail,
-                content: AppLocalizations.current
-                    .registerAccountContactHotline(AppConfig.hotline),
-                titleBtnAccept: AppLocalizations.current.support,
-                actionAccept: () {
-                  Common.callHotline;
-                },
-              ));
-            } else {
-              // => VERIFY OTP
-              Get.to(
-                () => OTPVerifyPage(
-                  ekycResponseModel: ekycResponseModel,
-                  requiredEKYC: model.content?.requiredEkyc ?? true,
-                ),
-              );
-            }
-          } else {
-            if (model.code == 60013) {
-              // ERROR EKYC
-              Get.dialog(DialogNotification(
-                image: Assets.images.icDialogFail,
-                content: AppLocalizations.current
-                    .ekycErrorContactHotline(AppConfig.hotline),
-                titleBtnAccept: AppLocalizations.current.support,
-                actionAccept: () {
-                  Common.callHotline;
-                },
-              ));
-            } else if (model.code == 60001) {
-              // ERROR PHONE NUMBER NOT MATCH
-              Get.dialog(DialogNotification(
-                image: Assets.images.icDialogFail,
-                title: AppLocalizations.current.phoneNumberIncorrect,
-                content: AppLocalizations.current.enterPhoneNumberForRegister,
-                titleBtnAccept: AppLocalizations.current.support,
-                actionAccept: () {
-                  Common.callHotline;
-                },
-              ));
-            } else if (model.code == 60002 || model.code == 60003) {
-              ekycResponseModel.registered3rd = true;
-              Get.to(
-                () => OTPVerifyPage(
-                  ekycResponseModel: ekycResponseModel,
-                  requiredEKYC: model.content?.requiredEkyc ?? true,
-                ),
-              );
-            }
-          }
-        }
-      }
-    });
+
     return BaseScreen(
       loadingWidget: BaseLoading<RegisterAccountController>(),
       title: AppLocalizations.current.certificate_package_register_account,
@@ -184,7 +76,7 @@ class RegisterAccountPage extends StatelessWidget {
                                     : (indexDropDownSelected == 1 ? 10 : 20);
                                 minLengthIdentifier = indexDropDownSelected == 0
                                     ? 12
-                                    : (indexDropDownSelected == 1 ? 8 : 10);
+                                    : (indexDropDownSelected == 1 ? 7 : 10);
                                 controller.typeDocumentSelected.value =
                                     indexDropDownSelected == 0
                                         ? TypeDocument.cccd
@@ -198,6 +90,7 @@ class RegisterAccountPage extends StatelessWidget {
                               }
                             },
                             listValues: controller.listStrTypeCard,
+                            isEnable: AppConfig.customerId != "" ? false : true,
                           ),
                           SizedBox(height: 20),
                           BaseText(
@@ -212,19 +105,26 @@ class RegisterAccountPage extends StatelessWidget {
                             () => FormBuilderTextField(
                               name: 'identifier',
                               controller: controller.identifierTEC.value,
+                              readOnly:
+                                  AppConfig.customerId != "" ? true : false,
                               maxLength: maxLengthIdentifier,
-                              keyboardType: [
-                                TypeDocument.mst,
-                                TypeDocument.cccd
-                              ].contains(controller.typeDocumentSelected.value)
-                                  ? TextInputType.number
-                                  : TextInputType.text,
+                              keyboardType:
+                                  controller.typeDocumentSelected.value ==
+                                          TypeDocument.cccd
+                                      ? TextInputType.streetAddress
+                                      : controller.typeDocumentSelected.value ==
+                                              TypeDocument.hc
+                                          ? TextInputType.streetAddress
+                                          : TextInputType.streetAddress,
                               textInputAction: TextInputAction.next,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(RegExp(
                                     indexDropDownSelected == 1
-                                        ? '[a-zA-Z0-9]'
-                                        : '[0-9]'))
+                                        ? '[a-zA-Z0-9_]'
+                                        : (indexDropDownSelected == 0
+                                            ? '[0-9_]'
+                                            : '[0-9_-]')))
                               ],
                               decoration: ConfigInputDecoration().config(
                                 AppLocalizations.current.usernamePlacehoder,
@@ -248,6 +148,9 @@ class RegisterAccountPage extends StatelessWidget {
                                 //         color: Color(0xff0D75D6),
                                 //       ),
                               ),
+                              onChanged: (text) {
+                                controller.checkEnableContinueButton();
+                              },
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(
                                     errorText: AppLocalizations.current
@@ -256,26 +159,22 @@ class RegisterAccountPage extends StatelessWidget {
                                 FormBuilderValidators.minLength(
                                     minLengthIdentifier,
                                     errorText: AppLocalizations.current
-                                        .enoughLength(AppLocalizations
-                                            .current.validate10or13)),
+                                        .minLength(minLengthIdentifier)),
                                 FormBuilderValidators.maxLength(
                                     maxLengthIdentifier,
                                     errorText: AppLocalizations.current
-                                        .enoughLength(AppLocalizations
-                                            .current.validate10or13)),
-                                (value) {
-                                  if (maxLengthIdentifier == 8 &&
-                                      !value!.isValidPassport) {
-                                    return AppLocalizations
-                                        .current.validate_passport_error;
-                                  } else if (maxLengthIdentifier == 13 &&
-                                      value?.length != 10 &&
-                                      value?.length != 13) {
-                                    return AppLocalizations.current
-                                        .enoughLength(AppLocalizations
-                                            .current.validate10or13);
-                                  }
-                                },
+                                        .maxLength(maxLengthIdentifier)),
+                                // (value) {
+                                // if (controller.typeDocumentSelected.value ==
+                                //         TypeDocument.hc &&
+                                //     !value!.isValidPassport) {
+                                //   return AppLocalizations
+                                //       .current.validate_passport_error;
+                                // } else if (maxLengthIdentifier == 13 && value?.length != 10 && value?.length != 13) {
+                                //   return AppLocalizations.current
+                                //       .enoughLength(AppLocalizations.current.validate10or13);
+                                // }
+                                // },
                               ]),
                             ),
                           ),
@@ -299,9 +198,12 @@ class RegisterAccountPage extends StatelessWidget {
                             controller: controller.phoneTEC,
                             maxLength: maxLength10,
                             keyboardType: TextInputType.phone,
+                            readOnly:
+                                AppConfig.customerPhone != "" ? true : false,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(RegExp('[0-9]'))
                             ],
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: ConfigInputDecoration().config(
                                 AppLocalizations.current
                                     .certificate_packageuser_form_contact_certificate_info_item_phone_hint_text),
@@ -321,6 +223,7 @@ class RegisterAccountPage extends StatelessWidget {
                               },
                             ]),
                             onChanged: (text) {
+                              controller.checkEnableContinueButton();
                               if (text == " ") {
                                 return;
                               }
@@ -337,7 +240,7 @@ class RegisterAccountPage extends StatelessWidget {
                     SizedBox(height: 15),
                     InkWell(
                       onTap: () {
-                        Get.to(TutorialRegisterAccountPage());
+                        Get.to(() => TutorialRegisterAccountPage());
                       },
                       child: Row(
                         children: [
@@ -345,11 +248,12 @@ class RegisterAccountPage extends StatelessWidget {
                             width: 20,
                             height: 20,
                             fit: BoxFit.fill,
+                            color: HexColor(AppConfig.colorPrimaryBtn),
                           ),
                           SizedBox(width: 5),
                           BaseText(
                             AppLocalizations.current.tutorialRegisterAccount,
-                            color: Color(0xff0D75D6),
+                            color: HexColor(AppConfig.colorPrimaryBtn),
                             fontWeight: FontWeight.w600,
                             textAlign: TextAlign.center,
                           ),
@@ -364,13 +268,18 @@ class RegisterAccountPage extends StatelessWidget {
           ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 15),
-            child: AppButtonWidget(
-              label: AppLocalizations.current.next,
-              doublePadding: 15,
-              onTap: () {
-                controller.onFormSubmit();
-              },
-            ),
+            child: Obx(() {
+              return AppButtonWidget(
+                backgroundColor: controller.continueEnable.value == true ? HexColor(AppConfig.colorPrimaryBtn) : Colors.grey,
+                label: AppLocalizations.current.next,
+                doublePadding: 15,
+                onTap: () {
+                  if (controller.continueEnable.value == true) {
+                    controller.onFormSubmit();
+                  }
+                },
+              );
+            }),
           ),
           SizedBox(height: 10),
           BottomContact(),

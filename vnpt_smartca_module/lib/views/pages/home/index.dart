@@ -6,7 +6,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scale_size/scale_size.dart';
-import '../../../configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/pages/notify/extend_cert_detail.dart';
 import '../../../core/models/request/history_request_model.dart';
 import '../../../core/models/response/certificate_model.dart';
 import '../../../core/models/response/order_cert_model.dart';
@@ -14,6 +14,7 @@ import '../../../core/models/response/transaction_model.dart';
 import '../../../gen/assets.gen.dart';
 import '../../controller/app_controller.dart';
 import '../../controller/auth_controller.dart';
+import '../../controller/certificate_controller.dart';
 import '../../controller/extend_certificate_controller.dart';
 import '../../controller/home_controller.dart';
 import '../../i18n/generated_locales/l10n.dart';
@@ -21,7 +22,6 @@ import '../../pages/account_information/index.dart';
 import '../../pages/certificate/common_action.dart';
 import '../../pages/doc_sign_history/index.dart';
 import '../../pages/transaction_request/index.dart';
-import '../../utils/enums.dart';
 import '../../widgets/app_refresh.dart';
 import '../../widgets/dialog/modal_bottom_sheet.dart';
 import '../../widgets/widget.dart';
@@ -29,20 +29,27 @@ import '../../widgets/widget.dart';
 import '../certificate/buy/order_detail_screen.dart';
 import '../certificate/buy/order_list_screen.dart';
 import '../certificate/extend/select_cert_to_extend_screen.dart';
+import '../certificate/select_cert_screen.dart';
 import '../certificate/setup_pin_code/index.dart';
+import '../register_account/certificate_pack_screen.dart';
 import 'widgets/biometric_auth.dart';
-import 'widgets/buy_cert.dart';
 import 'widgets/doc_sign_history.dart';
 
 class HomePage extends StatelessWidget {
-  final controller = Get.find<HomeController>();
+  final controller = Get.isRegistered<HomeController>()
+      ? Get.find<HomeController>()
+      : Get.put(HomeController(), permanent: true);
+
   final authController = Get.find<AuthController>();
 
-  HomePage({Key? key}) : super(key: key) {
+  HomePage({super.key}) {
     Timer(
-      Duration(milliseconds: 400),
-      () {
-        if (authController.currentUser.value?.useBiometric == null) {
+      Duration(milliseconds: 500),
+      () async {
+        if (authController.currentUser.value?.useBiometric == null &&
+            (await authController.biometricsService.getAvailableBiometrics())
+                .isNotEmpty &&
+            authController.canCheckBiometrics.value == true) {
           CustomBottomSheetDialog.show(
             isScrollControlled: true,
             title: AppLocalizations.current.biometricAuthentication,
@@ -56,7 +63,7 @@ class HomePage extends StatelessWidget {
   recentHistory() {
     return [
       Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 14),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -65,8 +72,8 @@ class HomePage extends StatelessWidget {
               child: BaseText(
                 AppLocalizations.current.recentTransactions,
                 color: Color(0xff08285C),
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
             ),
             InkWell(
@@ -97,6 +104,25 @@ class HomePage extends StatelessWidget {
           itemWidgetBuilder: (value, index) {
             return DocSignatureHistoryWidget(value: value);
           },
+          // filter: (value) {
+          //   final currentUser = Get.find<AuthController>().currentUser;
+          //   if (currentUser.value?.accType == 1) {
+          //     try {
+          //       final deviceId =
+          //           Get.find<AppController>().deviceInfo.value?.deviceId;
+          //       final listCertActivedOnDevice = Get.find<HomeController>()
+          //               .listCertificate
+          //               .value
+          //               ?.where(
+          //                   (element) => element.device?.deviceID == deviceId)
+          //               .map((e) => e.id) ??
+          //           [];
+
+          //       return listCertActivedOnDevice.contains(value.credentialId);
+          //     } catch (e) {}
+          //   }
+          //   return true;
+          // },
           isLoadMore: false,
           itemSpace: 8,
         ),
@@ -107,43 +133,34 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      var listCert = controller.listCertificate.value;
-      var listOrder = controller.listOrder.value;
-
-      final isShowOrderList = (listOrder != null &&
-              listOrder.length != 0 &&
-              listCert?.length == 0) ||
-          (listCert != null &&
-              listCert.length == 1 &&
-              listCert.first.status == StatusCertEnum.WAITING_APPROVE.index);
-
-      final isShowBuyCert =
-          listOrder != null && listOrder.length == 0 && listCert?.length == 0;
-
       return Column(
         children: [
           _UserProfileWidget(),
           NotificationWidget(),
-          if (isShowOrderList &&
+          if (controller.isShowOrderList &&
               controller
                   .transactionRequestController.transactionRequestList.isEmpty)
             Expanded(
                 child: OrderListScreen(
               hiddenBack: true,
+              hiddenFiltter: true,
               appBarColor: const Color.fromRGBO(241, 244, 250, 1),
               appBarBoxShadowColor: Colors.transparent,
             )),
-          if (isShowBuyCert) Expanded(child: BuyCertWidget()),
-          if (controller
-              .transactionRequestController.transactionRequestList.isNotEmpty)
-            Expanded(child: TransactionRequests()),
-          if (!isShowOrderList &&
-              !isShowBuyCert &&
+          if (controller.isShowBuyCert)
+            Expanded(
+                child: CertificatePackScreen(
+              hideAppBar: true,
+            )),
+          if (!controller.isShowOrderList &&
+              !controller.isShowBuyCert &&
               controller.transactionRequestController.transactionRequestList
                   .isEmpty) ...[
-            // _UserNotificationWidget(),
-            SizedBox(height: 15),
-            ...recentHistory()
+            if (controller.haveVaidCert) ...recentHistory(),
+          ],
+          if (controller.transactionRequestController.transactionRequestList
+              .isNotEmpty) ...[
+            Expanded(child: TransactionRequests()),
           ],
         ],
       );
@@ -202,7 +219,7 @@ class _UserProfileWidget extends StatelessWidget {
       ]),
       child: InkWell(
         onTap: () {
-          Get.to(AccountInformationPage());
+          Get.to(() => AccountInformationPage());
         },
         child: Row(
           children: [
@@ -262,6 +279,8 @@ class _NotificationWidgetState extends State<NotificationWidget> {
   List<CertificateModel> _listCert = [];
   List<CertificateModel> _listCertNeedExtend = [];
   List<OrderCertModel>? _listOrder = [];
+  List<CertificateModel> _listCertOvertime = [];
+
   int _orderCount = 0;
   int _currentPage = 0;
 
@@ -273,35 +292,35 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     _isShowOrder = controller.isShowOrderNotification.value;
     _isShowCertNeedExtend = controller.isShowCertNeedExtendNotification.value;
 
-    ever(controller.listCertificate, (p0) {
-      if (mounted) {
-        if (p0 == null) {
-          _listCert = [];
-          _listCertNeedExtend = [];
-        } else {
-          _listCert = p0
-              .where((element) => element.countCertNotificationInHome())
-              .toList();
-          _listCertNeedExtend = p0
-              .where(
-                  (element) => element.countCertNeedNotificationExtendInHome())
-              .toList();
-        }
+    // ever(controller.listCertificate, (p0) {
+    //   if (mounted) {
+    //     if (p0 == null) {
+    //       _listCert = [];
+    //       _listCertNeedExtend = [];
+    //     } else {
+    //       _listCert = p0
+    //           .where((element) => element.countCertNotificationInHome())
+    //           .toList();
+    //       _listCertNeedExtend = p0
+    //           .where(
+    //               (element) => element.countCertNeedNotificationExtendInHome())
+    //           .toList();
+    //     }
 
-        setState(() {});
-      }
-    });
+    //     setState(() {});
+    //   }
+    // });
 
-    ever(controller.orderCertList, (p0) {
-      if (mounted) {
-        if (p0 != null) {
-          setState(() {
-            _listOrder = p0.items;
-            _orderCount = p0.totalItemCount;
-          });
-        }
-      }
-    });
+    // ever(controller.orderCertList, (p0) {
+    //   if (mounted) {
+    //     if (p0 != null) {
+    //       setState(() {
+    //         _listOrder = p0.items;
+    //         _orderCount = p0.totalItemCount;
+    //       });
+    //     }
+    //   }
+    // });
 
     super.initState();
   }
@@ -318,7 +337,15 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     }
     // order
     if (_isShowOrder == true && _listOrder != null && _listOrder!.isNotEmpty) {
-      widgets.add(_renderOrderView());
+      var orderView = _renderOrderView();
+      if (orderView != null) {
+        widgets.add(orderView);
+      }
+    }
+    
+    if (controller.isShowCertOvertime.value == true &&
+        _listCertOvertime.isNotEmpty == true) {
+      widgets.add(_renderCertOvertime());
     }
 
     if (widgets.isEmpty) {
@@ -376,7 +403,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
               },
               autoPlay: widgets.length > 1,
               aspectRatio: 16 / 9,
-              height: 83.sw,
+              height: 100.sw,
               viewportFraction: 0.9,
               enlargeFactor: 0.2,
               enlargeCenterPage: true,
@@ -433,19 +460,60 @@ class _NotificationWidgetState extends State<NotificationWidget> {
 
   _renderCertNeedExtendView() {
     var list = _listCertNeedExtend;
+    var listValidNeedExtend =
+        _listCertNeedExtend.where((element) => element.isValid()).toList();
     return _renderNotificationView(
         AppLocalizations.current.renewCertOrder,
-        AppLocalizations.current.yourCertNeedExtend,
-        AppLocalizations.current.extend_now, () async {
+        // AppLocalizations.current.yourCertNeedExtend,
+        listValidNeedExtend.isEmpty
+            ? AppLocalizations.current.yourCertExpiredNeedExtend(list.length)
+            : (listValidNeedExtend.length == list.length
+                ? AppLocalizations.current.yourCertValidNeedExtend(list.length)
+                : AppLocalizations.current.yourCertExpiredAndValidNeedExtend(
+                    list.length - listValidNeedExtend.length,
+                    listValidNeedExtend.length)),
+        list.length > 1
+            ? AppLocalizations.current.view_detail
+            : (list.first.isPersonalCert()
+                ? AppLocalizations.current.extend_now
+                : AppLocalizations.current.view_detail), () async {
       // kiem tra tai khoan nhan vien hay doanh nghiep
-      bool isCheck = await extendCertificateController
-          .checkStaffOrBusinessesAccount(AppLocalizations.current.extend);
-      if (isCheck) {
-        return;
-      }
+      // bool isCheck = await extendCertificateController
+      //     .checkBusinessesAccount(AppLocalizations.current.extend);
+      // if (!isCheck) {
+      //   return;
+      // }
+      // // trang thai hoat dong va khong phai la cert Ca nhan trong DN
+      // List<CertificateModel> listCertOK = [];
+      // try {
+      //   listCertOK = list
+      //       .where((i) => i.isValidOrExpired() && i.isIndividualCert())
+      //       .toList();
+      // } catch (e) {
+      //   listCertOK = [];
+      // }
+
+      // if (listCertOK.isEmpty) {
+      //   // khong the gia han vi khong co CTS hop le
+      //   Get.dialog(
+      //     DialogNotification(
+      //       title: AppLocalizations.current.can_not_extend_cert,
+      //       content: AppLocalizations.current.can_not_extend_cert_description,
+      //       // image: image,
+      //       onlyActionAccept: true,
+      //       titleBtnAccept: AppLocalizations.current.agree,
+      //     ),
+      //   );
+      //   return;
+      // }
+
       if (list.length == 1) {
-        // chuyen sang man chon goi cuoc luon
-        extendCertificateController.handleCert(list.first);
+        if (list.first.isPersonalCert()) {
+          // chuyen sang man chon goi cuoc luon
+          extendCertificateController.handleCert(list.first);
+        } else {
+          Get.to(() => ExtendCertDetailNotify(certificateModel: list.first));
+        }
       } else {
         Get.to(() => SelectCertToExtendScreen());
       }
@@ -458,11 +526,32 @@ class _NotificationWidgetState extends State<NotificationWidget> {
   }
 
   _renderOrderView() {
+    String title = "";
+    String formatOrderCount =
+        _orderCount < 10 ? "0$_orderCount" : "$_orderCount";
+    if (_orderCount == 1) {
+      OrderCertModel firstOrder = _listOrder!.first;
+      if (firstOrder.isWaitingEKYC()) {
+        title =
+            AppLocalizations.current.numberEKYCNotComplete(formatOrderCount);
+      } else if (firstOrder.isWaitingPayment()) {
+        title =
+            AppLocalizations.current.numberPaymentNotComplete(formatOrderCount);
+      } else if (firstOrder.isWaitingContract()) {
+        title = AppLocalizations.current
+            .numberContractNotComplete(formatOrderCount);
+      } else if (firstOrder.isOrderError()) {
+        title =
+            AppLocalizations.current.numberActionNotComplete(formatOrderCount);
+      } else {
+        return null;
+      }
+    } else {
+      title =
+          AppLocalizations.current.numberRegisterNotComplete(formatOrderCount);
+    }
     return _renderNotificationView(
-        AppLocalizations.current.numberWaitingOrder(
-            _orderCount < 10 ? "0$_orderCount" : _orderCount),
-        "",
-        AppLocalizations.current.view_detail, () {
+        title, "", AppLocalizations.current.view_detail, () {
       if (_listOrder != null) {
         if (_listOrder!.isNotEmpty) {
           if (_orderCount == 1) {
@@ -482,15 +571,17 @@ class _NotificationWidgetState extends State<NotificationWidget> {
 
   _renderNotificationView(String title, String description, String actionText,
       Function? onTap, Function? onClose) {
-    return Stack(
-      children: [
-        InkWell(
-          onTap: () {
-            onTap?.call();
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+    return InkWell(
+      onTap: () {
+        onTap?.call();
+      },
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
+              border: Border.all(color: Colors.orange.shade100),
+              borderRadius: BorderRadius.circular(6),
               image: DecorationImage(
                   fit: BoxFit.fill,
                   image: Assets.images.bgNotificaion.provider()),
@@ -508,22 +599,22 @@ class _NotificationWidgetState extends State<NotificationWidget> {
               ],
             ),
           ),
-        ),
-        Positioned(
-          top: -4,
-          right: -4,
-          child: InkWell(
-            onTap: () {
-              onClose?.call();
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: Assets.images.icQrClose
-                  .image(width: 14, height: 14, color: Color(0xff5768A5)),
+          Positioned(
+            top: -4,
+            right: -4,
+            child: InkWell(
+              onTap: () {
+                onClose?.call();
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: Assets.images.icQrClose
+                    .image(width: 14, height: 14, color: Color(0xff5768A5)),
+              ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 
@@ -536,27 +627,106 @@ class _NotificationWidgetState extends State<NotificationWidget> {
           title,
           color: Color(0xff08285C),
           fontWeight: FontWeight.w600,
+          fontSize: 15.sw,
         ),
+        SizedBox(height: 1.sw),
         if (description.isNotEmpty) ...[
           BaseText(
             description,
             color: Color(0xff5768A5),
             fontSize: 12.5,
+            maxLines: 3,
             textOverflow: TextOverflow.ellipsis,
           )
         ],
-        BaseText(
-          actionText,
-          color: const Color(0xff5768A5),
-          fontWeight: FontWeight.w600,
-          fontSize: 12.5,
-        )
+        Container(
+            width: 160,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            margin: EdgeInsets.only(top: 4),
+            decoration: BoxDecoration(
+              border: Border.all(color: Color(0xffdcdcdc)),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              children: [
+                BaseText(
+                  actionText,
+                  color: const Color(0xffFF9900),
+                  fontWeight: FontWeight.w600,
+                ),
+                SizedBox(width: 10),
+                Assets.images.icArrowRight.image(
+                  width: 16,
+                  height: 16,
+                  fit: BoxFit.fill,
+                  color: Color(0xffFF9900),
+                )
+              ],
+            ))
       ],
     );
   }
 
+  _renderCertOvertime() {
+    return _renderNotificationView(
+        AppLocalizations.current.activeCer,
+        AppLocalizations.current.certOvertimeDesc,
+        AppLocalizations.current.activeNow, () async {
+      if (_listCertOvertime.length == 1) {
+        final controller = Get.find<CertificateController>();
+        controller.requestChangeDevice(
+            id: _listCertOvertime.first.id,
+            serial: _listCertOvertime.first.serial ?? "");
+        // Get.to(() => CertificateDetail(
+        //       title: AppLocalizations.current.certDetail,
+        //       certificateModel: _listCertOvertime.first,
+        //     ));
+      } else {
+        Get.to(() => SelectCertScreen(
+            isSystemLink: false,
+            onCertSelected: (idCert, serial) {
+              final controller = Get.find<CertificateController>();
+              controller.requestChangeDevice(id: idCert, serial: serial ?? "");
+            },
+            isFromOverTime: true));
+      }
+    }, () {
+      setState(() {
+        controller.isShowCertOvertime.value = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _renderViewV2();
+    return Obx(() {
+      _isShowCert = controller.isShowCertNotification.value;
+      _isShowOrder = controller.isShowOrderNotification.value;
+      _isShowCertNeedExtend = controller.isShowCertNeedExtendNotification.value;
+
+      if (controller.listCertificate.value == null) {
+        _listCert = [];
+        _listCertNeedExtend = [];
+      } else {
+        _listCert = controller.listCertificate.value!
+            .where((element) => element.countCertNotificationInHome())
+            .toList();
+        _listCertNeedExtend = controller.listCertificate.value!
+            .where((element) => element.countCertNeedNotificationExtendInHome())
+            .toList();
+
+        _listCertOvertime = controller.listCertificate.value!
+            .where((element) =>
+                (element.overTime ?? 0) > 0 && element.identity?.source != 8)
+            .toList();
+      }
+
+      if (controller.orderCertList.value != null) {
+        _listOrder = controller.orderCertList.value!.items;
+        _orderCount = controller.orderCertList.value!.totalItemCount;
+      }
+      return _renderViewV2();
+    });
   }
 }

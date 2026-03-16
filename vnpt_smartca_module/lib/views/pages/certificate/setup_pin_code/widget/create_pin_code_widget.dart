@@ -9,8 +9,6 @@ import '../../../../widgets/widget.dart';
 
 import '../../../../i18n/generated_locales/l10n.dart';
 
-final formKeyPinGlobal = GlobalKey<FormState>();
-
 class CreatePinCodeTextField extends StatefulWidget {
   final ValueChanged<String> callback;
   final FocusNode focusNode;
@@ -18,7 +16,8 @@ class CreatePinCodeTextField extends StatefulWidget {
   final String? title;
   final PinCodeFieldShape? shape;
   final bool showTitle;
-
+  final bool obscureText;
+  final TextStyle? textStyle;
   const CreatePinCodeTextField({
     Key? key,
     required this.callback,
@@ -27,6 +26,8 @@ class CreatePinCodeTextField extends StatefulWidget {
     this.title,
     this.shape,
     this.showTitle = true,
+    this.obscureText = true,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -37,14 +38,12 @@ class _CreatePinCodeTextFieldState extends State<CreatePinCodeTextField> {
   bool hasError = false;
   late StreamController<ErrorAnimationType> errorController;
   TextEditingController textEditingController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
   String errorMsg = '';
 
   @override
   void initState() {
     super.initState();
     errorController = StreamController<ErrorAnimationType>();
-    formKey = formKeyPinGlobal;
     textEditingController.clear();
   }
 
@@ -78,6 +77,8 @@ class _CreatePinCodeTextFieldState extends State<CreatePinCodeTextField> {
           onCompleted: widget.onCompleteCallback,
           onChanged: validatePin,
           shape: widget.shape,
+          obscureText: widget.obscureText,
+          textStyle: widget.textStyle,
         ),
       ],
     );

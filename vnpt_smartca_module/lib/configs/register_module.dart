@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:vnpt_smartca_module/data/repository/change_password_repository.dart';
+import 'package:vnpt_smartca_module/data/repository/policy_data_repository.dart';
 
 import '../core/services/biometrics.dart';
 import '../core/services/crypto/aes_encryption_util.dart';
@@ -15,6 +16,7 @@ import '../core/services/secure_local_storage.dart';
 import '../core/services/user_info_on_device.dart';
 import '../data/network/auth_api.dart';
 import '../data/network/eseal/api_gateway_eseal.dart';
+import '../data/network/forgot_password.dart';
 import '../data/network/send_log_api.dart';
 import '../data/network/smartca_api_gateway.dart';
 import '../data/repository/active_account_repository.dart';
@@ -25,6 +27,7 @@ import '../data/repository/confirm_information_repository.dart';
 import '../data/repository/eseal/3rd_repository.dart';
 import '../data/repository/eseal/certificate_repository.dart';
 import '../data/repository/eseal/transaction_repository.dart';
+import '../data/repository/forgot_password.dart';
 import '../data/repository/order_cert_repository.dart';
 import '../data/repository/otp_verify_repository.dart';
 import '../data/repository/purchase_certificate_repository.dart';
@@ -50,8 +53,13 @@ abstract class RegisterModule {
   FlutterSecureStorage get flutterSecureStorage => const FlutterSecureStorage();
 
   @lazySingleton
-  InternetConnectionChecker get connectionChecker =>
-      InternetConnectionChecker();
+    InternetConnectionChecker get connectionChecker =>
+      InternetConnectionChecker.createInstance(addresses: [
+        AddressCheckOptions(hostname: 'google.com', port: 80),
+        AddressCheckOptions(hostname: 'google.com'),
+        AddressCheckOptions(hostname: 'smartca.vnpt.vn', port: 80),
+        AddressCheckOptions(hostname: 'smartca.vnpt.vn'),
+      ]);
 
   @injectable
   AuthenRepository get authenRepository;
@@ -151,4 +159,13 @@ abstract class RegisterModule {
 
   @injectable
   ChangePasswordRepository get changePasswordRepository;
+
+  @injectable
+  ForgotPasswordApi get forgotPasswordApi;
+
+  @injectable
+  ForgotPasswordRepository get forgotPasswordRepository;
+  
+  @injectable
+  PolicyDataRepository get policyDataRepository;
 }

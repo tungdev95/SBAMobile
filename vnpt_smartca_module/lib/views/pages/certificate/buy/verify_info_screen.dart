@@ -12,8 +12,9 @@ import '../../../widgets/loading_circle_widget.dart';
 
 class VerifyInfoScreen extends StatelessWidget {
   final dynamic data;
+  final String? newCTSName;
 
-  VerifyInfoScreen({Key? key, required this.data}) : super(key: key);
+  VerifyInfoScreen({super.key, required this.data, this.newCTSName});
 
   final controller = Get.isRegistered<BuyCertificateController>()
       ? Get.find<BuyCertificateController>()
@@ -27,14 +28,14 @@ class VerifyInfoScreen extends StatelessWidget {
     //   }
     // });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      controller.verifyEkyc(data);
+      controller.verifyEkyc(data, newCTSName: newCTSName);
     });
     return WillPopScope(
       onWillPop: () async {
         return false;
       },
       child: BaseScreen(
-        hideAppBar: true,
+        // hideAppBar: true,
         // title: AppLocalizations.current.verifyInformationAccount,
         body: Column(
           children: [
@@ -43,7 +44,7 @@ class VerifyInfoScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    LoadingCircleWidget(sizeLoading: 150),
+                    LoadingCircleWidget(sizeLoading: 120),
                     SizedBox(height: 20),
                     BaseText(
                       AppLocalizations.current.beingVerified,
@@ -53,10 +54,10 @@ class VerifyInfoScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     BaseText(
-                      AppLocalizations.current.systemVerifying,
+                      AppLocalizations.current.waitaMinute,
                       color: Color(0xff5768A5),
                       textAlign: TextAlign.center,
-                      height: 24 / 14,
+                      fontWeight: FontWeight.w500,
                     ),
                   ],
                 ),

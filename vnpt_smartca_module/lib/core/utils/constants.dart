@@ -52,3 +52,4 @@ const String btn_add = 'PHN2ZyB3aWR0aD0iNzciIGhlaWdodD0iNzciIHZpZXdCb3g9IjAgMCA3
 const List<String> allowedFileExtensions = ['.pdf','.xml','.docx','.xlsx','.pptx','.PDF','.XML','.DOCX','.XLSX', ".PPTX"];
 const List<String> allowedImageExtensions = ['.jpg' , '.jpeg' ,'.pjpeg' , '.png', '.bmp', '.gif', '.tiff', '.tif'];
 const INSTRUCTED = "INSTRUCTED";
+const ACCOUNT_OPEN_FROM_VNEID = "ACCOUNT_OPEN_FROM_VNEID";

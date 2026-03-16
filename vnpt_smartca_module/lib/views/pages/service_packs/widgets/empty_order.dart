@@ -30,7 +30,7 @@ class _EmptyOrderState extends State<EmptyOrder> {
             AppLocalizations.of(context).emptyData,
             style: Theme.of(context)
                 .textTheme
-                .bodyText2!
+                .bodyMedium!
                 .copyWith(color: HexColor("#5E6476")),
             textAlign: TextAlign.center,
           ),
@@ -38,7 +38,7 @@ class _EmptyOrderState extends State<EmptyOrder> {
             '',
             style: Theme.of(context)
                 .textTheme
-                .caption!
+                .bodySmall!
                 .copyWith(color: HexColor("#5E6476")),
             textAlign: TextAlign.center,
           ),

@@ -1,13 +1,17 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:vnpt_smartca_module/views/i18n/generated_locales/l10n.dart';
 import '../../../configs/app_config.dart';
 import '../../controller/login_controller.dart';
 
 import '../../../gen/assets.gen.dart';
+import '../../utils/common.dart';
 import '../../widgets/navigator_helper.dart';
 import 'bottom_logo.dart';
 import 'language.dart';
@@ -29,9 +33,11 @@ class LoginPage extends StatelessWidget {
                 height: Get.size.height,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                  image: Assets.images.background
-                      .image(package: AppConfig.package)
-                      .image,
+                  image: AppConfig.backgroundLogin != ""
+                      ? MemoryImage(base64Decode(AppConfig.backgroundLogin))
+                      : Assets.images.background
+                          .image(package: AppConfig.package)
+                          .image,
                   fit: BoxFit.fill,
                 )),
                 child: Column(
@@ -58,7 +64,20 @@ class LoginPage extends StatelessWidget {
                     //   ],
                     // )),
                     LoginForm(),
-                    Expanded(child: BottomLogo()),
+                    Spacer(),
+                    InkWell(
+                      onTap: Common.callHotline,
+                      child: Text(
+                          "${AppLocalizations.current.hotline}: ${AppConfig.hotline}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white)),
+                    ),
+                    SizedBox(height: 4),
+                    BottomLogo(),
+                    SizedBox(height: 6),
                   ],
                 )),
           ),

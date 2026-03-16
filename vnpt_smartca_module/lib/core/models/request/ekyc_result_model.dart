@@ -21,6 +21,7 @@ class EkycResponseModel {
     this.email,
     this.notAllowReceivedAds,
     this.registered3rd = false,
+    this.source,
   });
   late final String ekycCode;
   late final String ekycExpiredTime;
@@ -33,6 +34,9 @@ class EkycResponseModel {
   String? email;
   bool? notAllowReceivedAds;
   bool? registered3rd;
+  // save uid have suffix or not
+  String? uid;
+  int? source;
 
   EkycResponseModel.fromJson(Map<String, dynamic> json) {
     ekycCode = json['ekycCode'];
@@ -87,7 +91,7 @@ class OcrResult {
   String? districtId;
   String? wardId;
 
-  OcrResult.fromJson(Map<String, dynamic> json){
+  OcrResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     originLocation = json['originLocation'];

@@ -69,7 +69,8 @@ class TransactionApi {
     return SmartCAApiResponse.fromMap(result);
   }
 
-  Future<SmartCAApiResponse> getSignatureItemTemplates(String accessToken) async {
+  Future<SmartCAApiResponse> getSignatureItemTemplates(
+      String accessToken) async {
     final result = await _httpClientService.post(
         '/${AppConfig.language}/csc/credentials/load_sig_temp', accessToken);
     return SmartCAApiResponse.fromMap(result);
@@ -91,6 +92,55 @@ class TransactionApi {
     final result = await _httpClientService.post(
       '/${AppConfig.language}/csc/credentials/remove_sig_temp',
       json.encoder.convert({"key": key}),
+    );
+    return SmartCAApiResponse.fromMap(result);
+  }
+
+  Future<SmartCAApiResponse> uploadSignedAcceptance(
+    Map req,
+  ) async {
+    final result = await _httpClientService.post(
+      '/${AppConfig.language}/certcms/acceptance/upload_signed_acceptance',
+      json.encoder.convert(req),
+    );
+    return SmartCAApiResponse.fromMap(result);
+  }
+
+  Future<SmartCAApiResponse> waitingtraninfoAcceptance(
+    WaitingTransactionRequest req,
+  ) async {
+    final result = await _httpClientService.post(
+      '/${AppConfig.language}/SicAcceptance/waitingtraninfo',
+      json.encoder.convert(req),
+    );
+    return SmartCAApiResponse.fromMap(result);
+  }
+
+  Future<SmartCAApiResponse> signconfirmAcceptance(
+    ConfirmWTRequest req,
+  ) async {
+    final result = await _httpClientService.post(
+      '/${AppConfig.language}/SicAcceptance/signconfirm',
+      json.encoder.convert(req),
+    );
+    return SmartCAApiResponse.fromMap(result);
+  }
+
+  Future<SmartCAApiResponse> waitingtransAcceptance(
+    WaitingTransactionListRequest req,
+  ) async {
+    final result = await _httpClientService.post(
+      '/${AppConfig.language}/SicAcceptance/waitingtrans',
+      json.encoder.convert(req),
+    );
+    return SmartCAApiResponse.fromMap(result);
+  }
+
+  Future<SmartCAApiResponse> confirmApproveCert (String serial) async {
+    final result = await _httpClientService.post(
+      //thay đầu API mới vào
+      '/certcms/acceptance/confirm_acceptance',
+      {"Serial": serial},
     );
     return SmartCAApiResponse.fromMap(result);
   }

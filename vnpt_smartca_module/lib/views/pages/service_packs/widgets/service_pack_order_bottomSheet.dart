@@ -87,7 +87,7 @@ class ServicePackOrderBottomSheetItem extends StatelessWidget {
                 backgroundColor: Colors.white,
                 textStyle: Theme.of(context)
                     .textTheme
-                    .bodyText1!
+                    .bodyLarge!
                     .copyWith(color: const Color.fromRGBO(222, 155, 57, 1.0)),
                 onCallBack: () => Get.back(),
               ),
@@ -102,7 +102,7 @@ class ServicePackOrderBottomSheetItem extends StatelessWidget {
                 title: AppLocalizations.of(context).btnPayment,
                 textStyle: Theme.of(context)
                     .textTheme
-                    .bodyText1!
+                    .bodyLarge!
                     .copyWith(color: Colors.white),
                 onCallBack: () => onCreatePersonalSignTurnOrder(),
               ),

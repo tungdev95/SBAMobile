@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../widgets/base_screen.dart';
 
 import '../../../../core/models/request/ekyc_result_model.dart';
@@ -61,6 +63,7 @@ class RegisterAccountSuccessPage extends StatelessWidget {
                   Spacer(),
                   AppButtonWidget(
                     label: AppLocalizations.current.registerCert,
+                    backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                     doublePadding: 15,
                     onTap: () {
                       authController.onLogin(ekycResponseModel.ocrResult.id, ekycResponseModel.password ?? "");

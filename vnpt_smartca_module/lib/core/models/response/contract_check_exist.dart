@@ -20,10 +20,10 @@ class ContractCheckExistModel {
 }
 
 class ContractData {
-  bool contractExist;
+  bool? contractExist;
   String? contractId;
   String? contractStatus;
-  bool isSigned;
+  bool? isSigned;
   late String validDate;
   late String signerId;
   String? urlPath;

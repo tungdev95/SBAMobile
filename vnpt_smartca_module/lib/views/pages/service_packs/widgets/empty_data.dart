@@ -31,7 +31,7 @@ class _EmptyDataState extends State<EmptyData> {
             widget.message != '' ? widget.message : AppLocalizations.of(context).emptyData,
             style: Theme.of(context)
                 .textTheme
-                .bodyText2!
+                .bodyMedium!
                 .copyWith(color: HexColor("#5E6476")),
             textAlign: TextAlign.center,
           ),
@@ -39,7 +39,7 @@ class _EmptyDataState extends State<EmptyData> {
             AppLocalizations.of(context).empty_description,
             style: Theme.of(context)
                 .textTheme
-                .caption!
+                .bodySmall!
                 .copyWith(color: HexColor("#5E6476")),
             textAlign: TextAlign.center,
           ),

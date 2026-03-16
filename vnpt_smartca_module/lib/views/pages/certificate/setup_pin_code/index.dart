@@ -5,18 +5,18 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
 import 'package:vnpt_smartca_module/views/pages/certificate/setup_pin_code/widget/create_pin_code_widget.dart';
 import 'package:vnpt_smartca_module/views/pages/certificate/setup_pin_code/widget/re_pin_code_widget.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../../core/models/response/certificate_model.dart';
 import '../../../controller/auth_controller.dart';
 import '../../../controller/buy_certificate_controller.dart';
 import '../../../widgets/bottom_contact.dart';
-import '../../../widgets/header_step.dart';
 import '../../../widgets/widget.dart';
 
 import '../../../../configs/injector/injector.dart';
 import '../../../../core/services/biometrics.dart';
-import '../../../../gen/assets.gen.dart';
 import '../../../i18n/generated_locales/l10n.dart';
 import '../../../widgets/dialog_notification.dart';
 
@@ -30,12 +30,13 @@ class SetupPinCodePage extends StatefulWidget {
 }
 
 class _SetupPinCodeState extends State<SetupPinCodePage> {
-
-  final controller = Get.put(BuyCertificateController());
+  final controller = Get.isRegistered<BuyCertificateController>()
+      ? Get.find<BuyCertificateController>()
+      : Get.put(BuyCertificateController(), permanent: true);
   final biometricService = getIt<BiometricsService>();
 
-  late FocusNode _focusNode;
-  late FocusNode _focusNode1;
+  final _focusNode = FocusNode();
+  final _focusNode1 = FocusNode();
 
   bool hasError = false;
   String errorMsg = '';
@@ -47,18 +48,22 @@ class _SetupPinCodeState extends State<SetupPinCodePage> {
   String rePin = '';
   bool isSwitched = true;
   bool isDeviceSupported = false;
+
   @override
   initState() {
     super.initState();
-    _focusNode = FocusNode();
-    _focusNode1 = FocusNode();
+
     checkSupportBiometric();
   }
 
   checkSupportBiometric() async {
-    final _isDeviceSupported = await biometricService.isDeviceSupported();
+    final isSupported = await biometricService.isDeviceSupported();
+
+    final availableBiometrics = (await biometricService.getAvailableBiometrics()).isNotEmpty;
+
     setState(() {
-      isDeviceSupported = _isDeviceSupported;
+      isDeviceSupported = isSupported;
+      isSwitched = availableBiometrics;
     });
   }
 
@@ -75,13 +80,13 @@ class _SetupPinCodeState extends State<SetupPinCodePage> {
       title: AppLocalizations.current.setupPinCode,
       body: Column(
         children: [
-          HeaderStep(
-            step: 1,
-            customImageStep: Assets.images.stepOneNew,
-          ),
+          // HeaderStep(
+          //   step: 1,
+          //   customImageStep: Assets.images.stepOneNew,
+          // ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(top: 30, left: 15, right: 15),
+              padding: EdgeInsets.only(top: 10, left: 15, right: 15),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +94,46 @@ class _SetupPinCodeState extends State<SetupPinCodePage> {
                     BaseText(
                       AppLocalizations.current.introPinCode,
                       textAlign: TextAlign.justify,
-                      color: Color(0xff5768A5),
+                      fontSize: 14.5,
+                      color: Color(0xffF51313),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 7, right: 10),
+                          decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xff5768A5)),
+                          width: 5,
+                          height: 5,
+                        ),
+                        Expanded(
+                          child: BaseText(
+                            AppLocalizations.current.pinCodeJustInclude,
+                            textAlign: TextAlign.justify,
+                            color: Color(0xff5768A5),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 7, right: 10),
+                          decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xff5768A5)),
+                          width: 5,
+                          height: 5,
+                        ),
+                        Expanded(
+                          child: BaseText(
+                            AppLocalizations.current.pinCodeNotInclude,
+                            textAlign: TextAlign.justify,
+                            color: Color(0xff5768A5),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 20),
                     CreatePinCodeTextField(
@@ -154,49 +198,10 @@ class _SetupPinCodeState extends State<SetupPinCodePage> {
                     SizedBox(height: 20),
                     AppButtonWidget(
                       label: AppLocalizations.current.next,
+                      backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                       onTap: () {
                         onSubmit();
                       },
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 7, left: 10, right: 10),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Color(0xff5768A5)),
-                          width: 5,
-                          height: 5,
-                        ),
-                        Expanded(
-                          child: BaseText(
-                            AppLocalizations.current.pinCodeJustInclude,
-                            textAlign: TextAlign.justify,
-                            color: Color(0xff5768A5),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 7, left: 10, right: 10),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Color(0xff5768A5)),
-                          width: 5,
-                          height: 5,
-                        ),
-                        Expanded(
-                          child: BaseText(
-                            AppLocalizations.current.pinCodeNotInclude,
-                            textAlign: TextAlign.justify,
-                            color: Color(0xff5768A5),
-                          ),
-                        ),
-                      ],
                     )
                   ],
                 ),
@@ -284,23 +289,18 @@ class _SetupPinCodeState extends State<SetupPinCodePage> {
     final authController = Get.find<AuthController>();
 
     if (isTrue) {
-      //set PIN on ActiveController
-      // controller.pin = pin;
-      // controller.genKey();
-      // Get.to(() => VerifyOTPScreen());
       if (isSwitched) {
-        bool isBioShow = await authController.toggleAuthBiometrics(
-            value: false, authRequired: true);
+        bool isBioShow = await authController.toggleAuthBiometrics(value: isSwitched, authRequired: true);
         if (!isBioShow) {
           setState(() {
             isSwitched = false;
           });
         }
       } else {
-        authController.toggleAuthBiometrics(value: false, authRequired: false);
+        await authController.toggleAuthBiometrics(value: false, authRequired: false);
       }
 
-      controller.genKey(pin, isSwitched, widget.certificateModel as dynamic);
+      controller.phoneVerification(pin, isSwitched, widget.certificateModel as dynamic);
     }
   }
 

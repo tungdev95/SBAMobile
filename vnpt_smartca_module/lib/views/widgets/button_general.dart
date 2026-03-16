@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
 import '../theme/theme.dart';
 
 class ButtonGeneral extends StatelessWidget {
@@ -34,8 +35,8 @@ class ButtonGeneral extends StatelessWidget {
         backgroundColor ?? const Color.fromRGBO(222, 155, 57, 1.0),
       ),
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-        const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(6.0)),
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(AppConfig.borderRadiusBtn ?? 6.0)),
         ),
       ),
       padding: MaterialStateProperty.all(
@@ -59,7 +60,7 @@ class ButtonGeneral extends StatelessWidget {
             Text(
               title,
               style: textStyle ??
-                  mainTheme.textTheme.bodyText2?.copyWith(
+                  mainTheme.textTheme.bodyMedium?.copyWith(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,

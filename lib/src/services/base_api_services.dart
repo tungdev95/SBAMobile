@@ -209,13 +209,15 @@ abstract class BaseApi {
 
   Future<ApiResponse<T?>> handleError<T>(DioException e) async {
     try {
-      if (e.type == DioExceptionType.cancel) {
+      if (e.type == DioExceptionType.cancel ||
+          e.type == DioExceptionType.unknown) {
         return ApiResponse.completed(null);
       } else if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         return ApiResponse.error(ActionTimeoutException());
       } else if (e.type == DioExceptionType.badResponse) {
-        if (e.response?.statusCode == StatusCode.kTokenExpired) {
+        if (e.response?.statusCode == StatusCode.kTokenExpired ||
+            e.response?.statusCode == 409) {
           return ApiResponse.error(
             AppException('Phiên làm việc hết hạn, vui lòng đăng nhập lại!',
                 StatusCode.kTokenExpired),

@@ -11,7 +11,7 @@ MMTBModel _$MMTBModelFromJson(Map<String, dynamic> json) => MMTBModel(
       usingOrigin: json['usingOrigin'] as String?,
       workingPrinciple: json['workingPrinciple'] as String?,
       remainQuality: (json['remainQuality'] as num?)?.toDouble(),
-      dayUse: json['dayUse'] as int?,
+      dayUse: (json['dayUse'] as num?)?.toInt(),
       productLineName: json['productLineName'] as String?,
       assetMachineInfors: (json['assetMachineInfors'] as List<dynamic>?)
               ?.map((e) => MachineInfo.fromJson(e as Map<String, dynamic>))
@@ -75,14 +75,14 @@ Map<String, dynamic> _$MMTBModelToJson(MMTBModel instance) => <String, dynamic>{
     };
 
 MachineInfo _$MachineInfoFromJson(Map<String, dynamic> json) => MachineInfo(
-      assetMachineInforId: json['assetMachineInforId'] as int?,
+      assetMachineInforId: (json['assetMachineInforId'] as num?)?.toInt(),
       assetId: json['assetId'] as String,
       legalName: json['legalName'] as String?,
       legalBrand: json['legalBrand'] as String?,
       legalModel: json['legalModel'] as String?,
       legalColor: json['legalColor'] as String?,
-      legalYearMfg: json['legalYearMfg'] as int?,
-      legalCountryMfgId: json['legalCountryMfgId'] as int?,
+      legalYearMfg: (json['legalYearMfg'] as num?)?.toInt(),
+      legalCountryMfgId: (json['legalCountryMfgId'] as num?)?.toInt(),
       legalMfr: json['legalMfr'] as String?,
       legalPower: (json['legalPower'] as num?)?.toDouble(),
       legalControlType: json['legalControlType'] as String?,
@@ -92,14 +92,14 @@ MachineInfo _$MachineInfoFromJson(Map<String, dynamic> json) => MachineInfo(
       legalElectricEngine: json['legalElectricEngine'] as String?,
       legalMainEngine: json['legalMainEngine'] as String?,
       legalEngineSystem: json['legalEngineSystem'] as String?,
-      legalCommonMachine: json['legalCommonMachine'] as int?,
+      legalCommonMachine: (json['legalCommonMachine'] as num?)?.toInt(),
       legalOtherContent: json['legalOtherContent'] as String?,
       realName: json['realName'] as String?,
       realBrand: json['realBrand'] as String?,
       realModel: json['realModel'] as String?,
       realColor: json['realColor'] as String?,
-      realYearMfg: json['realYearMfg'] as int?,
-      realCountryMfgId: json['realCountryMfgId'] as int?,
+      realYearMfg: (json['realYearMfg'] as num?)?.toInt(),
+      realCountryMfgId: (json['realCountryMfgId'] as num?)?.toInt(),
       realMfr: json['realMfr'] as String?,
       realPower: (json['realPower'] as num?)?.toDouble(),
       realControlType: json['realControlType'] as String?,
@@ -109,7 +109,7 @@ MachineInfo _$MachineInfoFromJson(Map<String, dynamic> json) => MachineInfo(
       realElectricEngine: json['realElectricEngine'] as String?,
       realMainEngine: json['realMainEngine'] as String?,
       realEngineSystem: json['realEngineSystem'] as String?,
-      realCommonMachine: json['realCommonMachine'] as int?,
+      realCommonMachine: (json['realCommonMachine'] as num?)?.toInt(),
       realOtherContent: json['realOtherContent'] as String?,
       repairHistories: (json['repairHistories'] as List<dynamic>?)
               ?.map((e) => RepairHistory.fromJson(e as Map<String, dynamic>))
@@ -121,7 +121,7 @@ MachineInfo _$MachineInfoFromJson(Map<String, dynamic> json) => MachineInfo(
       remainQuality: (json['remainQuality'] as num?)?.toDouble(),
       disputeInfor: json['disputeInfor'] as String?,
       note: json['note'] as String?,
-      dayUse: json['dayUse'] as int?,
+      dayUse: (json['dayUse'] as num?)?.toInt(),
       legalEngineNo: json['legalEngineNo'] as String?,
       realEngineNo: json['realEngineNo'] as String?,
     );
@@ -178,13 +178,13 @@ Map<String, dynamic> _$MachineInfoToJson(MachineInfo instance) =>
 
 RepairHistory _$RepairHistoryFromJson(Map<String, dynamic> json) =>
     RepairHistory(
-      repairHistoryId: json['repairHistoryId'] as int?,
+      repairHistoryId: (json['repairHistoryId'] as num?)?.toInt(),
       assetId: json['assetId'] as String?,
       note: json['note'] as String?,
       dateRepair: json['dateRepair'] == null
           ? null
           : DateTime.parse(json['dateRepair'] as String),
-      repairStatusId: json['repairStatusId'] as int?,
+      repairStatusId: (json['repairStatusId'] as num?)?.toInt(),
       repairDocument: json['repairDocument'] as String?,
       ecmId: json['ecmId'] as String?,
       filename: json['filename'] as String?,

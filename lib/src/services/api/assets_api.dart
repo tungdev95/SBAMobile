@@ -14,7 +14,7 @@ import 'package:sba/src/services/base_api_services.dart';
 import 'package:sba/src/utils/utils.dart';
 
 final assetsApiProvider = Provider<AssetsApi>((ref) {
-  var result = AssetsApi(ref.read(dioProvider));
+  var result = AssetsApi(ref.watch(dioProvider));
   ref.onDispose(result.dispose);
   return result;
 });

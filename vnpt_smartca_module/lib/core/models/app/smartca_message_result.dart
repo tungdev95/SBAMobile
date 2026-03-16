@@ -10,6 +10,7 @@ class ResultCodeDesc {
   static const String ENROLL_SUCCESS = "ENROLL_SUCCESS";
   static const String SUCCESS = "SUCCESS";
   static const String BIOMETRIC_ERROR = "BIOMETRIC_ERROR";
+  static const String NO_EXIST_CERT_VALID = "NO_EXIST_CERT_VALID";
 }
 
 class ResultCode {
@@ -18,6 +19,7 @@ class ResultCode {
   static const int USER_CANCEL_CODE = 1;
   static const int SUCCESS_CODE = 0;
   static const int SUCCESS_OPEN = 4;
+  static const int NO_EXIST_CERT_VALID = 5;
 }
 
 class SmartCaResult {

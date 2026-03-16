@@ -1,9 +1,13 @@
+import 'dart:convert';
+
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:tiengviet/tiengviet.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
 import '../../../configs/injector/injector.dart';
-import '../../../core/models/app/district_model.dart';
 import '../../../core/models/app/identity_card_model.dart';
 import '../../../core/models/app/nationality_model.dart';
 import '../../../core/models/app/province_model.dart';
@@ -14,24 +18,31 @@ import '../../../data/repository/authen_repository.dart';
 import '../../../data/repository/purchase_certificate_repository.dart';
 import '../../../views/i18n/generated_locales/l10n.dart';
 import '../../../views/pages/input_otp/index.dart';
+import '../../core/models/response/profile_model.dart';
+import '../../core/services/secure_local_storage.dart';
+import '../../core/utils/constants.dart';
 import '../pages/register_account/certificate_pack_screen.dart';
 import '../pages/register_account/sandboxpayment_screen.dart';
 import '../../../views/utils/exception_handler.dart';
 import '../../../views/widgets/dialog/common_dialog.dart';
 
 import '../../core/models/response/order_cert_model.dart';
+import '../widgets/show_snackbar_widget.dart';
 import 'base_controler.dart';
 
 class EnterInfoController extends BaseController {
   final purchaseCertificateRepository = getIt<PurchaseCertificateRepository>();
   final authRepository = getIt<AuthenRepository>();
+  final _secureLocalDataSource = getIt<SecureLocalStorageService>();
 
   var lstProvinces = List<ProvinceModel>.empty().obs;
-  var lstDistricts = List<DistrictModel>.empty().obs;
   var lstWards = List<WardsModel>.empty().obs;
+  var rootWards = List<WardsModel>.empty();
 
   var lstIdentityCards = List<IdentityCardModel>.empty().obs;
   var lstNationalitys = List<NationalityModel>.empty().obs;
+
+  var userProfile = ProfileModel().obs;
 
   TextEditingController txtHotenController = TextEditingController();
   TextEditingController txtSoCCCDController = TextEditingController();
@@ -42,7 +53,6 @@ class EnterInfoController extends BaseController {
   TextEditingController txtEmailController = TextEditingController();
   TextEditingController txtPhoneController = TextEditingController();
   TextEditingController txtProvinceController = TextEditingController();
-  TextEditingController txtDistrictController = TextEditingController();
   TextEditingController txtWardController = TextEditingController();
   TextEditingController txtAddressController = TextEditingController();
   TextEditingController txtReferrerCodeController = TextEditingController();
@@ -57,10 +67,12 @@ class EnterInfoController extends BaseController {
   GlobalKey<FormBuilderState> formKey4 = GlobalKey<FormBuilderState>();
 
   // lưu lại lần đầu tiên
-  final Rx<List<PurchaseCertificateModel>> listCertPacksFirst = Rx<List<PurchaseCertificateModel>>([]);
+  final Rx<List<PurchaseCertificateModel>> listCertPacksFirst =
+      Rx<List<PurchaseCertificateModel>>([]);
 
   // for show ui
-  final Rx<List<PurchaseCertificateModel>> listCertPacks = Rx<List<PurchaseCertificateModel>>([]);
+  final Rx<List<PurchaseCertificateModel>> listCertPacks =
+      Rx<List<PurchaseCertificateModel>>([]);
 
   final RefreshController refreshController = RefreshController();
   List<CertPackFilterModel> currentFilterModels = [];
@@ -68,48 +80,123 @@ class EnterInfoController extends BaseController {
 
   RxBool isPaymentSuccess = false.obs;
 
+  RxBool isSortUP = true.obs;
   @override
   onInit() {
     super.onInit();
+    getUserInformation();
     lstIdentityCards.value = identityCards;
     lstNationalitys.value = nationalities;
   }
 
-  getProvince() async {
-    try {
-      final result = await purchaseCertificateRepository.getProvince();
-      result.fold((l) => null, (r) {
-        lstProvinces.value = List.from(r).map((e) => ProvinceModel.fromJson(e)).toList();
-      });
-      result.toString();
-    } catch (e) {}
-  }
+  Future<void> getUserInformation() async {
+    String? strProfile =
+        await _secureLocalDataSource.getLastData(LOCAL_USER_PROFILE);
+    if (strProfile != null) {
+      userProfile.value = ProfileModel.fromJson(json.decode(strProfile));
 
-  getDistrict(String? provinceId) async {
-    try {
-      final result = await purchaseCertificateRepository.getDistrict(provinceId!);
-      result.fold((l) => null, (r) {
-        lstDistricts.value = List.from(r).map((e) => DistrictModel.fromJson(e)).toList();
-      });
-      result.toString();
-    } catch (e) {
-      e.toString();
+      if (userProfile.value.userAddress?.districtId == "99999") {
+        txtProvinceController.text =
+            userProfile.value.userAddress?.provinceName ?? '';
+        txtWardController.text = userProfile.value.userAddress?.wardName ?? '';
+      }
+
+      txtAddressController.text =
+          userProfile.value.userAddress?.streetName ?? '';
     }
   }
 
-  getWards(String? provinceId, String? districtId) async {
+  getAllWards() async {
     try {
-      final result = await purchaseCertificateRepository.getWards(provinceId!, districtId!);
+      showProgress();
+
+      final result = await purchaseCertificateRepository.getAllWards();
       result.fold((l) => null, (r) {
-        lstWards.value = List.from(r).map((e) => WardsModel.fromJson(e)).toList();
+        rootWards = List.from(r).map((e) => WardsModel.fromJson(e)).toList();
+
+        lstWards.value =
+            rootWards.groupBy((element) => element.wardId).entries.map((e) {
+          return WardsModel(
+            wardId: e.key,
+            wardName: e.value.first.wardName,
+            provinceId: e.value.first.provinceId ?? 0,
+            provinceName: e.value.first.provinceName ?? "",
+            provinceCode: e.value.first.provinceCode ?? "",
+            postalCode: e.value.first.postalCode ?? "",
+          );
+        }).toList();
+
+        lstProvinces.value = lstWards
+            .groupBy((element) => element.provinceId)
+            .entries
+            .map((e) => ProvinceModel(
+                  provinceId: e.key ?? 0,
+                  provinceName: e.value.first.provinceName ?? "",
+                ))
+            .toList();
+
+        // Sắp xếp danh sách tỉnh: đưa các tỉnh lớn lên đầu
+        _sortProvinces();
       });
-      result.toString();
     } catch (e) {
       e.toString();
+    } finally {
+      hideProgress();
     }
   }
 
-  Future<List<IdentityCardModel>> getIdentityCardTypeSuggestions(String query) async {
+  /// Danh sách các tỉnh thành lớn của Việt Nam (theo thứ tự ưu tiên)
+  static const List<String> _majorProvinces = [
+    'Hà Nội',
+    'Thành phố Hồ Chí Minh',
+    'Hồ Chí Minh',
+  ];
+
+  /// Sắp xếp danh sách tỉnh, đưa các tỉnh lớn lên đầu
+  void _sortProvinces() {
+    lstProvinces.value = lstProvinces.value
+      ..sort((a, b) {
+        final aIsMajor = _isMajorProvince(a.name);
+        final bIsMajor = _isMajorProvince(b.name);
+
+        if (aIsMajor && !bIsMajor) return -1;
+        if (!aIsMajor && bIsMajor) return 1;
+
+        // Nếu cả hai đều là tỉnh lớn, sắp xếp theo thứ tự trong danh sách
+        if (aIsMajor && bIsMajor) {
+          return _getMajorProvinceIndex(a.name) -
+              _getMajorProvinceIndex(b.name);
+        }
+
+        // Nếu cả hai đều không phải tỉnh lớn, sắp xếp theo tên
+        return TiengViet.parse(a.name.toLowerCase())
+            .compareTo(TiengViet.parse(b.name.toLowerCase()));
+      });
+  }
+
+  /// Kiểm tra xem có phải là tỉnh lớn hay không
+  bool _isMajorProvince(String provinceName) {
+    final normalizedName = TiengViet.parse(provinceName.toLowerCase());
+    return _majorProvinces.any((major) =>
+        normalizedName.contains(TiengViet.parse(major.toLowerCase())) ||
+        TiengViet.parse(major.toLowerCase()).contains(normalizedName));
+  }
+
+  /// Lấy index của tỉnh lớn trong danh sách ưu tiên
+  int _getMajorProvinceIndex(String provinceName) {
+    final normalizedName = TiengViet.parse(provinceName.toLowerCase());
+    for (int i = 0; i < _majorProvinces.length; i++) {
+      final majorNormalized = TiengViet.parse(_majorProvinces[i].toLowerCase());
+      if (normalizedName.contains(majorNormalized) ||
+          majorNormalized.contains(normalizedName)) {
+        return i;
+      }
+    }
+    return _majorProvinces.length;
+  }
+
+  Future<List<IdentityCardModel>> getIdentityCardTypeSuggestions(
+      String query) async {
     return lstIdentityCards.where((item) {
       final nameLower = item.name.toLowerCase();
       final queryLower = query.toLowerCase();
@@ -119,34 +206,29 @@ class EnterInfoController extends BaseController {
 
   Future<List<NationalityModel>> getNationalitySuggestions(String query) async {
     return lstNationalitys.where((item) {
-      final nameLower = item.name.toLowerCase();
-      final queryLower = query.toLowerCase();
+      final nameLower = TiengViet.parse(item.name.toLowerCase());
+      final queryLower = TiengViet.parse(query.toLowerCase());
       return nameLower.contains(queryLower);
     }).toList();
   }
 
   Future<List<ProvinceModel>> getProvinceSuggestions(String query) async {
     return lstProvinces.where((province) {
-      final nameLower = province.name.toLowerCase();
-      final queryLower = query.toLowerCase();
-      return nameLower.contains(queryLower);
-    }).toList();
-  }
-
-  Future<List<DistrictModel>> getDistrictsSuggestions(String query) async {
-    return lstDistricts.where((district) {
-      final nameLower = district.name.toLowerCase();
-      final queryLower = query.toLowerCase();
+      final nameLower = TiengViet.parse(province.name.toLowerCase());
+      final queryLower = TiengViet.parse(query.toLowerCase());
       return nameLower.contains(queryLower);
     }).toList();
   }
 
   Future<List<WardsModel>> getWardSuggestions(String query) async {
-    return lstWards.where((wards) {
-      final nameLower = wards.name.toLowerCase();
-      final queryLower = query.toLowerCase();
-      return nameLower.contains(queryLower);
+    final wards = lstWards.where((ward) {
+      final nameLower = TiengViet.parse(ward.name.toLowerCase());
+      final queryLower = TiengViet.parse(query.toLowerCase());
+      return nameLower.contains(queryLower) &&
+          ward.provinceName == txtProvinceController.text;
     }).toList();
+
+    return wards;
   }
 
   String? validateIdentityCardType(String? value) {
@@ -188,19 +270,6 @@ class EnterInfoController extends BaseController {
     return null;
   }
 
-  String? validateDistricts(String? value) {
-    if (GetUtils.isBlank(value) == true) {
-      return AppLocalizations.current.certificate_package_validate_input_error;
-    } else {
-      String? msg = validCharacters(value);
-      if (msg != null && msg.isNotEmpty) return msg;
-
-      msg = checkNameExistence(lstDistricts, value);
-      if (msg.isNotEmpty) return msg;
-    }
-    return null;
-  }
-
   String? validateWards(String? value) {
     if (GetUtils.isBlank(value) == true) {
       return AppLocalizations.current.certificate_package_validate_input_error;
@@ -216,16 +285,20 @@ class EnterInfoController extends BaseController {
 
   //Kiểm tra xem có ký tự đặc biệt hợp lệ không
   String? validCharacters(String? value) {
-    final nameRegExp = RegExp(r'[!@#$%\^*()+=\\[\]\\;{}|\\":<>\?]'); //new RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+    final nameRegExp = RegExp(
+        r'[!@#$%\^*()+=\\[\]\\;{}|\\":<>\?]'); //new RegExp(r'[!@#$%^&*(),.?":{}|<>]');
     if (nameRegExp.hasMatch(value!)) {
-      return AppLocalizations.current.certificate_package_validate_input_special_error;
+      return AppLocalizations
+          .current.certificate_package_validate_input_special_error;
     }
     return null;
   }
 
   //Kiểm tra giá trị nhập trong dropdown
   String checkNameExistence(dynamic list, String? value) {
-    return list.any((x) => x.name == value) ? "" : AppLocalizations.current.pleaseSelectDataInList;
+    return list.any((x) => x.name.toLowerCase() == value?.toLowerCase())
+        ? ""
+        : AppLocalizations.current.pleaseSelectDataInList;
   }
 
   @override
@@ -240,14 +313,14 @@ class EnterInfoController extends BaseController {
     txtEmailController.dispose();
     txtPhoneController.dispose();
     txtProvinceController.dispose();
-    txtDistrictController.dispose();
     txtWardController.dispose();
     txtAddressController.dispose();
     txtReferrerCodeController.dispose();
     super.dispose();
   }
 
-  Future sendOTP(String citizenId, String phoneNumber, CardInfo cardInfo) async {
+  Future sendOTP(
+      String citizenId, String phoneNumber, CardInfo cardInfo) async {
     showLoading();
     final result = await authRepository.sendOTP(citizenId, phoneNumber);
 
@@ -266,12 +339,15 @@ class EnterInfoController extends BaseController {
           inputOTPType: InputOTPType.register,
         ))?.then((value) {
       if (value == true) {
-        Get.to(() => CertificatePackScreen(cardInfo: cardInfo, listCerts: []));
+        Get.to(
+          () => CertificatePackScreen(),
+        );
       }
     });
   }
 
-  Future<void> fetchItems({bool isRefresh = false}) async {
+  Future<void> fetchItems(
+      {bool isRefresh = false, bool isSortUp = true}) async {
     if (isRefresh == false) {
       currentFilterModels = [];
       currentKeyword = "";
@@ -280,7 +356,9 @@ class EnterInfoController extends BaseController {
     final result = await purchaseCertificateRepository.getCertPackages();
     List<PurchaseCertificateModel> listData = [];
     result.fold((failure) => showErrorModal(exceptionHandler(failure)), (r) {
-      listData = List.from(r).map((e) => PurchaseCertificateModel.fromJson(e)).toList();
+      listData = List.from(r)
+          .map((e) => PurchaseCertificateModel.fromJson(e))
+          .toList();
       listCertPacksFirst.value = listData;
     });
     if (isRefresh == false) {
@@ -289,16 +367,26 @@ class EnterInfoController extends BaseController {
       if (currentFilterModels.isEmpty) {
         listCertPacks.value = listData;
       } else {
-        listCertPacks.value =
-            listCertPacksFirst.value.where((e) => _checkFilterSignTypeAndTimeValid(currentFilterModels, e)).toList();
+        listCertPacks.value = listCertPacksFirst.value
+            .where(
+                (e) => _checkFilterSignTypeAndTimeValid(currentFilterModels, e))
+            .toList();
       }
       if (currentKeyword.isNotEmpty) {
         listCertPacks.value = listCertPacks.value
-            .where(
-                (element) => element.pricingName != null && element.pricingName!.toLowerCase().contains(currentKeyword))
+            .where((element) =>
+                element.pricingName != null &&
+                element.pricingName!.toLowerCase().contains(currentKeyword))
             .toList();
       }
     }
+    if (AppConfig.packageDefault != "") {
+      listCertPacks.value = listData
+          .where((element) =>
+              element.pricingName?.contains(AppConfig.packageDefault) == true)
+          .toList();
+    }
+
     if (isRefresh == false) {
       hideLoading();
     } else {
@@ -306,8 +394,8 @@ class EnterInfoController extends BaseController {
     }
   }
 
-  bool _checkFilterSignTypeAndTimeValid(
-      List<CertPackFilterModel> filterModels, PurchaseCertificateModel purchaseCertificateModel) {
+  bool _checkFilterSignTypeAndTimeValid(List<CertPackFilterModel> filterModels,
+      PurchaseCertificateModel purchaseCertificateModel) {
     List<CertPackFilterModel> listFilterModelBySignType = [];
     List<CertPackFilterModel> listFilterModelByTimeValid = [];
     for (CertPackFilterModel certPackFilterModel in filterModels) {
@@ -320,10 +408,12 @@ class EnterInfoController extends BaseController {
 
     bool signTypeValid = listFilterModelBySignType.isEmpty
         ? true
-        : listFilterModelBySignType.any((element) => element.code == purchaseCertificateModel.signType);
+        : listFilterModelBySignType.any(
+            (element) => element.code == purchaseCertificateModel.signType);
     bool timeValid = listFilterModelByTimeValid.isEmpty
         ? true
-        : listFilterModelByTimeValid.any((element) => element.month == purchaseCertificateModel.timeValidity);
+        : listFilterModelByTimeValid.any((element) =>
+            element.month == purchaseCertificateModel.timeValidity);
 
     return signTypeValid && timeValid;
   }
@@ -333,11 +423,13 @@ class EnterInfoController extends BaseController {
     if (listCertPacksFirst.value.isEmpty) {
       return;
     }
-    if (filterModels.isEmpty || (filterModels.length == 1 && filterModels[0].code == -1)) {
+    if (filterModels.isEmpty ||
+        (filterModels.length == 1 && filterModels[0].code == -1)) {
       listCertPacks.value = listCertPacksFirst.value;
     } else {
-      listCertPacks.value =
-          listCertPacksFirst.value.where((e) => _checkFilterSignTypeAndTimeValid(filterModels, e)).toList();
+      listCertPacks.value = listCertPacksFirst.value
+          .where((e) => _checkFilterSignTypeAndTimeValid(filterModels, e))
+          .toList();
     }
     if (listCertPacks.value.isEmpty) {
       return;
@@ -345,15 +437,16 @@ class EnterInfoController extends BaseController {
     // filter by keyword
     if (currentKeyword.isNotEmpty) {
       listCertPacks.value = listCertPacks.value
-          .where(
-              (element) => element.pricingName != null && element.pricingName!.toLowerCase().contains(currentKeyword))
+          .where((element) =>
+              element.pricingName != null &&
+              element.pricingName!.toLowerCase().contains(currentKeyword))
           .toList();
     }
   }
 
   // filter by keyword
   filterByString(String value) {
-    currentKeyword = value;
+    currentKeyword = value.toLowerCase();
     if (listCertPacksFirst.value.isEmpty) {
       return;
     }
@@ -361,31 +454,31 @@ class EnterInfoController extends BaseController {
       listCertPacks.value = listCertPacksFirst.value;
     } else {
       listCertPacks.value = listCertPacksFirst.value
-          .where(
-              (element) => element.pricingName != null && element.pricingName!.toLowerCase().contains(currentKeyword))
+          .where((element) =>
+              element.pricingName != null &&
+              element.pricingName!.toLowerCase().contains(currentKeyword))
           .toList();
     }
     if (listCertPacks.value.isEmpty) {
       return;
     }
     if (currentFilterModels.isNotEmpty) {
-      listCertPacks.value =
-          listCertPacks.value.where((e) => _checkFilterSignTypeAndTimeValid(currentFilterModels, e)).toList();
+      listCertPacks.value = listCertPacks.value
+          .where(
+              (e) => _checkFilterSignTypeAndTimeValid(currentFilterModels, e))
+          .toList();
     }
   }
 
-  // payment
-/*
-    nvtruong: Hàm thanh toán đơn hàng (hàm này sẽ connect api qua vnpt dưới dạng webview)
-   */
-
-  Future<void> paymentOrderV2(OrderCertModel orderCertModel, bool isFree, String? raCode) async {
+  Future<void> paymentOrderV2(
+      OrderCertModel orderCertModel, bool isFree, String? raCode) async {
     isPaymentSuccess.value = false;
     final items = {"pricingCode": orderCertModel.pricing.pricingCode};
     saveServiceOrder(items, isFree, orderCertModel, raCode);
   }
 
-  Future<void> saveServiceOrder(dynamic dataItems, bool isFree, OrderCertModel cardInfo, String? raCode) async {
+  Future<void> saveServiceOrder(dynamic dataItems, bool isFree,
+      OrderCertModel cardInfo, String? raCode) async {
     showLoading();
 
     final obj = await initCertOrderTransaction(cardInfo.id, raCode ?? "");
@@ -413,9 +506,16 @@ class EnterInfoController extends BaseController {
     );
     if (result == null) {
       hideLoading();
-      showErrorModal(AppLocalizations.current.orderPAYMENT_ERROR, callback: () {
-        Get.back();
-      });
+      Get.back();
+
+      // showErrorModal(AppLocalizations.current.orderPAYMENT_ERROR);
+      showSnackBarWidget(
+        message: AppLocalizations.current.orderPAYMENT_ERROR,
+        icon: const Icon(Icons.check_circle_outline,
+            color: Colors.white, size: 32),
+        milliseconds: 1400,
+        backgroundColor: const Color(0xffE51F1F),
+      );
     }
   }
 
@@ -423,7 +523,8 @@ class EnterInfoController extends BaseController {
   Future<dynamic> initCertOrderTransaction(String id, String maGt) async {
     var returnData = {};
     try {
-      final result = await purchaseCertificateRepository.initPersonalCertificateOrderTransaction(id, maGt);
+      final result = await purchaseCertificateRepository
+          .initPersonalCertificateOrderTransaction(id, maGt);
       await result.fold((failure) {
         showErrorModal(exceptionHandler(failure), callback: () {
           Get.back();
@@ -432,11 +533,17 @@ class EnterInfoController extends BaseController {
         if (r != null) {
           returnData = {'msg': '', 'url': r};
         } else {
-          returnData = {'msg': AppLocalizations.current.service_pack_payment_failed, 'url': ''};
+          returnData = {
+            'msg': AppLocalizations.current.service_pack_payment_failed,
+            'url': ''
+          };
         }
       });
     } catch (e) {
-      returnData = {'msg': AppLocalizations.current.serviceSomethingWentWrong, 'url': ''};
+      returnData = {
+        'msg': AppLocalizations.current.serviceSomethingWentWrong,
+        'url': ''
+      };
     }
     return returnData;
   }
@@ -445,11 +552,13 @@ class EnterInfoController extends BaseController {
     nvtruong: Hàm kiểm tra thanh toán đơn hàng (hàm này sẽ connect api qua vnpt dưới dạng webview)
    */
   // ignore: long-method
-  Future<void> checkOrderPaymentResult(String id, String responseCode, String secureCode, String? LocalityCode) async {
+  Future<void> checkOrderPaymentResult(String id, String responseCode,
+      String secureCode, String? LocalityCode) async {
     showLoading();
     try {
-      final result = await purchaseCertificateRepository.checkOrderPaymentResult(
-          '', id, responseCode, secureCode, LocalityCode ?? "");
+      final result =
+          await purchaseCertificateRepository.checkOrderPaymentResult(
+              '', id, responseCode, secureCode, LocalityCode ?? "");
 
       await result.fold((failure) {
         showErrorModal(exceptionHandler(failure), callback: () {
@@ -461,16 +570,67 @@ class EnterInfoController extends BaseController {
           isPaymentSuccess.value = true;
           Get.back(result: true); // back to buy cert controller
         } else {
-          showErrorModal(AppLocalizations.current.orderPAYMENT_ERROR, callback: () {
-            Get.back();
-          });
+          // showErrorModal(AppLocalizations.current.orderPAYMENT_ERROR,
+          //     callback: () {
+          //   Get.back();
+          // });
+          showSnackBarWidget(
+            message: AppLocalizations.current.orderPAYMENT_ERROR,
+            icon: const Icon(Icons.check_circle_outline,
+                color: Colors.white, size: 32),
+            milliseconds: 1400,
+            backgroundColor: const Color(0xffE51F1F),
+          );
         }
       });
     } catch (e) {
-      showErrorModal(AppLocalizations.current.serviceSomethingWentWrong, callback: () {
+      showErrorModal(AppLocalizations.current.serviceSomethingWentWrong,
+          callback: () {
         Get.back();
       });
     }
     hideLoading();
+  }
+
+  addressStandardization(ProvinceModel provinceModel, WardsModel wardsModel) {
+    final userAddress = userProfile.value.userAddress;
+
+    if (userAddress?.districtId == "99999") {
+      provinceModel.provinceId = int.tryParse(userAddress!.provinceId) ?? 0;
+      provinceModel.provinceName = userAddress.provinceName;
+
+      wardsModel.wardId = int.tryParse(userAddress.wardId) ?? 0;
+      wardsModel.wardName = userAddress.wardName;
+
+      return;
+    }
+
+    var province = rootWards.firstWhereOrNull((element) =>
+        element.oldProvinceName == userAddress?.provinceName ||
+        element.oldProvinceId == int.tryParse(userAddress!.provinceId));
+
+    if (province != null) {
+      provinceModel = ProvinceModel(
+        provinceId: province.provinceId ?? 0,
+        provinceName: provinceModel.name,
+      );
+
+      txtProvinceController.text = province.provinceName ?? "";
+    }
+
+    var ward = rootWards.firstWhereOrNull((element) =>
+        (element.oldWardName == userAddress?.wardName ||
+            element.oldWardId == int.tryParse(userAddress!.wardId)) &&
+        (element.oldProvinceName == userAddress?.provinceName ||
+            element.oldProvinceId == int.tryParse(userAddress!.provinceId)));
+
+    if (ward != null) {
+      txtWardController.text = ward.wardName;
+
+      wardsModel = WardsModel(
+        wardId: ward.wardId,
+        wardName: txtWardController.text,
+      );
+    }
   }
 }

@@ -10,8 +10,8 @@ AssetsDetailModel<T> _$AssetsDetailModelFromJson<T>(
         Map<String, dynamic> json) =>
     AssetsDetailModel<T>(
       assetCode: json['assetCode'] as String?,
-      assetLevelThreeId: json['assetLevelThreeId'] as int?,
-      assetLevelTwoId: json['assetLevelTwoId'] as int?,
+      assetLevelThreeId: (json['assetLevelThreeId'] as num?)?.toInt(),
+      assetLevelTwoId: (json['assetLevelTwoId'] as num?)?.toInt(),
       assetObject: _Converter<T?>().fromJson(json['assetObject']),
       assetImages: (json['assetImages'] as List<dynamic>?)
               ?.map((e) => Attachment.fromJson(e as Map<String, dynamic>))

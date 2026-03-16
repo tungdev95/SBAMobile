@@ -9,14 +9,13 @@ import '../../i18n/generated_locales/l10n.dart';
 import '../../widgets/bottom_contact.dart';
 import '../../widgets/widget.dart';
 
-import '../../../core/models/response/profile_model.dart';
-
 class PaymentScreen extends StatefulWidget {
   final OrderCertModel orderCertModel;
-  final ProfileModel profileModel;
+  // final ProfileModel profileModel;
   final String? raCode;
 
-  const PaymentScreen({super.key, required this.orderCertModel, required this.profileModel, required this.raCode});
+  const PaymentScreen(
+      {super.key, required this.orderCertModel, required this.raCode});
 
   @override
   State<StatefulWidget> createState() => _PaymentScreenState();
@@ -29,7 +28,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // executes after build
-      controller.paymentOrderV2(widget.orderCertModel, widget.orderCertModel.pricing.price == 0, widget.raCode);
+      controller.paymentOrderV2(widget.orderCertModel,
+          widget.orderCertModel.pricing.price == 0, widget.raCode);
     });
     super.initState();
   }
@@ -37,22 +37,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
-      title: AppLocalizations.current.serviceInitialization,
+      // title: AppLocalizations.current.serviceInitialization,
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
+            child: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 20),
-                  const ImageSliderWidget(),
+                  // const SizedBox(height: 20),
+                  // const ImageSliderWidget(),
                   Obx(() {
                     if (controller.isLoading.value) {
                       return Container(
                         margin: const EdgeInsets.only(top: 60, bottom: 20),
                         child: LoadingCircleWidget(
-                          title: AppLocalizations.current.initializingTheService,
-                          subtitle: AppLocalizations.current.theSystemIsInitializingTheServicePleaseWaitAMoment,
+                          title:
+                              AppLocalizations.current.initializingTheService,
+                          subtitle: AppLocalizations.current.waitaMinute,
                         ),
                       );
                     }

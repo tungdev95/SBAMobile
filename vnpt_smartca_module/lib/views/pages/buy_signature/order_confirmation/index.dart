@@ -5,8 +5,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 
 import '../../../../configs/injector/injector.dart';
+import '../../../../core/models/response/certificate_model.dart';
 import '../../../../core/models/response/profile_model.dart';
 import '../../../../core/models/response/service_pack_model.dart';
 import '../../../../core/services/secure_local_storage.dart';
@@ -23,8 +26,10 @@ import 'order_confirmation_loading.dart';
 
 class OrderConfirmationPage extends StatefulWidget {
   final ServicePackModel packageModel;
+  final CertificateModel? certModel;
 
-  OrderConfirmationPage({Key? key, required this.packageModel}) : super(key: key);
+  OrderConfirmationPage({Key? key, required this.packageModel, this.certModel})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => OrderConfirmationState();
@@ -35,6 +40,7 @@ class OrderConfirmationState extends State<OrderConfirmationPage> {
   ProfileModel? userProfile;
 
   final controller = Get.find<ServicePackController>();
+  // final referralCodeController = Get.put(ReferralCodeController());
 
   late int totalMoney;
 
@@ -50,7 +56,8 @@ class OrderConfirmationState extends State<OrderConfirmationPage> {
         ? widget.packageModel.price * widget.packageModel.signTurnNumber
         : widget.packageModel.price;
     return BaseScreen(
-      title: AppLocalizations.current.certificate_package_page_confirm_order_title,
+      title:
+          AppLocalizations.current.certificate_package_page_confirm_order_title,
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         color: Color(0xffF5F7FB),
@@ -62,7 +69,8 @@ class OrderConfirmationState extends State<OrderConfirmationPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CertPackageViewWidget(packageModel: widget.packageModel, showBill: true),
+                    CertPackageViewWidget(
+                        packageModel: widget.packageModel, showBill: true),
                     SizedBox(height: 15),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 8),
@@ -81,10 +89,15 @@ class OrderConfirmationState extends State<OrderConfirmationPage> {
                             fontWeight: FontWeight.w600,
                           ),
                           SizedBox(height: 15),
-                          _itemInformation(AppLocalizations.current.fullName, userProfile?.fullName),
-                          _itemInformation(AppLocalizations.current.phone, userProfile?.phone),
-                          _itemInformation(AppLocalizations.current.email, userProfile?.email),
-                          _itemInformation(AppLocalizations.current.address, userProfile?.address, marginBottom: 0),
+                          _itemInformation(AppLocalizations.current.fullName,
+                              userProfile?.fullName),
+                          _itemInformation(AppLocalizations.current.phone,
+                              userProfile?.phone),
+                          _itemInformation(AppLocalizations.current.email,
+                              userProfile?.email),
+                          _itemInformation(AppLocalizations.current.address,
+                              userProfile?.userAddress?.diaChi ?? "",
+                              marginBottom: 0),
                         ],
                       ),
                     ),
@@ -133,16 +146,18 @@ class OrderConfirmationState extends State<OrderConfirmationPage> {
                   ),
                   SizedBox(height: 5),
                   BaseText(
-                    AppLocalizations.current.included10VAT,
+                    AppLocalizations.current.service_pack_vat_included,
                     color: Color(0xff5768A5),
                     fontStyle: FontStyle.italic,
                   ),
                   SizedBox(height: 10),
                   AppButtonWidget(
                     label: AppLocalizations.current.btnPayment,
+                    backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                     doublePadding: 15,
                     onTap: () {
-                      controller.onFormSubmit(widget.packageModel);
+                      controller.onFormSubmit(
+                          widget.packageModel, widget.certModel?.id);
                       Get.to(() => OrderConfirmationLoadingPage());
                     },
                   ),

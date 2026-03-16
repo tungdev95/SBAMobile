@@ -23,7 +23,7 @@ MapDetailModel _$MapDetailModelFromJson(Map<String, dynamic> json) =>
       types:
           (json['types'] as List<dynamic>?)?.map((e) => e as String).toList(),
       url: json['url'] as String?,
-      utcOffset: json['utc_offset'] as int?,
+      utcOffset: (json['utc_offset'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$MapDetailModelToJson(MapDetailModel instance) =>

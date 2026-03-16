@@ -13,7 +13,7 @@ class LanguageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: 16),
+      padding: EdgeInsets.only(right: 40),
       child: Align(
         alignment: Alignment.centerRight,
         child: InkWell(

@@ -23,3 +23,7 @@ FOUNDATION_EXPORT const unsigned char ICSdkEKYCVersionString[];
 #import <ICSdkEKYC/ICEkycCameraProtocols.h>
 #import <ICSdkEKYC/ICEKYCSavedData.h>
 
+#import <ICSdkEKYC/ICEkycAddFace.h>
+#import <ICSdkEKYC/ICEkycAddInformation.h>
+#import <ICSdkEKYC/ICEkycVerifyFace.h>
+#import <ICSdkEKYC/ICEkycSearchFace.h>

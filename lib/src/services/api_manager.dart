@@ -1,6 +1,5 @@
 import 'dart:io' show Platform;
 
-import 'package:device_info/device_info.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -9,14 +8,32 @@ import 'package:sba/src/models/base/request_header_model.dart';
 import 'package:sba/src/screens/base/top_level_provider.dart';
 import 'package:sba/src/services/token_refresh_interceptor.dart';
 import 'package:sba/src/utils/app_constants.dart';
-
-import '../models/login/user_model.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class APIManager {
   APIManager();
 
   Dio initApiManager(Ref ref) {
-    var baseUrl = AppConstants.kProUrl;
+    // README.md
+    const env = String.fromEnvironment('ENV');
+    late String baseUrl;
+
+    switch (env) {
+      case 'dev':
+        baseUrl = AppConstants.kDevUrl;
+        break;
+      case 'uat':
+        baseUrl = AppConstants.kUatUrl;
+        break;
+      case 'pro':
+        baseUrl = AppConstants.kProUrl;
+        break;
+      default:
+        baseUrl = AppConstants.kDevUrl;
+    }
+    // var baseUrl = AppConstants.kUatUrl;
+
+    final token = ref.watch(appController).userLogin?.accessToken;
 
     BaseOptions options = BaseOptions(
       baseUrl: baseUrl,
@@ -30,7 +47,7 @@ class APIManager {
     );
     Dio dio = Dio(options);
     dio.interceptors
-      ..add(AppInterceptor(ref))
+      ..add(AppInterceptor(ref, token))
       ..add(
         TokenRefreshInterceptor(
           dio: dio,
@@ -53,8 +70,9 @@ class APIManager {
 class AppInterceptor extends Interceptor {
   RequestHeaderModel? header;
   Ref ref;
+  String? token;
 
-  AppInterceptor(this.ref);
+  AppInterceptor(this.ref, this.token);
 
   Future<void> getDeviceInfo() async {
     header ??= RequestHeaderModel();
@@ -63,7 +81,7 @@ class AppInterceptor extends Interceptor {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       header
         ?..oS = 'android'
-        ..deviceId = androidInfo.androidId
+        ..deviceId = androidInfo.id
         ..deviceName = removeDiacritics(androidInfo.model);
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
@@ -88,9 +106,8 @@ class AppInterceptor extends Interceptor {
       headers['OS'] = header?.oS ?? '';
       headers['DeviceId'] = header?.deviceId ?? '';
       headers['DeviceName'] = header?.deviceName ?? '';
-      UserModel? userLogin = ref.read(appController).userLogin;
-      if (userLogin != null) {
-        headers['Authorization'] = 'Bearer ${userLogin.accessToken}';
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
       }
     } catch (e) {
       debugPrint(e.toString());

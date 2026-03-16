@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 
 import '../../gen/assets.gen.dart';
 import '../i18n/generated_locales/l10n.dart';
@@ -71,8 +73,11 @@ class UpdateAppWidget extends StatelessWidget {
               Expanded(
                 child: AppButtonWidget(
                   label: titleBtnCancel ?? AppLocalizations.current.close,
-                  labelColor: const Color(0xff0D75D6),
-                  backgroundColor: const Color(0xffE0F0FF),
+                  // labelColor: const Color(0xff0D75D6),
+                  // backgroundColor: const Color(0xffE0F0FF),
+                  labelColor: HexColor(AppConfig.colorPrimaryBtn),
+                  backgroundColor: HexColor(AppConfig.colorSecondBtn),
+                  border: AppConfig.colorPrimaryBtn == "#0D75D6" ? null : Border.all(width: 1.5, color: HexColor(AppConfig.colorPrimaryBtn)),
                   onTap: () {
                     Navigator.pop(context);
                     actionCancel?.call();
@@ -83,6 +88,7 @@ class UpdateAppWidget extends StatelessWidget {
               Expanded(
                 child: AppButtonWidget(
                   label: titleBtnAccept ?? AppLocalizations.current.confirm,
+                  backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                   onTap: () {
                     Navigator.pop(context);
                     actionAccept?.call();

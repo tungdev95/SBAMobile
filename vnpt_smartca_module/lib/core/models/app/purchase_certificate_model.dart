@@ -33,6 +33,7 @@ class PurchaseCertificateModel extends AppRefreshModel {
   int? price;
   int? timeValidity;
   bool? selected;
+  int? initSignTurn;
 
   PurchaseCertificateModel(
       {this.pricingCode,
@@ -52,27 +53,30 @@ class PurchaseCertificateModel extends AppRefreshModel {
       this.pricePlan,
       this.price,
       this.timeValidity,
-      this.selected}) : super("");
+      this.selected,
+      this.initSignTurn})
+      : super("");
 
   factory PurchaseCertificateModel.fromJson(Map<String, dynamic> json) {
     return PurchaseCertificateModel(
-        pricingCode: json['pricingCode'],
-        pricingName: json['pricingName'],
-        certificateProfileId: json['certificateProfileId'],
-        requestConfigId: json['requestConfigId'],
-        code: json['code'],
-        endEntityProfileName: json['endEntityProfileName'],
-        certificateProfileName: json['certificateProfileName'],
-        keylength: json['keylength'],
-        caid: json['caid'],
-        signType: json['signType'],
-        customerType: json['customerType'],
-        onSale: json['onSale'],
-        purposeType: json['purposeType'],
-        pricePlan: json['pricePlan'],
-        price: json['price'],
-        timeValidity: json['timeValidity'],
-        selected: json['selected'],
+      pricingCode: json['pricingCode'],
+      pricingName: json['pricingName'],
+      certificateProfileId: json['certificateProfileId'],
+      requestConfigId: json['requestConfigId'],
+      code: json['code'],
+      endEntityProfileName: json['endEntityProfileName'],
+      certificateProfileName: json['certificateProfileName'],
+      keylength: json['keylength'],
+      caid: json['caid'],
+      signType: json['signType'],
+      customerType: json['customerType'],
+      onSale: json['onSale'],
+      purposeType: json['purposeType'],
+      pricePlan: json['pricePlan'],
+      price: json['price'],
+      timeValidity: json['timeValidity'],
+      selected: json['selected'],
+      initSignTurn: json["initSignTurn"] ?? 0
     );
   }
 

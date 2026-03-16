@@ -1,13 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sba/gen/assets.gen.dart';
 import 'package:sba/generated/l10n.dart';
 import 'package:sba/src/screens/base/top_level_provider.dart';
 import 'package:sba/src/screens/login/provider/login_controller.dart';
 import 'package:sba/src/screens/login/provider/login_states.dart';
-import 'package:sba/src/utils/base_flutter_extensions.dart';
 import 'package:sba/src/utils/utils.dart';
 import 'package:sba/src/widgets/widget_network_image.dart';
 import '../base/base_page.dart';
@@ -141,6 +141,90 @@ class LoginPage extends BasePage<LoginController, LoginState> {
                                 S.current.dang_nhap_bang_microsoft,
                               ),
                             ),
+                            if (kDebugMode) ...[
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Divider(color: Colors.white54),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12),
+                                    child: Text(
+                                      'hoặc',
+                                      style: TextStyle(color: Colors.white70),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Divider(color: Colors.white54),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              _LoginTextField(
+                                validator: (username) {
+                                  if (username == null || username.isEmpty) {
+                                    return S.current.validate_login_name;
+                                  }
+                                  return null;
+                                },
+                                hint: S.current.login_name,
+                                textInputAction: TextInputAction.next,
+                                leading: Assets.images.icUserSvg.svg(),
+                                onChanged: (_) {},
+                                controller: ref
+                                    .read(LoginController
+                                        .loginStateProvider.notifier)
+                                    .userNameController,
+                              ),
+                              const SizedBox(height: 12),
+                              _LoginTextField(
+                                validator: (pass) {
+                                  if (pass == null || pass.isEmpty) {
+                                    return S.current.validate_password;
+                                  }
+                                  return null;
+                                },
+                                hint: S.current.password,
+                                textInputAction: TextInputAction.done,
+                                leading: const Icon(Icons.lock_outline,
+                                    color: Colors.grey),
+                                obscureText: true,
+                                onChanged: (_) {},
+                                controller: ref
+                                    .read(LoginController
+                                        .loginStateProvider.notifier)
+                                    .passController,
+                              ),
+                              const SizedBox(height: 16),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 48,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(LoginController
+                                            .loginStateProvider.notifier)
+                                        .onClickLogin();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF2154A6),
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    S.current.dang_nhap,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                             const SizedBox(
                               height: 24,
                             ),

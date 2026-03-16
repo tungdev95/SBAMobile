@@ -8,10 +8,10 @@ part of 'risk_factor_model.dart';
 
 RiskFactorModel _$RiskFactorModelFromJson(Map<String, dynamic> json) =>
     RiskFactorModel(
-      riskDetailId: json['riskDetailId'] as int?,
+      riskDetailId: (json['riskDetailId'] as num?)?.toInt(),
       assetId: json['assetId'] as String?,
-      riskAssetId: json['riskAssetId'] as int?,
-      riskTypeId: json['riskTypeId'] as int?,
+      riskAssetId: (json['riskAssetId'] as num?)?.toInt(),
+      riskTypeId: (json['riskTypeId'] as num?)?.toInt(),
       description: json['description'] as String?,
       riskAsset: json['riskAsset'] == null
           ? null
@@ -30,11 +30,11 @@ Map<String, dynamic> _$RiskFactorModelToJson(RiskFactorModel instance) =>
 
 RiskAssetModel _$RiskAssetModelFromJson(Map<String, dynamic> json) =>
     RiskAssetModel(
-      riskAssetId: json['riskAssetId'] as int?,
+      riskAssetId: (json['riskAssetId'] as num?)?.toInt(),
       riskContent: json['riskContent'] as String?,
-      assetLevelTwoId: json['assetLevelTwoId'] as int?,
+      assetLevelTwoId: (json['assetLevelTwoId'] as num?)?.toInt(),
       description: json['description'] as String?,
-      riskLevel: json['riskLevel'] as int?,
+      riskLevel: (json['riskLevel'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$RiskAssetModelToJson(RiskAssetModel instance) =>

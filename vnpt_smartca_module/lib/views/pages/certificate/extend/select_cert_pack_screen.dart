@@ -17,11 +17,12 @@ import '../../../widgets/base_screen.dart';
 
 class SelectCertPackScreen extends StatelessWidget {
   final String certSerial;
+  final bool isPS0;
 
   final ExtendCertificateController extendCertificateController = Get.find<ExtendCertificateController>();
   final BuyCertificateController buyCertificateController = Get.put(BuyCertificateController());
 
-  SelectCertPackScreen({super.key, required this.certSerial});
+  SelectCertPackScreen({super.key, required this.certSerial, required this.isPS0});
 
   _gotoDetailOrder(OrderCertModel value) {
     Get.to(() => OrderDetailScreen(
@@ -107,26 +108,35 @@ class SelectCertPackScreen extends StatelessWidget {
                         }
                       });
                     },
-                    child: _CertPackageViewWidget(purchaseCertificateModel: value));
+                    child: _CertPackageViewWidget(
+                      purchaseCertificateModel: value,
+                      isPS0: isPS0,
+                    ));
               },
               params: {"serial": certSerial},
               headerBuilder: (int? value) {
                 return Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      BaseText(
-                        AppLocalizations.current.suggested_extension,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: const Color(0xff08285C),
+                      Row(
+                        children: [
+                          BaseText(
+                            AppLocalizations.current.suggested_extension,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: const Color(0xff08285C),
+                          ),
+                          BaseText(
+                            " (${value == null ? 0 : ((value > 1 && value < 10) ? "0$value" : value)})",
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: const Color(0xff44507B),
+                          )
+                        ],
                       ),
-                      BaseText(
-                        " (${value == null ? 0 : ((value > 1 && value < 10) ? "0$value" : value)})",
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: const Color(0xff44507B),
-                      )
+                      isPS0 ? _Note() : const SizedBox()
                     ],
                   ),
                 );
@@ -151,8 +161,9 @@ class SelectCertPackScreen extends StatelessWidget {
 
 class _CertPackageViewWidget extends StatelessWidget {
   final PurchaseCertificateModel purchaseCertificateModel;
+  final bool isPS0;
 
-  const _CertPackageViewWidget({required this.purchaseCertificateModel});
+  const _CertPackageViewWidget({required this.purchaseCertificateModel, required this.isPS0});
 
   @override
   Widget build(BuildContext context) {
@@ -297,6 +308,36 @@ class _CertPackageViewWidget extends StatelessWidget {
                     )
                   ],
                 ),
+                Visibility(
+                    visible: isPS0,
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            BaseText(
+                              AppLocalizations.current.numberOfSignatures,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              // height: 24 / 14,
+                              textAlign: TextAlign.center,
+                              color: const Color(0xff5768A5),
+                            ),
+                            BaseText(
+                              purchaseCertificateModel.initSignTurn ?? 0,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              // height: 24 / 14,
+                              textAlign: TextAlign.center,
+                              color: Colors.green,
+                            )
+                          ],
+                        ),
+                      ],
+                    )),
                 const SizedBox(
                   height: 13,
                 ),
@@ -305,6 +346,115 @@ class _CertPackageViewWidget extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class _Note extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _NoteState();
+  }
+}
+
+class _NoteState extends State<_Note> {
+  bool isExpand = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              // setState(() {
+              //   isExpand = !isExpand;
+              // });
+            },
+            child: Row(children: [
+              Assets.images.icCertInfo.image(width: 20, height: 20, fit: BoxFit.fill),
+              const SizedBox(
+                width: 6,
+              ),
+              Expanded(
+                child: BaseText(
+                  AppLocalizations.current.whatYouNeedTKnow,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14,
+                  // height: 24 / 14,
+                  color: const Color(0xff5768A5),
+                ),
+              ),
+              // const SizedBox(
+              //   width: 6,
+              // ),
+              // isExpand
+              //     ? Assets.images.icArrowUp
+              //     .image(width: 20, height: 20, fit: BoxFit.fill)
+              //     : Assets.images.icArrowDown
+              //     .image(width: 20, height: 20, fit: BoxFit.fill),
+            ]),
+          ),
+          Visibility(
+              visible: isExpand,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _BulletText(AppLocalizations.current.extendNote1),
+                  _BulletText(AppLocalizations.current.extendNote2),
+                ],
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+class _BulletText extends StatelessWidget {
+  final String content;
+  final bool bulletVisible;
+  final bool contentBold;
+
+  const _BulletText(this.content, {this.bulletVisible = true, this.contentBold = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(
+          width: 10,
+        ),
+        BaseText(
+          AppLocalizations.current.bulletDot,
+          fontWeight: FontWeight.w700,
+          color: bulletVisible ? const Color(0xff5768A5) : Colors.transparent,
+          fontSize: 14,
+          height: 24 / 14,
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Expanded(
+          child: BaseText(
+            content,
+            fontWeight: contentBold ? FontWeight.w700 : FontWeight.w400,
+            color: const Color(0xff5768A5),
+            textAlign: TextAlign.justify,
+            fontSize: 14,
+            height: 24 / 14,
+          ),
+        )
+      ],
     );
   }
 }

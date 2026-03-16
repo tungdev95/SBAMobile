@@ -11,9 +11,11 @@ class SignBillRepository {
 
   SignBillRepository(this.remoteDataSource);
 
-  Future<Either<GenericException, String>> getBill(String serial) async {
+  Future<Either<GenericException, String>> getBill(
+      String serial, String orderId) async {
     try {
-      final remoteData = await remoteDataSource.getBill(serial);
+      final remoteData = await remoteDataSource.getBill(serial, orderId);
+
       return remoteData.code == 0
           ? Right(remoteData.content)
           : Left(GenericException(
@@ -28,9 +30,11 @@ class SignBillRepository {
     }
   }
 
-  Future<Either<GenericException, String>> saveSignatureImage(String serial, String base64SignatureImage) async {
+  Future<Either<GenericException, String>> saveSignatureImage(
+      String serial, String base64SignatureImage) async {
     try {
-      final remoteData = await remoteDataSource.saveSignatureImage(serial, base64SignatureImage);
+      final remoteData = await remoteDataSource.saveSignatureImage(
+          serial, base64SignatureImage);
       return remoteData.code == 0
           ? Right(remoteData.content)
           : Left(GenericException(
@@ -45,19 +49,21 @@ class SignBillRepository {
     }
   }
 
-  Future<Either<GenericException, OrderCertModel>> uploadOrderContract(String orderId, String base64Contract) async {
+  Future<Either<GenericException, OrderCertModel>> uploadOrderContract(
+      String orderId, String base64Contract) async {
     try {
-      final remoteData = await remoteDataSource.uploadOrderContract(orderId, base64Contract);
+      final remoteData =
+          await remoteDataSource.uploadOrderContract(orderId, base64Contract);
       // final resp = OrderCertModel.fromJson(remoteData.content);
       return remoteData.code == 0
           ? Right(OrderCertModel.fromJson(remoteData.content))
           : Left(GenericException(
-        error: ServerException(
-          message: remoteData.message,
-          code: remoteData.code,
-          codeDesc: remoteData.codeDesc,
-        ),
-      ));
+              error: ServerException(
+                message: remoteData.message,
+                code: remoteData.code,
+                codeDesc: remoteData.codeDesc,
+              ),
+            ));
     } catch (e, s) {
       return Left(GenericException(error: e, stack: s));
     }

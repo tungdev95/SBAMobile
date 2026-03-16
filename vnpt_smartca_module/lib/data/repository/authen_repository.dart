@@ -6,6 +6,7 @@ import '../../../core/models/response/user_status.dart';
 import '../../core/models/app/exceptions.dart';
 import '../../core/models/request/get_user_status.dart';
 import '../../core/models/request/login.dart';
+import '../../core/models/response/contract_check_exist.dart';
 import '../../core/models/response/token_model.dart';
 import '../../core/services/secure_local_storage.dart';
 import '../../core/utils/constants.dart';
@@ -163,7 +164,40 @@ class AuthenRepository {
 
   verifyOTP(String citizenId, String phoneNumber, String otp) async {
     try {
-      final remoteData = await remoteDataSource.verifyOTP(citizenId, phoneNumber, otp);
+      final remoteData =
+          await remoteDataSource.verifyOTP(citizenId, phoneNumber, otp);
+      return remoteData.code == 0
+          ? Right(remoteData)
+          : Left(GenericException(
+              error: ServerException(
+              message: remoteData.message,
+              code: remoteData.code,
+              codeDesc: remoteData.codeDesc,
+            )));
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
+
+  createLoginLog(dynamic param) async {
+    try {
+      final remoteData = await remoteDataSource.createLoginLog(param);
+      return remoteData.code == 0
+          ? Right(remoteData)
+          : Left(GenericException(
+              error: ServerException(
+              message: remoteData.message,
+              code: remoteData.code,
+              codeDesc: remoteData.codeDesc,
+            )));
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
+
+  getLoginLog(dynamic param) async {
+    try {
+      final remoteData = await remoteDataSource.createLoginLog(param);
       return remoteData.code == 0
           ? Right(remoteData)
           : Left(GenericException(
@@ -177,4 +211,32 @@ class AuthenRepository {
     }
   }
 
+  Future<Either<GenericException, TokenModel>> getAppAccessToken() async {
+    try {
+      TokenModel remoteData = await remoteDataSource.getAppAccessToken();
+      // Cache Token, Username, Password
+      await secureLocalDataSource.saveData(
+          LOCAL_ACCESS_TOKEN_AUTH, remoteData.toJson());
+      return Right(remoteData);
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
+
+  Future<Either<GenericException, ContractCheckExistModel>>
+      signContractWithoutOTP(String contractId) async {
+    try {
+      final remoteData =
+          await remoteDataSource.signContractWithoutOTP(contractId);
+      return remoteData.message == "ECT-00000000"
+          ? Right(remoteData)
+          : Left(GenericException(
+              error: ServerException(
+              message: remoteData.message!,
+              code: remoteData.code,
+            )));
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
 }

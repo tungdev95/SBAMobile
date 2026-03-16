@@ -6,8 +6,8 @@ import '../../../gen/assets.gen.dart';
 import '../../controller/home_controller.dart';
 import '../../i18n/generated_locales/l10n.dart';
 import '../../widgets/base_screen.dart';
-import '../certificate/buy/active_key_screen.dart';
 import '../certificate/sign_bbnt/index.dart';
+import '../certificate/buy/active_key_screen.dart';
 
 class DetailDocSignaturePage extends StatelessWidget {
   final transController = Get.find<HomeController>();

@@ -2,8 +2,11 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:injectable/injectable.dart';
 import 'package:vnpt_smartca_module/method_channel_handler.dart';
+import 'package:vnpt_smartca_module/views/controller/home_controller.dart';
 import '../../../views/controller/app_controller.dart';
 import '../../../views/controller/auth_controller.dart';
 import '../../../views/i18n/generated_locales/l10n.dart';
@@ -12,6 +15,7 @@ import '../../../views/pages/warning/index.dart';
 import '../../../views/utils/enums.dart';
 import '../../../views/widgets/show_snackbar_widget.dart';
 
+import 'configs/app_config.dart';
 import 'views/pages/certificate/select_cert_screen.dart';
 import 'views/pages/main/main_page.dart';
 
@@ -50,6 +54,11 @@ class _SmartCAAppState extends State<AppWrapper> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.portraitUp,
+      ]);
+
       // // Kiểm tra thiết bị thật hay ko
       final showWarningScreen = (appController.isJailbroken.value == true ||
           !appController.isPhysicalDevice.value == true ||
@@ -63,16 +72,16 @@ class _SmartCAAppState extends State<AppWrapper> {
       }
 
       final authStatus = authController.authStatus.value;
-      final currentHostAppMethod = appController.currentHostAppMethod.value;
 
       switch (authStatus) {
         case AuthenticationStatus.unauthenticated:
           widget = LoginPage();
           break;
         case AuthenticationStatus.authenticated:
-          widget = currentHostAppMethod == MethodChannelNames.getAuthentication
-              ? SelectCertScreen()
-              : MainPage();
+          Get.isRegistered<HomeController>()
+              ? Get.find<HomeController>()
+              : Get.put(HomeController(), permanent: true);
+          widget = MainPage();
 
           ///Todo : check
           break;

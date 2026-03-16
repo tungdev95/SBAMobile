@@ -3,9 +3,6 @@ import 'package:flutter/services.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../views/theme/styles.dart';
 import '../../../views/widgets/widget.dart';
-import '../../configs/injector/injector.dart';
-import '../../method_channel_handler.dart';
-import 'navigator_helper.dart';
 
 class BaseScreen extends StatelessWidget {
   static const double toolbarHeight = 56;
@@ -35,6 +32,8 @@ class BaseScreen extends StatelessWidget {
 
   final Widget? floatingButton;
 
+  final Widget? bottomSheet;
+
   // nếu true => sẽ ẩn backIcon , mặc định là true
   final bool hiddenIconBack;
 
@@ -55,6 +54,7 @@ class BaseScreen extends StatelessWidget {
     this.hiddenIconBack = false,
     this.colorTitle = const Color(0xff08285C),
     this.loadingWidget,
+    this.bottomSheet,
     this.hideAppBar = false,
     this.floatingButton,
     this.colorBg = AppColors.white,
@@ -72,6 +72,7 @@ class BaseScreen extends StatelessWidget {
           Scaffold(
               appBar: hideAppBar ? null : (customAppBar ?? baseAppBar(context)),
               backgroundColor: colorBg,
+              bottomSheet: bottomSheet,
               body: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
@@ -106,12 +107,12 @@ class BaseScreen extends StatelessWidget {
       preferredSize: const Size.fromHeight(toolbarHeight),
       child: Container(
         decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-            color: appBarBoxShadowColor ?? const Color(0xff1A3478).withOpacity(0.1),
-            spreadRadius: 0,
-            blurRadius: 10,
-            offset: const Offset(0, 1), // changes position of shadow
-          ),
+          // BoxShadow(
+          //   color: appBarBoxShadowColor ?? const Color(0xff1A3478).withOpacity(0.1),
+          //   spreadRadius: 0,
+          //   blurRadius: 10,
+          //   offset: const Offset(0, 1), // changes position of shadow
+          // ),
         ]),
         child: AppBar(
           elevation: 0,
@@ -123,8 +124,12 @@ class BaseScreen extends StatelessWidget {
               : InkWell(
                   onTap: () {
                     // Get.back();
-                    Navigator.pop(context);
-                    onBackPress?.call();
+                    try {
+                      Navigator.pop(context);
+                      onBackPress?.call();
+                    } catch (e) {
+                      // todo
+                    }
                   },
                   child: Container(
                     width: 56,
@@ -138,7 +143,7 @@ class BaseScreen extends StatelessWidget {
                   ),
                 ),
           centerTitle: true,
-          actions: rightWidgets,
+          actions: rightWidgets ?? [],
         ),
       ),
     );

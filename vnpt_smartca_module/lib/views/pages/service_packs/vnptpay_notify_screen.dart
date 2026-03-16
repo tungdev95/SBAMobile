@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../views/i18n/generated_locales/l10n.dart';
 import '../../../views/pages/service_packs/service_pack_order_history_srceen.dart';
 
@@ -63,6 +65,7 @@ class VNPTPayNotifyScreen extends StatelessWidget {
             Padding(padding: EdgeInsets.only(top: 5, bottom: 15)),
             AppButtonWidget(
               label: AppLocalizations.current.link_view_service_pack_order_history_page,
+              backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
               onTap: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
                 Get.to(() => ServicePackOrderHistoryScreen());

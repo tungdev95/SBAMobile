@@ -9,11 +9,11 @@ part of 'submission_history_model.dart';
 SubmissionHistoryModel _$SubmissionHistoryModelFromJson(
         Map<String, dynamic> json) =>
     SubmissionHistoryModel(
-      approvalSubmissionId: json['approvalSubmissionId'] as int?,
+      approvalSubmissionId: (json['approvalSubmissionId'] as num?)?.toInt(),
       appraisalFileId: json['appraisalFileId'] as String?,
-      level: json['level'] as int?,
-      totalLevel: json['totalLevel'] as int?,
-      status: json['status'] as int?,
+      level: (json['level'] as num?)?.toInt(),
+      totalLevel: (json['totalLevel'] as num?)?.toInt(),
+      status: (json['status'] as num?)?.toInt(),
       approvalHistoryDtos: (json['approvalHistoryDtos'] as List<dynamic>?)
           ?.map((e) => ApprovalHistoryModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -33,19 +33,20 @@ Map<String, dynamic> _$SubmissionHistoryModelToJson(
 ApprovalHistoryModel _$ApprovalHistoryModelFromJson(
         Map<String, dynamic> json) =>
     ApprovalHistoryModel(
-      approvalHistoryId: json['approvalHistoryId'] as int?,
-      approvalSubmissionId: json['approvalSubmissionId'] as int?,
+      approvalHistoryId: (json['approvalHistoryId'] as num?)?.toInt(),
+      approvalSubmissionId: (json['approvalSubmissionId'] as num?)?.toInt(),
       approvalEmployeeId: json['approvalEmployeeId'] as String?,
       approvalNextEmployeeId: json['approvalNextEmployeeId'] as String?,
-      status: json['status'] as int?,
+      status: (json['status'] as num?)?.toInt(),
       approvalComment: json['approvalComment'] as String?,
-      level: json['level'] as int?,
-      totalLevel: json['totalLevel'] as int?,
-      assignmentId: json['assignmentId'] as int?,
+      level: (json['level'] as num?)?.toInt(),
+      totalLevel: (json['totalLevel'] as num?)?.toInt(),
+      assignmentId: (json['assignmentId'] as num?)?.toInt(),
       createdDate: json['createdDate'] == null
           ? null
           : DateTime.parse(json['createdDate'] as String),
-      constructionFutureValue: json['constructionFutureValue'] as int?,
+      constructionFutureValue:
+          (json['constructionFutureValue'] as num?)?.toInt(),
       approvalHistoryValueDtos: json['approvalHistoryValueDtos'],
       approvalHistoryConstructionDtos: json['approvalHistoryConstructionDtos'],
       approvalHistoryConstructionFutureInfoDtos:

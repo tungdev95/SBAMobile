@@ -76,7 +76,7 @@ class _SuccessChangeDialogState extends State<SuccessChangeDialog> {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 widget.title != null ? widget.title : '',
-                style: mainTheme.textTheme.subtitle1,
+                style: mainTheme.textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
             ),

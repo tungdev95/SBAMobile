@@ -19,17 +19,28 @@ class ConfirmInformationApi {
     return SmartCAApiResponse.fromMap(result);
   }
 
+  createCMMS(EkycResponseModel ekycModel) async {
+    final result = await _httpClientService.post(
+      '/${AppConfig.language}/thirdpartyapi/cmms/create',
+      {
+        "uid": ekycModel.ocrResult.id,
+        "uidPrefix": ekycModel.loaiGiayTo?.toUpperCase()
+      },
+    );
+    return SmartCAApiResponse.fromMap(result);
+  }
+
   register(EkycResponseModel ekycModel) async {
     // var deviceInfo = await _deviceInfoService.getDeviceInfo();
     var address = {
       "provinceId": ekycModel.ocrResult.cityId,
-      "districtId": ekycModel.ocrResult.districtId,
+      "districtId": ekycModel.ocrResult.districtId ?? "99999",
       "wardId": ekycModel.ocrResult.wardId,
       "streetName": ekycModel.ocrResult.street,
       "address": "",
     };
     var param = {
-      "Uid": ekycModel.ocrResult.id,
+      "Uid": ekycModel.uid ?? ekycModel.ocrResult.id,
       "deviceId": ekycModel.deviceId,
       "ekycCode": ekycModel.ekycCode,
       "otp": ekycModel.otp,

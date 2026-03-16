@@ -15,7 +15,8 @@ class Common {
     await launchUrl(launchUri);
   }
 
-  static String formatPrice(price, {bool showPrefix = true, bool formatDouble = false}) {
+  static String formatPrice(price,
+      {bool showPrefix = true, bool formatDouble = false}) {
     if (price == null) {
       return "";
     }
@@ -29,21 +30,49 @@ class Common {
           }
         }
         final numberFormat = NumberFormat(format);
-        return numberFormat.format(double.parse(price.toString())) + "${showPrefix ? " VNĐ" : ""}";
+        return numberFormat.format(double.parse(price.toString())) +
+            "${showPrefix ? " VNĐ" : ""}";
       } else {
         final numberFormat = NumberFormat("#,###");
-        return numberFormat.format(double.parse(price.toString()).round()) + "${showPrefix ? " VNĐ" : ""}";
+        return numberFormat.format(double.parse(price.toString()).round()) +
+            "${showPrefix ? " VNĐ" : ""}";
       }
     } catch (e) {
       return price?.toString() ?? "";
     }
   }
 
-  static const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  static const _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
   static String getRandomString(int length) {
     Random rnd = Random();
     return String.fromCharCodes(Iterable.generate(
         length, (_) => _chars.codeUnitAt(rnd.nextInt(_chars.length))));
+  }
+
+  static String removeSuffixInUid(String uid) {
+    if (uid.isEmpty) {
+      return uid;
+    }
+    List<String> parseSuffix = uid.split("_");
+    if (parseSuffix.length >= 2) {
+      if (parseSuffix.length == 2) {
+        int? suffix = int.tryParse(parseSuffix[1]);
+        if (suffix == null) {
+          return uid;
+        } else {
+          if (suffix <= 999) {
+            return parseSuffix[0];
+          } else {
+            // Loại tài khoản MST_CCCD
+            return parseSuffix[1];
+          }
+        }
+      } else {
+        return parseSuffix[1];
+      }
+    }
+    return uid;
   }
 }

@@ -7,7 +7,7 @@ part of 'user_model.dart';
 // **************************************************************************
 
 Position _$PositionFromJson(Map<String, dynamic> json) => Position(
-      positionId: json['positionId'] as int? ?? 0,
+      positionId: (json['positionId'] as num?)?.toInt() ?? 0,
       positionName: json['positionName'] as String? ?? '',
       term: json['term'] as String? ?? '',
     );
@@ -20,7 +20,7 @@ Map<String, dynamic> _$PositionToJson(Position instance) => <String, dynamic>{
 
 CompanyBranch _$CompanyBranchFromJson(Map<String, dynamic> json) =>
     CompanyBranch(
-      companyBranchId: json['companyBranchId'] as int? ?? 0,
+      companyBranchId: (json['companyBranchId'] as num?)?.toInt() ?? 0,
       companyBranchName: json['companyBranchName'] as String? ?? '',
     );
 

@@ -44,12 +44,12 @@ class ServicePackOrderHistoryScreen extends StatelessWidget {
                         children: [
                           Text(
                             AppLocalizations.of(context).totalRecord(controller.totalItemCount),
-                            style: Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.black),
+                            style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.black),
                           ),
                           const Spacer(),
                           Text(
                             '${controller.currentPage}/${controller.pageCount}',
-                            style: Theme.of(context).textTheme.caption!.copyWith(color: Colors.black),
+                            style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.black),
                           )
                         ],
                       ),

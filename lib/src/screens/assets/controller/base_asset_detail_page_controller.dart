@@ -207,6 +207,7 @@ abstract class BaseAssetDetailPageController<T extends BaseDetailModel>
     });
 
     if (assetsModel == null) return;
+
     showLoading();
     final detailResponse =
         await ref.read(assetsApiProvider).getAssetDetailFromFileId(

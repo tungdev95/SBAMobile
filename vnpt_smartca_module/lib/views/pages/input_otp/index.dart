@@ -5,6 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../gen/assets.gen.dart';
 import '../../controller/input_otp_controller.dart';
 import '../../i18n/generated_locales/l10n.dart';
@@ -125,6 +127,7 @@ class _InputOTPState extends State<InputOTPPage> {
                 const SizedBox(height: 20),
                 AppButtonWidget(
                   label: AppLocalizations.current.next,
+                  backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                   onTap: () {
                     controller.verifyOTP(widget.citizenId, widget.phoneNumber, textEditingController.text);
                   },

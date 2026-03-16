@@ -11,6 +11,7 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vnpt_smartca_module/views/pages/certificate/sign_bbnt/indexV2.dart';
 import '../../../configs/injector/injector.dart';
 import '../../../core/extensions/either_data.dart';
 import '../../../core/models/app/exceptions.dart';
@@ -92,9 +93,12 @@ class GenerateCerKeyController extends BaseController {
       showLoading(loadingTitle: AppLocalizations.current.activingKey);
       bool isReady = false;
       bool hasError = false;
+      int count = 0;
+
       //Gọi kiểm tra trạng thái thái chứng thư
       //Thoát vòng lặp nếu cert.status == 7 hoặc có lỗi
-      do {
+      while (isReady == false && hasError == false) {
+        if (count > 300) hasError = true;
         // thoat khoi vong lap khi an back
         if (canLoop == false) {
           isReady = true;
@@ -141,7 +145,7 @@ class GenerateCerKeyController extends BaseController {
                 // var credentialId = item.id;
                 // _secureLocalDataSource.saveData(CREDENTIAL_ID_KEY, credentialId);
                 Timer(const Duration(milliseconds: 1500), () {
-                  gotoSignBBNT(credentialId: certificateInfo.id);
+                  gotoSignBBNT(certInfo: certificateInfo);
                 });
               }
               if (certificateInfo.typeStatus == StatusCertEnum.VALID) {
@@ -155,8 +159,10 @@ class GenerateCerKeyController extends BaseController {
             _showError(AppLocalizations.current.serviceExpireToken);
           }
         }
-        await Future.delayed(const Duration(seconds: 3));
-      } while (!isReady && !hasError);
+
+        await Future.delayed(Duration(seconds: count > 20 ? 4 : 5));
+        count++;
+      }
     } catch (e) {
       _showError(AppLocalizations.current.serviceSomethingWentWrong);
     }
@@ -181,7 +187,7 @@ class GenerateCerKeyController extends BaseController {
         );
         break;
       case StatusCertEnum.WAITING_SIGN_ACCEPTANCE:
-        gotoSignBBNT(credentialId: certificateModel.id);
+        gotoSignBBNT(certInfo: certificateModel);
         break;
       case StatusCertEnum.EXPIRED:
         processDesc.value =
@@ -324,7 +330,17 @@ class GenerateCerKeyController extends BaseController {
 
       hideLoading();
       result.fold((failure) {
-        _showError(exceptionHandler(failure));
+        String msg = exceptionHandler(failure);
+
+        showErrorModal(msg).then((value) {
+          if (msg
+              .toLowerCase()
+              .contains("Mã OTP không đúng hoặc hết hạn".toLowerCase())) {
+            Get.back();
+          } else {
+            goHome();
+          }
+        });
       }, (result) {
         if (result.content == null || result.code != 0) {
           String m = result.message;
@@ -413,10 +429,16 @@ class GenerateCerKeyController extends BaseController {
       _showError(exceptionHandler(GenericException(error: e)));
     }
   }
-
-  void gotoSignBBNT({required String credentialId}) {
+  
+  void gotoSignBBNT({required CertificateModel certInfo}) async {
     Get.until((route) => Get.currentRoute == "/");
-    Get.to(() => SignAcceptanceView(credentialId: credentialId));
+
+    if (certInfo.orderInfo?.certOrderVersion == 2) {
+      Get.to(() => ConfirmProvideCertView(certificateModel: certInfo));
+    } else {
+      Get.to(() => SignAcceptanceView(credentialId: certInfo.id));
+    }
+    
   }
 
   _showError(String? error) {
@@ -585,10 +607,6 @@ class GenerateCerKeyController extends BaseController {
       target[subIndex] = sequence[subIndex];
     }
     return target;
-  }
-
-  void clearCache() {
-    _secureLocalDataSource.removeAll();
   }
 
   void showDialogCertValid() {

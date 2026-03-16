@@ -40,32 +40,37 @@ class OrderCertListModel {
 enum OrderType { unknown, newCert, renewCert, changeDevice, changeInfo }
 
 class OrderCertModel extends AppRefreshModel {
-  OrderCertModel({
-    required this.statusDesc,
-    required this.status,
-    required this.requireEkyc,
-    required this.requireOTP,
-    required this.requirePayment,
-    required this.requireContract,
-    required this.createdDate,
-    required this.typeDesc,
-    required this.type,
-    this.previousSerial,
-    required this.identityId,
-    required this.uid,
-    this.credentialId,
-    this.requestCertId,
-    required this.pricing,
-    required this.dhsxkdCustomerInfo,
-    required this.localityCode,
-    this.ekycTranId,
-    required this.logs,
-    required this.id,
-    required this.timestamp,
-    this.statusIsDone = false,
-  }) : super(id);
+  OrderCertModel(
+      {required this.statusDesc,
+      required this.status,
+      required this.requireEkyc,
+      required this.requireOTP,
+      required this.requirePayment,
+      required this.requireContract,
+      required this.createdDate,
+      required this.typeDesc,
+      required this.type,
+      this.previousSerial,
+      required this.identityId,
+      required this.uid,
+      this.credentialId,
+      this.requestCertId,
+      required this.pricing,
+      required this.dhsxkdCustomerInfo,
+      required this.localityCode,
+      this.ekycTranId,
+      required this.logs,
+      required this.id,
+      required this.timestamp,
+      this.statusIsDone = false,
+      this.fullName,
+      this.isCreatedBy3rd = false,
+      this.address,
+      this.version,
+      this.serialNumber})
+      : super(id);
 
-  late final String statusDesc;
+  late final String? statusDesc;
   late final int status;
   late final bool requireEkyc;
   late final bool requireOTP;
@@ -87,6 +92,11 @@ class OrderCertModel extends AppRefreshModel {
   late final String id;
   late final String timestamp;
   late final bool statusIsDone;
+  late final String? fullName;
+  late final bool isCreatedBy3rd;
+  late final OrderAddress? address;
+  late final int? version;
+  late final String? serialNumber;
 
   int? code;
 
@@ -119,9 +129,18 @@ class OrderCertModel extends AppRefreshModel {
       id: json['id'],
       timestamp: json['timestamp'],
       statusIsDone: json['status'] == DONE,
+      fullName: json["fullName"],
+      isCreatedBy3rd: json["isCreatedBy3rd"],
+      address: json['address'] == null
+          ? null
+          : OrderAddress.fromJson(json['address']),
+      version: json['version'],
+      serialNumber: json['serialNumber'],
     );
     orderCertModel.orderItemController =
         Get.put(OrderItemController(orderCertModel), tag: orderCertModel.id);
+    orderCertModel.orderItemController?.currentOrderCertModel.value =
+        orderCertModel;
     return orderCertModel;
   }
 
@@ -148,6 +167,11 @@ class OrderCertModel extends AppRefreshModel {
     _data['logs'] = logs;
     _data['id'] = id;
     _data['timestamp'] = timestamp;
+    _data["fullName"] = fullName;
+    _data["isCreatedBy3rd"] = isCreatedBy3rd;
+    _data["address"] = address?.toJson();
+    _data["version"] = version;
+    _data["serialNumber"] = serialNumber;
     return _data;
   }
 
@@ -187,12 +211,52 @@ class OrderCertModel extends AppRefreshModel {
       OTP_WAITING,
       PAYMENT_WATING,
       PAYMENT_ERROR,
-      CONTRACT_SIGN_WAITING
+      CONTRACT_SIGN_WAITING,
+      KEY_ASSIGN_WATING,
     ].contains(status);
   }
 
   canCancel() {
-    return status != CANCELED && status != DONE;
+    return [
+          CANCELED,
+          CANCELING,
+          CANCEL_ERROR,
+          DONE,
+          REQUESTCERT_WATING,
+          ONEBSS_SUBMIT_WAITING,
+          APPROVE_REQUEST_CERT_WAITING,
+          KEY_ASSIGN_WATING,
+        ].contains(status) ==
+        false;
+  }
+
+  bool isWaitingEKYC() {
+    return EKYC_WAITING == status;
+  }
+
+  bool isWaitingPayment() {
+    return PAYMENT_WATING == status;
+  }
+
+  bool isWaitingContract() {
+    return [CONTRACT_CREATE_WAITING, OrderCertModel.CONTRACT_SIGN_WAITING]
+        .contains(status);
+  }
+
+  bool isOrderError() {
+    return [
+      EKYC_ERROR,
+      OTP_ERROR,
+      PAYMENT_ERROR,
+      CONTRACT_CREATE_ERROR,
+      CONTRACT_SIGN_ERROR,
+      REQUESTCERT_ERROR,
+      ONEBSS_SUBMIT_ERROR,
+      APPROVE_REQUEST_CERT_ERROR,
+      REJECT_REQUEST_CERT,
+      KEY_ASSIGN_ERROR,
+      EKYC_PROFILE_SYNC_ERROR,
+    ].contains(status);
   }
 
   showWaitingApproveScreen() {
@@ -231,29 +295,12 @@ class OrderCertModel extends AppRefreshModel {
   static const KEY_ASSIGN_ERROR = 59;
 
   static const CANCELED = 99;
+  static const CANCELING = 97;
+  static const CANCEL_ERROR = 98;
   // done
   static const DONE = 100;
+  static const EKYC_PROFILE_SYNC_ERROR = 60;
 
-  // EKYC_WAITING = 0,
-  // OTP_WAITING = 1,
-  // PAYMENT_WATING = 2,
-  // CONTRACT_CREATE_WAITING  = 3,
-  // CONTRACT_SIGN_WAITING  = 4,
-  // REQUESTCERT_WATING = 5,
-  // ONEBSS_SUBMIT_WAITING = 6,
-  // APPROVE_REQUEST_CERT_WAITING = 7,
-  //
-  // EKYC_ERROR = 50,
-  // OTP_ERROR = 51,
-  // PAYMENT_ERROR = 52,
-  // CONTRACT_CREATE_ERROR = 53,
-  // CONTRACT_SIGN_ERROR = 54,
-  // REQUESTCERT_ERROR = 55,
-  // ONEBSS_SUBMIT_ERROR = 56,
-  // APPROVE_REQUEST_CERT_ERROR = 57,
-  // REJECT_REQUEST_CERT = 58,
-  //
-  // DONE = 100,
   getStateText() {
     switch (status) {
       case 0:
@@ -285,29 +332,21 @@ class OrderCertModel extends AppRefreshModel {
       case 54:
         return AppLocalizations.current.orderCONTRACT_SIGN_ERROR;
       case 55:
-        // if (getTypeEnum() == OrderType.newCert) {
-        return AppLocalizations.current.orderAPPROVE_REQUEST_CERT_WAITING;
-        // } else {
-        return AppLocalizations.current.orderREQUESTCERT_ERROR;
-      // }
+        return AppLocalizations.current.orderAPPROVE_REQUEST_CERT_ERROR;
       case 56:
-        // if (getTypeEnum() == OrderType.newCert) {
-        return AppLocalizations.current.orderAPPROVE_REQUEST_CERT_WAITING;
-      // } else {
-      //   return AppLocalizations.current.orderONEBSS_SUBMIT_ERROR;
-      // }
+        return AppLocalizations.current.orderONEBSS_SUBMIT_ERROR;
       case 57:
-        // if (getTypeEnum() == OrderType.newCert) {
-        return AppLocalizations.current.orderAPPROVE_REQUEST_CERT_WAITING;
-      // } else {
-      //   return AppLocalizations.current.orderAPPROVE_REQUEST_CERT_ERROR;
-      // }
+        return AppLocalizations.current.orderAPPROVE_REQUEST_CERT_ERROR;
       case 58:
         return AppLocalizations.current.orderREJECT_REQUEST_CERT;
       case 59:
         return AppLocalizations.current.orderKEY_ASSIGN_ERROR;
       case 99:
         return AppLocalizations.current.orderCANCELED;
+      case 97:
+        return AppLocalizations.current.orderCanceling;
+      case 98:
+        return AppLocalizations.current.orderCANCEL_ERROR;
       case 100:
         return AppLocalizations.current.orderDONE;
       default:
@@ -325,7 +364,9 @@ class Pricing {
     required this.certificateProfileName,
     required this.signType,
     required this.signTypeDesc,
+    required this.initSignTurn,
   });
+
   late final String pricingCode;
   late final String pricingName;
   late final int timeValidity;
@@ -333,6 +374,7 @@ class Pricing {
   late final String certificateProfileName;
   late final int signType;
   late final String signTypeDesc;
+  late final int initSignTurn;
 
   static emptyPricing() {
     return Pricing(
@@ -342,6 +384,7 @@ class Pricing {
         price: 0,
         certificateProfileName: "",
         signType: 0,
+        initSignTurn: 0,
         signTypeDesc: "");
     // return Pricing(pricingCode: "", pricingName: "", 0, 0, "", 0, "");
   }
@@ -354,6 +397,7 @@ class Pricing {
     certificateProfileName = json['certificateProfileName'];
     signType = json['signType'];
     signTypeDesc = json['signTypeDesc'];
+    initSignTurn = json['initSignTurn'] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -365,17 +409,17 @@ class Pricing {
     _data['certificateProfileName'] = certificateProfileName;
     _data['signType'] = signType;
     _data['signTypeDesc'] = signTypeDesc;
+    _data['initSignTurn'] = initSignTurn ?? 0;
     return _data;
   }
 
   String get timeValidityStr {
-    if (timeValidity == null || timeValidity! <= 0) return 'N/A';
+    if (timeValidity! <= 0) return 'N/A';
     return '$timeValidity ${AppLocalizations.current.month_text}';
   }
 
   String get priceStr {
-    if (price == null || price! <= 0)
-      return AppLocalizations.current.order_free;
+    if (price! <= 0) return AppLocalizations.current.order_free;
     return NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0)
         .format(price);
   }
@@ -409,11 +453,11 @@ class DhsxkdCustomerInfo {
   late final String maTb;
 
   DhsxkdCustomerInfo.fromJson(Map<String, dynamic> json) {
-    maGd = json['ma_gd'];
-    maKh = json['ma_kh'];
-    maHd = json['ma_hd'];
-    maHrm = json['ma_hrm'];
-    maTb = json['ma_tb'];
+    maGd = json['ma_gd'] ?? "";
+    maKh = json['ma_kh'] ?? "";
+    maHd = json['ma_hd'] ?? "";
+    maHrm = json['ma_hrm'] ?? "";
+    maTb = json['ma_tb'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
@@ -424,5 +468,49 @@ class DhsxkdCustomerInfo {
     _data['ma_hrm'] = maHrm;
     _data['ma_tb'] = maTb;
     return _data;
+  }
+}
+
+class OrderAddress {
+  OrderAddress(
+      {this.provinceId,
+      this.provinceName,
+      this.districtId,
+      this.districtName,
+      this.wardId,
+      this.wardName,
+      this.streetName,
+      this.address});
+  String? provinceId;
+  String? provinceName;
+  String? districtId;
+  String? districtName;
+  String? wardId;
+  String? wardName;
+  String? streetName;
+  String? address;
+
+  OrderAddress.fromJson(Map<String, dynamic> json) {
+    provinceId = json['provinceId'] ?? "";
+    provinceName = json['provinceName'] ?? "";
+    districtId = json['districtId'] ?? "";
+    districtName = json['districtName'] ?? "";
+    wardId = json['wardId'] ?? "";
+    wardName = json['wardName'] ?? "";
+    streetName = json['streetName'] ?? "";
+    address = json['address'] ?? "";
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['provinceId'] = provinceId;
+    data['provinceName'] = provinceName;
+    data['districtId'] = districtId;
+    data['districtName'] = districtName;
+    data['wardId'] = wardId;
+    data['wardName'] = wardName;
+    data['streetName'] = streetName;
+    data['address'] = address;
+    return data;
   }
 }

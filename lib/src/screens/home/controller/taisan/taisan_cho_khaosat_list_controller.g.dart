@@ -6,7 +6,7 @@ part of 'taisan_cho_khaosat_list_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getListAssetsHash() => r'a970b418c3c16261f171ad398ff5ce397b555291';
+String _$getListAssetsHash() => r'1f56d886e4454aa1c41617ef2f247d6c83603aa8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -196,7 +196,7 @@ class _GetListAssetsProviderElement
   FileStatus? get fileStatus => (origin as _GetListAssetsProvider).fileStatus;
 }
 
-String _$getListAssetsSendHash() => r'e166c23e61308d74fc4c55e904c8c8a2652ceece';
+String _$getListAssetsSendHash() => r'9932e320b4e57e852558d4d9f1fe85573d69b42b';
 
 /// See also [_getListAssetsSend].
 @ProviderFor(_getListAssetsSend)

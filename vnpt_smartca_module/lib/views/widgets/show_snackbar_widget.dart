@@ -3,18 +3,19 @@ import 'package:get/get.dart';
 
 showSnackBarWidget(
     {required String message,
-    int? duration,
+    int? milliseconds,
     Widget? icon,
     Color? backgroundColor,
     SnackPosition? snackPosition}) {
   if (Get.isSnackbarOpen) Get.back(closeOverlays: true);
 
   final snackBar = GetSnackBar(
-    backgroundColor: backgroundColor ?? Theme.of(Get.context!).errorColor,
-    duration: duration == null ? null : Duration(seconds: duration),
-    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 65),
+    backgroundColor: backgroundColor ?? Theme.of(Get.context!).colorScheme.error,
+    duration:
+        milliseconds == null ? null : Duration(milliseconds: milliseconds),
+    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 70),
     padding: const EdgeInsets.all(15),
-    borderRadius: 6,
+    borderRadius: 8,
     icon: icon,
     messageText: Text(
       message,

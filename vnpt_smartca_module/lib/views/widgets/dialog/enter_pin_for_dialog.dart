@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../configs/injector/injector.dart';
 import '../../../core/services/secure_local_storage.dart';
 import '../../../core/utils/constants.dart';
@@ -104,7 +106,7 @@ class _EnterPINDialogState extends State<EnterPINDialog> {
         errorMesg = AppLocalizations.current.invalidPIN;
       });
     } else {
-      Get.back(closeOverlays: true);
+      Get.back();
       widget.callback(currentText);
     }
   }
@@ -138,6 +140,18 @@ class _EnterPINDialogState extends State<EnterPINDialog> {
                 textAlign: TextAlign.center,
               ),
             ),
+            SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: BaseText(
+                "(${AppLocalizations.current.descriptionForPIN})",
+                fontSize: 13,
+                // fontWeight: FontWeight.w600,
+                color: Color(0xff515151),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(height: 6),
             Form(
               key: formKey,
               child: Padding(
@@ -171,9 +185,16 @@ class _EnterPINDialogState extends State<EnterPINDialog> {
                     Expanded(
                       child: AppButtonWidget(
                         key: UniqueKey(),
-                        labelColor: Color(0xff0D75D6),
+                        // labelColor: Color(0xff0D75D6),
                         label: AppLocalizations.current.cancel,
-                        backgroundColor: Color(0xffE0F0FF),
+                        // backgroundColor: Color(0xffE0F0FF),
+                        labelColor: HexColor(AppConfig.colorPrimaryBtn),
+                        backgroundColor: HexColor(AppConfig.colorSecondBtn),
+                        border: AppConfig.colorPrimaryBtn == "#0D75D6"
+                            ? null
+                            : Border.all(
+                                width: 1.5,
+                                color: HexColor(AppConfig.colorPrimaryBtn)),
                         onTap: () {
                           Get.back();
                         },
@@ -184,6 +205,7 @@ class _EnterPINDialogState extends State<EnterPINDialog> {
                       child: AppButtonWidget(
                         key: UniqueKey(),
                         label: widget.buttonText,
+                        backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                         onTap: _onValidatePIN,
                       ),
                     ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../gen/fonts.gen.dart';
 import '../../controller/certificate_controller.dart';
 import '../../i18n/generated_locales/l10n.dart';
@@ -13,7 +15,8 @@ class ChangeNameWidget extends StatelessWidget {
 
   final _formKey = GlobalKey<FormBuilderState>();
 
-  ChangeNameWidget({super.key, required this.currentName, required this.certId});
+  ChangeNameWidget(
+      {super.key, required this.currentName, required this.certId});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,8 @@ class ChangeNameWidget extends StatelessWidget {
       child: Center(
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: FormBuilder(
@@ -93,6 +97,7 @@ class ChangeNameWidget extends StatelessWidget {
                           FormBuilderValidators.required(),
                           FormBuilderValidators.maxLength(256),
                         ]),
+                        enableSuggestions: true,
                       ),
                       const SizedBox(
                         height: 11,
@@ -111,33 +116,55 @@ class ChangeNameWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 23,),
+                const SizedBox(
+                  height: 23,
+                ),
                 Row(
                   children: [
-                    Expanded(child: AppButtonWidget(
-                      label: AppLocalizations.current.cancel,
-                      labelColor: const Color(0xff0D75D6),
-                      backgroundColor: const Color(0xffE0F0FF),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),),
-                    const SizedBox(width: 16,),
-                    Expanded(child: AppButtonWidget(
-                      label: AppLocalizations.current.confirm,
-                      onTap: () {
-                        debugPrint(name ?? "null");
-                        bool valid = _formKey.currentState?.fields["certName"]?.validate() ?? false;
-                        debugPrint(valid.toString());
-                        if (valid) {
+                    Expanded(
+                      child: AppButtonWidget(
+                        label: AppLocalizations.current.cancel,
+                        // labelColor: const Color(0xff0D75D6),
+                        // backgroundColor: const Color(0xffE0F0FF),
+                        labelColor: HexColor(AppConfig.colorPrimaryBtn),
+                        backgroundColor: HexColor(AppConfig.colorSecondBtn),
+                        border: AppConfig.colorPrimaryBtn == "#0D75D6"
+                            ? null
+                            : Border.all(
+                                width: 1.5,
+                                color: HexColor(AppConfig.colorPrimaryBtn)),
+                        onTap: () {
                           Navigator.pop(context);
-                          // change cts name
-                          final controller = Get.find<CertificateController>();
-                          controller.changeName(certId, name!);
-                        }
-                        // Navigator.pop(context);
-                      },
-                    ),)
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: AppButtonWidget(
+                        label: AppLocalizations.current.confirm,
+                        backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
+                        onTap: () {
+                          debugPrint(name ?? "null");
+                          bool valid = _formKey.currentState?.fields["certName"]
+                                  ?.validate() ??
+                              false;
+                          debugPrint(valid.toString());
+                          if (valid) {
+                            Navigator.pop(context);
+                            // change cts name
+                            final certificateController =
+                                Get.isRegistered<CertificateController>()
+                                    ? Get.find<CertificateController>()
+                                    : Get.put(CertificateController());
+
+                            certificateController.changeName(certId, name!);
+                          }
+                          // Navigator.pop(context);
+                        },
+                      ),
+                    )
                   ],
                 )
               ],

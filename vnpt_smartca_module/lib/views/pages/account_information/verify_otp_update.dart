@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
 import 'package:vnpt_smartca_module/views/controller/buy_certificate_controller.dart';
 import 'package:vnpt_smartca_module/views/controller/otp_verify_controller.dart';
 import 'package:vnpt_smartca_module/views/i18n/generated_locales/l10n.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import 'package:vnpt_smartca_module/views/widgets/dialog_notification.dart';
 import 'package:vnpt_smartca_module/views/widgets/widget.dart';
 
@@ -54,19 +56,6 @@ class _OTPVerifyUpdateState extends State<VerifyOTPUpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // controllerEkyc.checkSuccessUpdate.listen((p0) {
-    //   if(p0?.code == 0) {
-    //     Get.dialog(DialogNotification(
-    //       content: AppLocalizations.current.update_info_success,
-    //       titleBtnAccept: AppLocalizations.current.goHome,
-    //       onlyActionAccept: true,
-    //       actionAccept: () {
-    //         final appController = Get.find<AppController>();
-    //         appController.backToMainPage();
-    //       },
-    //     ));
-    //   }
-    // });
     return BaseScreen(
       loadingWidget: BaseLoading<BuyCertificateController>(),
       title: AppLocalizations.current.inputOTP,
@@ -159,6 +148,7 @@ class _OTPVerifyUpdateState extends State<VerifyOTPUpdateScreen> {
           ),
           AppButtonWidget(
             label: AppLocalizations.current.confirm,
+            backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
             doublePadding: 15,
             onTap: () {
               verifyOTP(otp);

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../i18n/generated_locales/l10n.dart';
 import '../../theme/styles.dart';
 import '../../theme/theme.dart';
@@ -70,7 +72,7 @@ class CustomAlertDialog extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: AppGap.g8),
               child: Text(
                 AppLocalizations.current.Notice,
-                style: mainTheme.textTheme.subtitle1,
+                style: mainTheme.textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -86,10 +88,10 @@ class CustomAlertDialog extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: '',
-                      style: mainTheme.textTheme.bodyText2,
+                      style: mainTheme.textTheme.bodyMedium,
                     ),
                   ],
-                  style: mainTheme.textTheme.bodyText2,
+                  style: mainTheme.textTheme.bodyMedium,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -97,8 +99,8 @@ class CustomAlertDialog extends StatelessWidget {
             ButtonGeneral(
               title: buttonText,
               onCallBack: callback,
-              backgroundColor: Color(0xff0D75D6),
-              borderColor: Color(0xff0D75D6),
+              backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
+              borderColor: HexColor(AppConfig.colorPrimaryBtn),
             ),
           ],
         )

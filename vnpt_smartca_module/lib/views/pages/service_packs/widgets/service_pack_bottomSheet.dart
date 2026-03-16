@@ -85,7 +85,7 @@ class ServicePackBottomSheetItem extends StatelessWidget {
                   borderColor: HexColor("#DE9B39"),
                   textStyle: Theme.of(context)
                       .textTheme
-                      .bodyText1!
+                      .bodyLarge!
                       .copyWith(color: Colors.white),
                   onCallBack: () => onRedirectToServicePackPorder(),
                 ),

@@ -2,10 +2,13 @@
 
 import 'dart:async';
 
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../../core/models/response/order_cert_model.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../controller/buy_certificate_controller.dart';
@@ -22,9 +25,15 @@ import '../../../../core/extensions/datetime.dart';
 
 class OrderListScreen extends StatefulWidget {
   final bool hiddenBack;
+  final bool hiddenFiltter;
   final Color? appBarColor;
   final Color? appBarBoxShadowColor;
-  const OrderListScreen({super.key, this.hiddenBack = false, this.appBarColor, this.appBarBoxShadowColor});
+  const OrderListScreen(
+      {super.key,
+      this.hiddenBack = false,
+      this.appBarColor,
+      this.appBarBoxShadowColor,
+      this.hiddenFiltter = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -40,8 +49,6 @@ class _OrderListScreenState extends State<OrderListScreen> {
   @override
   void initState() {
     Get.put(BuyCertificateController());
-    debugPrint(DateTime.now().toString());
-    debugPrint(DateTime.now().toIso8601String());
     super.initState();
   }
 
@@ -122,7 +129,8 @@ class _OrderListScreenState extends State<OrderListScreen> {
     }
     if (_fromDate != null && _toDate != null) {
       try {
-        DateTime? from = DatetimeFormat().parseStringToDate(_fromDate!, utc: true);
+        DateTime? from =
+            DatetimeFormat().parseStringToDate(_fromDate!, utc: true);
         DateTime? to = DatetimeFormat().parseStringToDate(_toDate!, utc: true);
         if (from != null && to != null) {
           from = DateTime(from.year, from.month, from.day, 0, 0, 0);
@@ -145,8 +153,10 @@ class _OrderListScreenState extends State<OrderListScreen> {
   _refreshList() {
     appRefreshControllerAll.refresh(params: _getParam(_ListPageStatus.all));
     appRefreshControllerDone.refresh(params: _getParam(_ListPageStatus.done));
-    appRefreshControllerInProgress.refresh(params: _getParam(_ListPageStatus.inProgress));
-    appRefreshControllerCanceled.refresh(params: _getParam(_ListPageStatus.canceled));
+    appRefreshControllerInProgress.refresh(
+        params: _getParam(_ListPageStatus.inProgress));
+    appRefreshControllerCanceled.refresh(
+        params: _getParam(_ListPageStatus.canceled));
   }
 
   _checkStringIsNotEmpty(String? s) {
@@ -181,8 +191,11 @@ class _OrderListScreenState extends State<OrderListScreen> {
               height: 20,
               width: 20,
               alignment: Alignment.center,
-              child: Assets.images.icQrClose
-                  .image(fit: BoxFit.fill, height: 20, width: 20, color: const Color(0xff5768A5)),
+              child: Assets.images.icQrClose.image(
+                  fit: BoxFit.fill,
+                  height: 20,
+                  width: 20,
+                  color: const Color(0xff5768A5)),
             ),
           )
         ],
@@ -201,159 +214,171 @@ class _OrderListScreenState extends State<OrderListScreen> {
       loadingWidget: const BaseLoading<BuyCertificateController>(),
       body: Column(
         children: [
-          FormBuilder(
-            // key: controller.formKey3,
-            child: Container(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: FormBuilderTextField(
-                        name: "searchText",
-                        autofocus: false,
-                        readOnly: false,
-                        // initialValue: initValue,
-                        // onSubmitted: (value) => controller.onFormSubmit(),
-                        textInputAction: TextInputAction.search,
-                        onChanged: (String? value) {
-                          _searchText = value;
-                          if (_debounce?.isActive ?? false) _debounce?.cancel();
-                          _debounce = Timer(const Duration(milliseconds: 500), () {
-                            _refreshList();
-                          });
-                        },
-                        maxLength: 250,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.maxLength(250, errorText: AppLocalizations.current.maxLength(250)),
-                        ]),
-                        decoration: ConfigInputDecoration().config(AppLocalizations.current.enterTextToSearchOrder,
-                            fillColor: Colors.white,
-                            suffixIcon: Container(
-                              height: 20,
-                              width: 20,
-                              alignment: Alignment.center,
-                              child: Assets.images.icCertSearch.image(
-                                fit: BoxFit.fill,
+          if (!widget.hiddenFiltter == true)
+            FormBuilder(
+              // key: controller.formKey3,
+              child: Container(
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: FormBuilderTextField(
+                          name: "searchText",
+                          autofocus: false,
+                          readOnly: false,
+                          enableSuggestions: true,
+
+                          // initialValue: initValue,
+                          // onSubmitted: (value) => controller.onFormSubmit(),
+                          textInputAction: TextInputAction.search,
+                          onChanged: (String? value) {
+                            _searchText = value;
+                            if (_debounce?.isActive ?? false)
+                              _debounce?.cancel();
+                            _debounce =
+                                Timer(const Duration(milliseconds: 500), () {
+                              _refreshList();
+                            });
+                          },
+                          maxLength: 250,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.maxLength(250,
+                                errorText:
+                                    AppLocalizations.current.maxLength(250)),
+                          ]),
+                          decoration: ConfigInputDecoration().config(
+                              AppLocalizations.current.enterTextToSearchOrder,
+                              fillColor: Colors.white,
+                              suffixIcon: Container(
                                 height: 20,
                                 width: 20,
-                              ),
-                            ))),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      // todo
-                      showDialog(
-                          context: context,
-                          builder: (ctx) {
-                            return Material(
-                              color: Colors.transparent,
-                              child: Container(
                                 alignment: Alignment.center,
-                                color: Colors.transparent,
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                        child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              color: Colors.transparent,
-                                            ))),
-                                    _FilterBoxWidget(
-                                      currentType: _orderType,
-                                      fromDate: _fromDate,
-                                      toDate: _toDate,
-                                      orderTypes: orderTypes,
-                                      getFilter: (int? type, String? fromDate, String? toDate) {
-                                        _orderType = type;
-                                        _fromDate = fromDate;
-                                        _toDate = toDate;
-                                        setState(() {
-                                          _refreshList();
-                                        });
-                                      },
-                                    )
-                                  ],
+                                child: Assets.images.icCertSearch.image(
+                                  fit: BoxFit.fill,
+                                  height: 20,
+                                  width: 20,
                                 ),
-                              ),
-                            );
-                          });
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Assets.images.icCertFilter.image(
-                        fit: BoxFit.fill,
-                        height: 24,
-                        width: 24,
+                              ))),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // todo
+                        showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return Material(
+                                color: Colors.transparent,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  color: Colors.transparent,
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                          child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Container(
+                                                color: Colors.transparent,
+                                              ))),
+                                      _FilterBoxWidget(
+                                        currentType: _orderType,
+                                        fromDate: _fromDate,
+                                        toDate: _toDate,
+                                        orderTypes: orderTypes,
+                                        getFilter: (int? type, String? fromDate,
+                                            String? toDate) {
+                                          _orderType = type;
+                                          _fromDate = fromDate;
+                                          _toDate = toDate;
+                                          setState(() {
+                                            _refreshList();
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Assets.images.icCertFilter.image(
+                          fit: BoxFit.fill,
+                          height: 24,
+                          width: 24,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-            alignment: Alignment.centerLeft,
-            // color: Colors.red,
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(0),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _HeaderOption(
-                      label: AppLocalizations.current.all,
-                      isSelected: _index == 0,
-                      onTap: () {
-                        setState(() {
-                          _index = 0;
-                        });
-                      }),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  _HeaderOption(
-                      label: AppLocalizations.current.inProgress,
-                      isSelected: _index == 1,
-                      onTap: () {
-                        setState(() {
-                          _index = 1;
-                        });
-                      }),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  _HeaderOption(
-                      label: AppLocalizations.current.completed,
-                      isSelected: _index == 2,
-                      onTap: () {
-                        setState(() {
-                          _index = 2;
-                        });
-                      }),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  _HeaderOption(
-                      label: AppLocalizations.current.order_canceled,
-                      isSelected: _index == 3,
-                      onTap: () {
-                        setState(() {
-                          _index = 3;
-                        });
-                      }),
-                  // const SizedBox(
-                  //   width: 16,
-                  // ),
-                ],
+          if (!widget.hiddenFiltter == true)
+            Container(
+              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+              alignment: Alignment.centerLeft,
+              // color: Colors.red,
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(0),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    _HeaderOption(
+                        label: AppLocalizations.current.all,
+                        isSelected: _index == 0,
+                        onTap: () {
+                          setState(() {
+                            _index = 0;
+                          });
+                        }),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    _HeaderOption(
+                        label: AppLocalizations.current.inProgress,
+                        isSelected: _index == 1,
+                        onTap: () {
+                          setState(() {
+                            _index = 1;
+                          });
+                        }),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    _HeaderOption(
+                        label: AppLocalizations.current.completed,
+                        isSelected: _index == 2,
+                        onTap: () {
+                          setState(() {
+                            _index = 2;
+                          });
+                        }),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    _HeaderOption(
+                        label: AppLocalizations.current.order_canceled,
+                        isSelected: _index == 3,
+                        onTap: () {
+                          setState(() {
+                            _index = 3;
+                          });
+                        }),
+                    // const SizedBox(
+                    //   width: 16,
+                    // ),
+                  ],
+                ),
               ),
             ),
-          ),
           Visibility(
-            visible: _orderType != null || _checkStringIsNotEmpty(_fromDate) || _checkStringIsNotEmpty(_toDate),
+            visible: _orderType != null ||
+                _checkStringIsNotEmpty(_fromDate) ||
+                _checkStringIsNotEmpty(_toDate),
             child: Container(
               padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
               alignment: Alignment.centerLeft,
@@ -431,7 +456,8 @@ class _ListPage extends StatefulWidget {
   final _ListPageStatus listPageStatus;
   final AppRefreshController? appRefreshController;
 
-  const _ListPage({this.listPageStatus = _ListPageStatus.all, this.appRefreshController});
+  const _ListPage(
+      {this.listPageStatus = _ListPageStatus.all, this.appRefreshController});
 
   @override
   State<StatefulWidget> createState() {
@@ -439,25 +465,60 @@ class _ListPage extends StatefulWidget {
   }
 }
 
-class _ListPageState extends State<_ListPage> with AutomaticKeepAliveClientMixin {
-  _renderItemInfo(String label, String content, {Color? contentColor, FontWeight? contentFontWeight}) {
+class _ListPageState extends State<_ListPage>
+    with AutomaticKeepAliveClientMixin {
+  _renderItemInfo(String label, String content,
+      {Color? contentColor,
+      FontWeight? contentFontWeight,
+      bool isShowCopyButton = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BaseText(
-          label,
-          fontWeight: FontWeight.w400,
-          textAlign: TextAlign.left,
-          color: const Color(0xff5768A5),
+        Visibility(
+          visible: label.isNotEmpty,
+          child: Expanded(
+            flex: 3,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: BaseText(
+                label,
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                height: 24 / 14,
+                textAlign: TextAlign.left,
+                color: const Color(0xff5768A5),
+              ),
+            ),
+          ),
         ),
-        SizedBox(width: 6),
         Expanded(
+          flex: 7,
+          child: Container(
+            alignment:
+                label.isNotEmpty ? Alignment.centerRight : Alignment.centerLeft,
             child: BaseText(
-          content,
-          fontWeight: contentFontWeight ?? FontWeight.w400,
-          textAlign: TextAlign.right,
-          color: contentColor ?? const Color(0xff08285C),
-        ))
+              content,
+              fontWeight: contentFontWeight ?? FontWeight.w400,
+              fontSize: 14,
+              height: 24 / 14,
+              textAlign: TextAlign.right,
+              color: contentColor ?? const Color(0xff08285C),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: isShowCopyButton,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 5),
+            child: InkWell(
+                onTap: () {
+                  FlutterClipboard.copy(content);
+                },
+                child: Assets.images.icCopy
+                    .image(width: 20, height: 20, fit: BoxFit.contain)),
+          ),
+        )
       ],
     );
   }
@@ -515,7 +576,6 @@ class _ListPageState extends State<_ListPage> with AutomaticKeepAliveClientMixin
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    debugPrint("test");
     // return SingleChildScrollView(
     //   child: Column(
     //     children: List.generate(100, (index) => Container(
@@ -525,13 +585,16 @@ class _ListPageState extends State<_ListPage> with AutomaticKeepAliveClientMixin
     //   ),
     // );
     return AppRefresh<OrderCertModel>(
+      // path: "/order/certorderCompleteOnline/listCertOrder",
       path: "/order/certorder/listCertOrder",
       fromMap: OrderCertModel.fromJson,
       appRefreshController: widget.appRefreshController,
-      keyController: "listCertOrder${widget.listPageStatus.toString()}_${Common.getRandomString(6)}",
+      keyController:
+          "listCertOrder${widget.listPageStatus.toString()}_${Common.getRandomString(6)}",
       itemWidgetBuilder: (v, index) {
         return Obx(() {
-          OrderCertModel value = v.orderItemController!.currentOrderCertModel.value!;
+          OrderCertModel value =
+              v.orderItemController!.currentOrderCertModel.value!;
           return InkWell(
             onTap: () {
               // if (value.type != 0) {
@@ -565,9 +628,12 @@ class _ListPageState extends State<_ListPage> with AutomaticKeepAliveClientMixin
                     margin: const EdgeInsets.symmetric(horizontal: 7),
                     decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(11), topRight: Radius.circular(11)),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(11),
+                          topRight: Radius.circular(11)),
                     ),
-                    padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+                    padding: const EdgeInsets.only(
+                        left: 16, right: 16, top: 8, bottom: 8),
                     child: Row(
                       children: [
                         Expanded(
@@ -577,7 +643,8 @@ class _ListPageState extends State<_ListPage> with AutomaticKeepAliveClientMixin
                           fontSize: 16,
                           color: const Color(0xff0D75D6),
                         )),
-                        Assets.images.icArrowRight.image(width: 16, height: 16, fit: BoxFit.cover)
+                        Assets.images.icArrowRight
+                            .image(width: 16, height: 16, fit: BoxFit.cover)
                       ],
                     ),
                   ),
@@ -599,7 +666,8 @@ class _ListPageState extends State<_ListPage> with AutomaticKeepAliveClientMixin
                               decoration: const BoxDecoration(
                                   color: Color.fromRGBO(241, 244, 250, 1),
                                   borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(14), bottomRight: Radius.circular(14))),
+                                      topRight: Radius.circular(14),
+                                      bottomRight: Radius.circular(14))),
                             )
                           ],
                         ),
@@ -627,8 +695,9 @@ class _ListPageState extends State<_ListPage> with AutomaticKeepAliveClientMixin
                               height: 14,
                               decoration: const BoxDecoration(
                                   color: Color.fromRGBO(241, 244, 250, 1),
-                                  borderRadius:
-                                      BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(14),
+                                      bottomLeft: Radius.circular(14))),
                             )
                           ],
                         ),
@@ -640,64 +709,63 @@ class _ListPageState extends State<_ListPage> with AutomaticKeepAliveClientMixin
                     margin: const EdgeInsets.symmetric(horizontal: 7),
                     decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                          BorderRadius.only(bottomLeft: Radius.circular(11), bottomRight: Radius.circular(11)),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(11),
+                          bottomRight: Radius.circular(11)),
                     ),
                     padding: const EdgeInsets.only(left: 16, right: 16),
                     child: Column(
                       children: [
-                        _renderItemInfo(AppLocalizations.current.orderCode, value.dhsxkdCustomerInfo.maGd),
+                        _renderItemInfo(AppLocalizations.current.orderCode,
+                            value.dhsxkdCustomerInfo.maGd),
                         const SizedBox(
                           height: 8,
                         ),
-                        _renderItemInfo(
-                            AppLocalizations.current.orderDate, DatetimeFormat().formatDate(value.createdDate)),
+                        _renderItemInfo(AppLocalizations.current.orderDate,
+                            DatetimeFormat().formatDate(value.createdDate)),
                         const SizedBox(
                           height: 8,
                         ),
-                        _renderItemInfo(AppLocalizations.current.status, value.getStateText(),
-                            contentFontWeight: FontWeight.w600, contentColor: getStatusColor(value)),
+                        _renderItemInfo(AppLocalizations.current.status,
+                            value.getStateText(),
+                            contentFontWeight: FontWeight.w600,
+                            contentColor: getStatusColor(value)),
                         Container(
                           margin: const EdgeInsets.only(top: 8, bottom: 6),
                           color: Colors.white,
                           height: 14,
                           alignment: Alignment.center,
-                          child: Assets.images.icLine.image(fit: BoxFit.fitWidth),
+                          child:
+                              Assets.images.icLine.image(fit: BoxFit.fitWidth),
                         ),
                         InkWell(
                           onTap: () {
-                            // if (value.getTypeEnum() != OrderType.newCert) {
-                            //   return;
-                            // }
-                            // controller.currentOrderCertModel.value = value;
                             Get.to(() => OrderDetailScreen(
                                   orderCertModel: value,
-                                  // isCompleted: widget.listPageStatus == _ListPageStatus.done,
-                                ))?.then((value) {
-                              // appRefreshController?.refresh(params: getParam(), isRefresh: false);
-                            });
+                                ))?.then((value) {});
                           },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Assets.images.eyeOrderDetail.image(width: 16, height: 16, fit: BoxFit.contain),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              BaseText(
-                                AppLocalizations.current.viewOrderDetail,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                // height: 24 / 14,
-                                textAlign: TextAlign.center,
-                                color: const Color(0xff39476A),
-                              )
-                            ],
+                          child: Container(
+                            padding: EdgeInsets.only(top: 4, bottom: 10),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Assets.images.eyeOrderDetail.image(
+                                    width: 16, height: 16, fit: BoxFit.contain),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                BaseText(
+                                  AppLocalizations.current.viewOrderDetail,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  // height: 24 / 14,
+                                  textAlign: TextAlign.center,
+                                  color: const Color(0xff39476A),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 14,
                         ),
                       ],
                     ),
@@ -744,7 +812,8 @@ class _ListPageState extends State<_ListPage> with AutomaticKeepAliveClientMixin
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Assets.images.icCertPackEmpty.image(width: 157, height: 135, fit: BoxFit.cover),
+            Assets.images.icCertPackEmpty
+                .image(width: 157, height: 135, fit: BoxFit.cover),
             SizedBox(
               height: 10,
             ),
@@ -775,7 +844,8 @@ class _HeaderOption extends StatelessWidget {
   final bool isSelected;
   final Function onTap;
 
-  const _HeaderOption({required this.label, required this.isSelected, required this.onTap});
+  const _HeaderOption(
+      {required this.label, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -789,7 +859,10 @@ class _HeaderOption extends StatelessWidget {
         decoration: BoxDecoration(
             color: isSelected ? const Color(0xffE7F1FB) : Colors.white,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: isSelected ? const Color(0xff0D75D6) : const Color(0xffC9CED7))),
+            border: Border.all(
+                color: isSelected
+                    ? const Color(0xff0D75D6)
+                    : const Color(0xffC9CED7))),
         child: BaseText(
           label,
           color: isSelected ? const Color(0xff0D75D6) : const Color(0xff5768A5),
@@ -828,7 +901,8 @@ class _NoteState extends State<_Note> {
               });
             },
             child: Row(children: [
-              Assets.images.icCertInfo.image(width: 20, height: 20, fit: BoxFit.fill),
+              Assets.images.icCertInfo
+                  .image(width: 20, height: 20, fit: BoxFit.fill),
               const SizedBox(
                 width: 6,
               ),
@@ -845,8 +919,10 @@ class _NoteState extends State<_Note> {
                 width: 6,
               ),
               isExpand
-                  ? Assets.images.icArrowUp.image(width: 20, height: 20, fit: BoxFit.fill)
-                  : Assets.images.icArrowDown.image(width: 20, height: 20, fit: BoxFit.fill),
+                  ? Assets.images.icArrowUp
+                      .image(width: 20, height: 20, fit: BoxFit.fill)
+                  : Assets.images.icArrowDown
+                      .image(width: 20, height: 20, fit: BoxFit.fill),
             ]),
           ),
           Visibility(
@@ -855,8 +931,11 @@ class _NoteState extends State<_Note> {
                 children: [
                   Row(
                     children: [
-                      Assets.images.icCertInfo
-                          .image(width: 20, height: 20, fit: BoxFit.fill, color: Colors.transparent),
+                      Assets.images.icCertInfo.image(
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.fill,
+                          color: Colors.transparent),
                       const SizedBox(
                         width: 6,
                       ),
@@ -891,7 +970,8 @@ class _BulletText extends StatelessWidget {
   final bool bulletVisible;
   final bool contentBold;
 
-  const _BulletText(this.content, {this.bulletVisible = true, this.contentBold = false});
+  const _BulletText(this.content,
+      {this.bulletVisible = true, this.contentBold = false});
 
   @override
   Widget build(BuildContext context) {
@@ -934,7 +1014,12 @@ class _FilterBoxWidget extends StatefulWidget {
   final Function? getFilter;
 
   const _FilterBoxWidget(
-      {super.key, this.currentType, this.fromDate, this.toDate, required this.orderTypes, this.getFilter});
+      {super.key,
+      this.currentType,
+      this.fromDate,
+      this.toDate,
+      required this.orderTypes,
+      this.getFilter});
 
   @override
   State<StatefulWidget> createState() {
@@ -1020,13 +1105,15 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
     return Container(
       decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10), topLeft: Radius.circular(10))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 17),
-            decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xffE0E0E0)))),
+            decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: Color(0xffE0E0E0)))),
             child: Row(
               children: [
                 Expanded(
@@ -1045,15 +1132,19 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
                     width: 26,
                     height: 26,
                     alignment: Alignment.center,
-                    child: Assets.images.icQrClose
-                        .image(width: 20, height: 20, color: const Color(0xff6D6D6D), fit: BoxFit.fill),
+                    child: Assets.images.icQrClose.image(
+                        width: 20,
+                        height: 20,
+                        color: const Color(0xff6D6D6D),
+                        fit: BoxFit.fill),
                   ),
                 )
               ],
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 15, bottom: 9),
+            padding:
+                const EdgeInsets.only(left: 16, right: 16, top: 15, bottom: 9),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1087,24 +1178,31 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
                     child: InkWell(
                       onTap: () {
                         showDatePicker(
-                            context: context,
-                            initialDate: DatetimeFormat().parseStringToDate(_fromDate ?? "") ?? DateTime.now(),
-                            firstDate: DateTime(2010),
-                            lastDate: DateTime.now()).then((value) {
-                              startDateController.text = value?.fromDate() ?? "";
-                              _fromDate = value?.fromDate();
-                              _checkError();
+                                context: context,
+                                initialDate: DatetimeFormat()
+                                        .parseStringToDate(_fromDate ?? "") ??
+                                    DateTime.now(),
+                                firstDate: DateTime(2010),
+                                lastDate: DateTime.now())
+                            .then((value) {
+                          startDateController.text = value?.fromDate() ?? "";
+                          _fromDate = value?.fromDate();
+                          _checkError();
                         });
                       },
                       child: TextField(
                         enabled: false,
                         controller: startDateController,
                         textInputAction: TextInputAction.done,
-                        decoration: ConfigInputDecoration().config(AppLocalizations.of(context).selectDate,
-                            suffixIcon: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15),
-                              child: Assets.images.icCalendar.image(width: 20, height: 20, fit: BoxFit.contain),
-                            )),
+                        decoration: ConfigInputDecoration()
+                            .config(AppLocalizations.of(context).selectDate,
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  child: Assets.images.icCalendar.image(
+                                      width: 20,
+                                      height: 20,
+                                      fit: BoxFit.contain),
+                                )),
                       ),
                     ),
                   ),
@@ -1116,10 +1214,13 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
                     child: InkWell(
                       onTap: () {
                         showDatePicker(
-                            context: context,
-                            initialDate: DatetimeFormat().parseStringToDate(_toDate ?? "") ?? DateTime.now(),
-                            firstDate: DateTime(2010),
-                            lastDate: DateTime.now()).then((value) {
+                                context: context,
+                                initialDate: DatetimeFormat()
+                                        .parseStringToDate(_toDate ?? "") ??
+                                    DateTime.now(),
+                                firstDate: DateTime(2010),
+                                lastDate: DateTime.now())
+                            .then((value) {
                           endDateController.text = value?.fromDate() ?? "";
                           _toDate = value?.fromDate();
                           _checkError();
@@ -1141,11 +1242,15 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
                         enabled: false,
                         controller: endDateController,
                         textInputAction: TextInputAction.done,
-                        decoration: ConfigInputDecoration().config(AppLocalizations.of(context).selectDate,
-                            suffixIcon: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15),
-                              child: Assets.images.icCalendar.image(width: 20, height: 20, fit: BoxFit.contain),
-                            )),
+                        decoration: ConfigInputDecoration()
+                            .config(AppLocalizations.of(context).selectDate,
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  child: Assets.images.icCalendar.image(
+                                      width: 20,
+                                      height: 20,
+                                      fit: BoxFit.contain),
+                                )),
                       ),
                     ),
                   ),
@@ -1167,6 +1272,7 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
             child: AppButtonWidget(
               label: AppLocalizations.current.apply,
+              backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
               onTap: () {
                 // todo
                 debugPrint("F $_fromDate - T $_toDate");
@@ -1183,7 +1289,8 @@ class _FilterBoxState extends State<_FilterBoxWidget> {
                   return;
                 }
                 if (_fromDate != null && _toDate != null) {
-                  DateTime? from = DatetimeFormat().parseStringToDate(_fromDate!);
+                  DateTime? from =
+                      DatetimeFormat().parseStringToDate(_fromDate!);
                   DateTime? to = DatetimeFormat().parseStringToDate(_toDate!);
                   if (from != null && to != null && to.isBefore(from)) {
                     setState(() {

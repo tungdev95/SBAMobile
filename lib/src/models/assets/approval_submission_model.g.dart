@@ -9,11 +9,12 @@ part of 'approval_submission_model.dart';
 ApprovalSubmissionInfo _$ApprovalSubmissionInfoFromJson(
         Map<String, dynamic> json) =>
     ApprovalSubmissionInfo(
-      approvalSubmissionId: json['approvalSubmissionId'] as int? ?? 0,
+      approvalSubmissionId:
+          (json['approvalSubmissionId'] as num?)?.toInt() ?? 0,
       appraisalFileId: json['appraisalFileId'] as String? ?? '',
-      level: json['level'] as int? ?? 0,
-      totalLevel: json['totalLevel'] as int? ?? 0,
-      status: json['status'] as int? ?? 0,
+      level: (json['level'] as num?)?.toInt() ?? 0,
+      totalLevel: (json['totalLevel'] as num?)?.toInt() ?? 0,
+      status: (json['status'] as num?)?.toInt() ?? 0,
       approvalHistoryDtos: (json['approvalHistoryDtos'] as List<dynamic>?)
               ?.map((e) => ApprovalHistory.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -36,15 +37,15 @@ ApprovalHistory _$ApprovalHistoryFromJson(Map<String, dynamic> json) =>
       createdDate: json['createdDate'] == null
           ? null
           : DateTime.parse(json['createdDate'] as String),
-      approvalHistoryId: json['approvalHistoryId'] as int?,
-      approvalSubmissionId: json['approvalSubmissionId'] as int?,
+      approvalHistoryId: (json['approvalHistoryId'] as num?)?.toInt(),
+      approvalSubmissionId: (json['approvalSubmissionId'] as num?)?.toInt(),
       approvalEmployeeId: json['approvalEmployeeId'] as String?,
       approvalNextEmployeeId: json['approvalNextEmployeeId'] as String?,
-      status: json['status'] as int?,
+      status: (json['status'] as num?)?.toInt(),
       approvalComment: json['approvalComment'] as String?,
-      level: json['level'] as int?,
-      totalLevel: json['totalLevel'] as int?,
-      assignmentId: json['assignmentId'] as int?,
+      level: (json['level'] as num?)?.toInt(),
+      totalLevel: (json['totalLevel'] as num?)?.toInt(),
+      assignmentId: (json['assignmentId'] as num?)?.toInt(),
       approvalHistoryValueDtos:
           (json['approvalHistoryValueDtos'] as List<dynamic>?)
                   ?.map((e) =>
@@ -85,11 +86,12 @@ Map<String, dynamic> _$ApprovalHistoryToJson(ApprovalHistory instance) =>
 
 ApproveSubmission _$ApproveSubmissionFromJson(Map<String, dynamic> json) =>
     ApproveSubmission(
-      approvalSubmissionId: json['approvalSubmissionId'] as int?,
+      approvalSubmissionId: (json['approvalSubmissionId'] as num?)?.toInt(),
       approvalEmployeeId: json['approvalEmployeeId'] as String?,
       approvalNextEmployeeId: json['approvalNextEmployeeId'] as String?,
       approvalComment: json['approvalComment'] as String?,
-      constructionFutureValue: json['constructionFutureValue'] as int?,
+      constructionFutureValue:
+          (json['constructionFutureValue'] as num?)?.toInt(),
       approvalHistoryValues: (json['approvalHistoryValues'] as List<dynamic>?)
               ?.map((e) =>
                   ApprovalHistoryValue.fromJson(e as Map<String, dynamic>))
@@ -126,26 +128,27 @@ Map<String, dynamic> _$ApproveSubmissionToJson(ApproveSubmission instance) {
 ApprovalHistoryValue _$ApprovalHistoryValueFromJson(
         Map<String, dynamic> json) =>
     ApprovalHistoryValue(
-      approvalHistoryValueId: json['approvalHistoryValueId'] as int?,
-      approvalHistoryId: json['approvalHistoryId'] as int?,
-      assetChildId: json['assetChildId'] as int?,
-      assetGrandChildId: json['assetGrandChildId'] as int?,
-      valuationResultLandEstateId: json['valuationResultLandEstateId'] as int?,
+      approvalHistoryValueId: (json['approvalHistoryValueId'] as num?)?.toInt(),
+      approvalHistoryId: (json['approvalHistoryId'] as num?)?.toInt(),
+      assetChildId: (json['assetChildId'] as num?)?.toInt(),
+      assetGrandChildId: (json['assetGrandChildId'] as num?)?.toInt(),
+      valuationResultLandEstateId:
+          (json['valuationResultLandEstateId'] as num?)?.toInt(),
       name: json['name'] as String?,
-      type: json['type'] as int?,
+      type: (json['type'] as num?)?.toInt(),
       totalArea: (json['totalArea'] as num?)?.toDouble(),
       totalAreaApprovaled: (json['totalAreaApprovaled'] as num?)?.toDouble(),
-      unitPrice: json['unitPrice'] as int?,
-      totalValue: json['totalValue'] as int?,
-      unitPriceApprovaled: json['unitPriceApprovaled'] as int?,
-      totalValueApprovaled: json['totalValueApprovaled'] as int?,
-      realCommonMachine: json['realCommonMachine'] as int?,
+      unitPrice: (json['unitPrice'] as num?)?.toInt(),
+      totalValue: (json['totalValue'] as num?)?.toInt(),
+      unitPriceApprovaled: (json['unitPriceApprovaled'] as num?)?.toInt(),
+      totalValueApprovaled: (json['totalValueApprovaled'] as num?)?.toInt(),
+      realCommonMachine: (json['realCommonMachine'] as num?)?.toInt(),
       productLineName: json['productLineName'] as String?,
       appraisalFileId: json['appraisalFileId'] as String?,
       valuationResultWaterwayVehicleId:
-          json['valuationResultWaterwayVehicleId'] as int?,
+          (json['valuationResultWaterwayVehicleId'] as num?)?.toInt(),
       valuationResultRoadVehicleId:
-          json['valuationResultRoadVehicleId'] as int?,
+          (json['valuationResultRoadVehicleId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ApprovalHistoryValueToJson(
@@ -176,19 +179,19 @@ ApprovalHistoryConstruction _$ApprovalHistoryConstructionFromJson(
         Map<String, dynamic> json) =>
     ApprovalHistoryConstruction(
       approvalHistoryConstructionId:
-          json['approvalHistoryConstructionId'] as int?,
-      approvalHistoryId: json['approvalHistoryId'] as int?,
-      constructionId: json['constructionId'] as int?,
-      assetLandInforId: json['assetLandInforId'] as int?,
+          (json['approvalHistoryConstructionId'] as num?)?.toInt(),
+      approvalHistoryId: (json['approvalHistoryId'] as num?)?.toInt(),
+      constructionId: (json['constructionId'] as num?)?.toInt(),
+      assetLandInforId: (json['assetLandInforId'] as num?)?.toInt(),
       constructionTypeName: json['constructionTypeName'] as String?,
       constructionName: json['constructionName'] as String?,
       constructionArea: (json['constructionArea'] as num?)?.toDouble(),
       remainingQuality: (json['remainingQuality'] as num?)?.toDouble(),
       mdht: (json['mdht'] as num?)?.toDouble(),
-      unitPrice: json['unitPrice'] as int?,
-      totalValue: json['totalValue'] as int?,
-      unitPriceApprovaled: json['unitPriceApprovaled'] as int?,
-      totalValueApprovaled: json['totalValueApprovaled'] as int?,
+      unitPrice: (json['unitPrice'] as num?)?.toInt(),
+      totalValue: (json['totalValue'] as num?)?.toInt(),
+      unitPriceApprovaled: (json['unitPriceApprovaled'] as num?)?.toInt(),
+      totalValueApprovaled: (json['totalValueApprovaled'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ApprovalHistoryConstructionToJson(

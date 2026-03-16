@@ -9,8 +9,6 @@ import '../../../../widgets/widget.dart';
 
 import '../../../../i18n/generated_locales/l10n.dart';
 
-final formKeyPinGlobal = GlobalKey<FormState>();
-
 class ConfirmPinCodeTextField extends StatefulWidget {
   final String pin;
   final ValueChanged<String> callback;
@@ -30,14 +28,12 @@ class _ConfirmPinCodeTextFieldState extends State<ConfirmPinCodeTextField> {
   bool hasError = false;
   late StreamController<ErrorAnimationType> errorController;
   TextEditingController textEditingController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
   String errorMsg = '';
 
   @override
   void initState() {
     super.initState();
     errorController = StreamController<ErrorAnimationType>();
-    formKey = formKeyPinGlobal;
     textEditingController.clear();
   }
 

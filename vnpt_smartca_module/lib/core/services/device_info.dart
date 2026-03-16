@@ -2,8 +2,8 @@
 
 import 'dart:io';
 
-// import 'package:device_info_plus/device_info_plus.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+// import 'package:device_info/device_info.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -29,7 +29,7 @@ class DeviceInfoService {
       var ios = await devInfo.iosInfo;
       deviceInfoModel = DeviceInfoModel(
         deviceId:
-            deviceInfo != null ? deviceInfo.deviceId : ios.identifierForVendor,
+            deviceInfo != null ? deviceInfo.deviceId : ios.identifierForVendor!,
         deviceName: ios.name,
         osName: ios.systemName,
         osVersion: ios.systemVersion,
@@ -42,7 +42,7 @@ class DeviceInfoService {
     } else if (Platform.isAndroid) {
       var android = await devInfo.androidInfo;
       deviceInfoModel = DeviceInfoModel(
-        deviceId: android.androidId,
+        deviceId: android.id,
         deviceName: android.model,
         branch: android.brand,
         osVersion: android.version.release,

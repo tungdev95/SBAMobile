@@ -32,7 +32,7 @@ Future<ApiResponse<List<AssetsModel>?>> _getListAssets(
   required AssetsTypeEnum? assetsType,
   FileStatus? fileStatus,
 }) async {
-  final result = await ref.read(assetsApiProvider).getListAssets(
+  final result = await ref.watch(assetsApiProvider).getListAssets(
         page: pageIndex ?? 1,
         assetLevelTwoId: assetsType?.assetsLevel2Id,
         assetLevelOneId: assetsType?.assetsLevel1Id,
@@ -49,7 +49,7 @@ Future<ApiResponse<List<AssetsModel>?>> _getListAssetsSend(
   required AssetsTypeEnum? assetsType,
   FileStatus? fileStatus,
 }) async {
-  final result = await ref.read(assetsApiProvider).getListAssetsSend(
+  final result = await ref.watch(assetsApiProvider).getListAssetsSend(
         page: pageIndex ?? 1,
         assetLevelTwoId: assetsType?.assetsLevel2Id,
         assetLevelOneId: assetsType?.assetsLevel1Id,
@@ -147,10 +147,22 @@ class TaiSanChoKhaoSatListController
             fileStatus: fileStatus,
           ).future);
     bool isOK = await handleResponse(result, (p0) {
-      final data = p0 ?? [];
+      if (!mounted) return;
+      var oldData = <AssetsModel>[];
+      if (state.isSuccess) {
+        oldData = state.asSuccess.items;
+      }
+      final data = p0 ?? oldData;
       state = PagingValue(items: data, nextPageKey: data.isNotEmpty ? 2 : null);
     }, error: (e) {
-      state = const PagingValue.error();
+      if (state.isSuccess) {
+        state = PagingValue(
+          items: state.asSuccess.items,
+          nextPageKey: null,
+        );
+      } else {
+        state = const PagingValue.error();
+      }
     });
   }
 

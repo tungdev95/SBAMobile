@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,21 +22,38 @@ import '../system_link/list/index.dart';
 import 'buy/order_detail_screen.dart';
 import 'change_name.dart';
 
+StreamSubscription? orderCertModelStream;
+
 class CertificateDetail extends StatelessWidget {
   final String title;
   final CertificateModel certificateModel;
   final CertificateController controller = Get.put(CertificateController());
   final authController = Get.find<AuthController>();
+  bool isHideCert = false;
 
   CertificateDetail(
       {super.key, required this.title, required this.certificateModel});
+
+  _getTypeCertName() {
+    if (certificateModel.isOrgCert()) {
+      return AppLocalizations.current.ctsOrg;
+    } else if (certificateModel.isPersonalCert()) {
+      return AppLocalizations.current.ctsPersonal;
+    } else if (certificateModel.isPersonalInOrgCert()) {
+      return AppLocalizations.current.ctsPersonalInOrg;
+    } else {
+      return "";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     controller.currentName.value = (certificateModel.refName ??
             authController.currentUser.value!.displayName) ??
         "";
-    controller.orderCertModel.listen((model) async {
+
+    orderCertModelStream?.cancel();
+    orderCertModelStream = controller.orderCertModel.listen((model) async {
       if (model != null) {
         Get.to(() => OrderDetailScreen(
               orderCertModel: model,
@@ -42,6 +61,11 @@ class CertificateDetail extends StatelessWidget {
             ));
       }
     });
+
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   controller.isCheckHideCert(certificateModel.id);
+    // });
+
     return AnnotatedRegion(
       value: SystemUiOverlayStyle.dark,
       child: BaseScreen(
@@ -61,9 +85,7 @@ class CertificateDetail extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(left: 5),
                       child: Text(
-                        authController.currentUser.value?.accType == 1
-                            ? AppLocalizations.current.businessOrganization
-                            : AppLocalizations.current.ctsPersonal,
+                        _getTypeCertName(),
                         style: const TextStyle(
                             color: Color(0xff08285C),
                             fontSize: 16,
@@ -105,9 +127,36 @@ class CertificateDetail extends StatelessWidget {
                           ),
                           _CertInfoItem(
                             label: AppLocalizations.current.citizenIdLabel,
-                            value: authController.currentUser.value!.uid,
+                            value: authController.currentUser.value!.uid
+                                    .split("_")
+                                    .first ??
+                                "",
                             horizontalDisplay: true,
                           ),
+                          Visibility(
+                              visible: certificateModel.isPersonalInOrgCert(),
+                              child: Column(
+                                children: [
+                                  _CertInfoItem(
+                                    label:
+                                        AppLocalizations.current.nameBusiness,
+                                    value: certificateModel.getOrgName(),
+                                    horizontalDisplay: false,
+                                  ),
+                                  _CertInfoItem(
+                                    label:
+                                        AppLocalizations.current.positionInOrg,
+                                    value:
+                                        certificateModel.getPositionInOrgName(),
+                                    horizontalDisplay: false,
+                                  ),
+                                  _CertInfoItem(
+                                    label: AppLocalizations.current.unitInOrg,
+                                    value: certificateModel.getUnitInOrgName(),
+                                    horizontalDisplay: false,
+                                  )
+                                ],
+                              )),
                           _CertInfoItem(
                             label: AppLocalizations.current.issuer,
                             value: "VNPT SmartCA",
@@ -171,12 +220,58 @@ class CertificateDetail extends StatelessWidget {
                                     "\n${AppLocalizations.current.deviceId}: ${certificateModel.device!.deviceID}",
                                 isActionImage: false,
                                 textAlign: TextAlign.left),
-                          if (certificateModel.typeStatus ==
-                                  StatusCertEnum.VALID ||
-                              certificateModel.typeStatus ==
-                                  StatusCertEnum.WAITING_SIGN_ACCEPTANCE ||
-                              certificateModel.typeStatus ==
-                                  StatusCertEnum.WAITING_SYNC_ACCEPTANCE)
+                          // Obx(
+                          //   () {
+                          //     return Container(
+                          //       margin: const EdgeInsets.only(top: 14),
+                          //       // color: Colors.red,
+                          //       child: Row(
+                          //         children: [
+                          //           InkWell(
+                          //             onTap: () {
+                          //               controller
+                          //                   .hideCert(certificateModel.id);
+                          //             },
+                          //             child: controller.isTick.value
+                          //                 ? Assets.images.icTicked.image(
+                          //                     width: 24,
+                          //                     height: 24,
+                          //                     fit: BoxFit.fill)
+                          //                 : Assets.images.icTick.image(
+                          //                     width: 24,
+                          //                     height: 24,
+                          //                     fit: BoxFit.fill),
+                          //           ),
+                          //           const SizedBox(
+                          //             width: 10,
+                          //           ),
+                          //           Expanded(
+                          //               child: Text(
+                          //             controller.isTick.value
+                          //                 ? AppLocalizations
+                          //                     .current.hideCTSInListScreen
+                          //                 : AppLocalizations
+                          //                     .current.hideCTSInListScreen,
+                          //             style: const TextStyle(
+                          //               color: Color(0xff0D75D6),
+                          //               fontSize: 14,
+                          //               // fontStyle: FontStyle.italic,
+                          //               // height: 22/ 14,
+                          //               fontWeight: FontWeight.w500,
+                          //             ),
+                          //           ))
+                          //         ],
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
+                          if ((certificateModel.typeStatus ==
+                                      StatusCertEnum.VALID ||
+                                  certificateModel.typeStatus ==
+                                      StatusCertEnum.WAITING_SIGN_ACCEPTANCE ||
+                                  certificateModel.typeStatus ==
+                                      StatusCertEnum.WAITING_SYNC_ACCEPTANCE) &&
+                              certificateModel.identity?.source != 8) ...[
                             Container(
                               margin: EdgeInsets.only(top: 14),
                               width: Get.width - 24,
@@ -184,7 +279,8 @@ class CertificateDetail extends StatelessWidget {
                                   horizontal: 16, vertical: 10),
                               decoration: BoxDecoration(
                                   color: Colors.blue.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(6)),
+                                  borderRadius: BorderRadius.circular(
+                                      AppConfig.borderRadiusBtn ?? 6)),
                               child: InkWell(
                                 onTap: () {
                                   if (certificateModel.serial != null) {
@@ -203,32 +299,35 @@ class CertificateDetail extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          SizedBox(height: 10),
-                          Visibility(
-                            visible:
-                                certificateModel.certProfile?.isEseal() == true,
-                            child: Container(
-                              width: Get.width - 24,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 10),
-                              decoration: BoxDecoration(
-                                  color: Colors.blue.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(6)),
-                              child: InkWell(
-                                onTap: () {
-                                  Get.to(ListSystemLinkPage(
-                                      idCert: certificateModel.id));
-                                },
-                                child: BaseText(
-                                  AppLocalizations.current.listLinkSystem,
-                                  // height: 22/ 14,
-                                  color: Color(0xff0D75D6),
-                                  fontWeight: FontWeight.w500,
-                                  textAlign: TextAlign.center,
+                            SizedBox(height: 10),
+                            Visibility(
+                              visible:
+                                  certificateModel.certProfile?.isEseal() ==
+                                      true,
+                              child: Container(
+                                width: Get.width - 24,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.blue.withOpacity(0.15),
+                                    borderRadius: BorderRadius.circular(
+                                        AppConfig.borderRadiusBtn ?? 6)),
+                                child: InkWell(
+                                  onTap: () {
+                                    Get.to(ListSystemLinkPage(
+                                        idCert: certificateModel.id));
+                                  },
+                                  child: BaseText(
+                                    AppLocalizations.current.listLinkSystem,
+                                    // height: 22/ 14,
+                                    color: Color(0xff0D75D6),
+                                    fontWeight: FontWeight.w500,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
                             ),
-                          )
+                          ],
                         ],
                       ),
                       // Container(
@@ -357,6 +456,7 @@ class _CertInfoItem extends StatelessWidget {
                           child: isActionImage
                               ? Image.asset(
                                   actionData,
+                                  package: AppConfig.package,
                                   width: 22,
                                   height: 22,
                                   fit: BoxFit.fill,

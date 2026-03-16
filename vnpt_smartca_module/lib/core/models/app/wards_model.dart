@@ -1,35 +1,44 @@
 import 'category_model.dart';
 
 class WardsModel extends CategoryModel {
-  final int wardId;
-  final String wardName;
-  final int? districtId;
-  final String? districtCode;
-  final String? districtName;
+  int wardId;
+  String wardName;
   final int? provinceId;
   final String? provinceName;
   final String? provinceCode;
+  final String? postalCode;
+  final int? oldProvinceId;
+  final String? oldProvinceCode;
+  final String? oldProvinceName;
+  final int? oldWardId;
+  final String? oldWardName;
 
   WardsModel({
     this.wardId = 0,
     this.wardName = "",
-    this.districtId = 0,
-    this.districtCode = "",
-    this.districtName = "",
     this.provinceId = 0,
     this.provinceName = "",
     this.provinceCode = "",
+    this.postalCode = "",
+    this.oldProvinceId = 0,
+    this.oldProvinceCode = "",
+    this.oldProvinceName = "",
+    this.oldWardId = 0,
+    this.oldWardName = "",
   });
 
   WardsModel.fromJson(Map<String, dynamic> json)
       : wardId = json['wardId'],
         wardName = json['wardName'],
-        districtId = json['districtId'],
-        districtCode = json['districtCode'],
-        districtName = json['districtName'],
         provinceId = json['provinceId'],
         provinceName = json['provinceName'],
-        provinceCode = json['provinceCode'];
+        postalCode = json['postalCode'],
+        provinceCode = json['provinceCode'],
+        oldProvinceId = json['oldProvinceId'],
+        oldProvinceCode = json['oldProvinceCode'],
+        oldProvinceName = json['oldProvinceName'],
+        oldWardId = json['oldWardId'],
+        oldWardName = json['oldWardName'];
 
   @override
   String get name {

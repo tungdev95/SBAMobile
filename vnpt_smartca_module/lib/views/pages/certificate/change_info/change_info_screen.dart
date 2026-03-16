@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../../core/models/response/certificate_model.dart';
 import '../../../../core/models/response/profile_model.dart';
 import '../../../controller/change_info_certiificate_controller.dart';
@@ -15,9 +17,11 @@ class ChangeInfoScreen extends StatelessWidget {
   final ProfileModel profileModel;
   final CertificateModel certificateModel;
 
-  final ChangeInfoCertificateController changeInfoCertificateController = Get.find<ChangeInfoCertificateController>();
+  final ChangeInfoCertificateController changeInfoCertificateController =
+      Get.find<ChangeInfoCertificateController>();
 
-  ChangeInfoScreen({super.key, required this.profileModel, required this.certificateModel});
+  ChangeInfoScreen(
+      {super.key, required this.profileModel, required this.certificateModel});
 
   @override
   Widget build(BuildContext context) {
@@ -83,21 +87,28 @@ class ChangeInfoScreen extends StatelessWidget {
                     FormBuilderTextField(
                       name: 'name',
                       initialValue: profileModel.fullName,
+                      enableSuggestions: true,
                       readOnly: false,
                       // maxLength: 32,
                       // controller: changeInfoCertificateController.fullNameTEC,
-                      decoration: ConfigInputDecoration()
-                          .config("", borderColor: const Color(0xffA5B0C2), fillColor: Colors.white),
+                      decoration: ConfigInputDecoration().config("",
+                          borderColor: const Color(0xffA5B0C2),
+                          fillColor: Colors.white),
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(
-                            errorText: AppLocalizations.current
-                                .inputRequired(AppLocalizations.current.please_input_full_name)),
+                            errorText: AppLocalizations.current.inputRequired(
+                                AppLocalizations
+                                    .current.please_input_full_name)),
                         // FormBuilderValidators.maxLength(32, errorText: AppLocalizations.current.maxLength(32)),
-                        FormBuilderValidators.notEqual(profileModel.fullName as Object,
-                            errorText: AppLocalizations.current.please_input_different_name),
+                        FormBuilderValidators.notEqual(
+                            profileModel.fullName as Object,
+                            errorText: AppLocalizations
+                                .current.please_input_different_name),
                         (val) {
-                          return val?.toLowerCase().trim() == profileModel.fullName?.toLowerCase().trim()
-                              ? AppLocalizations.current.please_input_different_name
+                          return val?.toLowerCase().trim() ==
+                                  profileModel.fullName?.toLowerCase().trim()
+                              ? AppLocalizations
+                                  .current.please_input_different_name
                               : null;
                         },
                       ]),
@@ -120,15 +131,23 @@ class ChangeInfoScreen extends StatelessWidget {
                 ],
               ),
               child: Container(
-                margin: const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 25),
+                margin: const EdgeInsets.only(
+                    left: 15, right: 15, top: 15, bottom: 25),
                 child: Row(
                   children: [
                     Expanded(
                       flex: 1,
                       child: AppButtonWidget(
                         label: AppLocalizations.current.back,
-                        labelColor: const Color(0xff0D75D6),
-                        backgroundColor: const Color(0xffE0F0FF),
+                        // labelColor: const Color(0xff0D75D6),
+                        // backgroundColor: const Color(0xffE0F0FF),
+                        labelColor: HexColor(AppConfig.colorPrimaryBtn),
+                        backgroundColor: HexColor(AppConfig.colorSecondBtn),
+                        border: AppConfig.colorPrimaryBtn == "#0D75D6"
+                            ? null
+                            : Border.all(
+                                width: 1.5,
+                                color: HexColor(AppConfig.colorPrimaryBtn)),
                         doublePadding: 15,
                         onTap: () {
                           Get.back();
@@ -140,10 +159,13 @@ class ChangeInfoScreen extends StatelessWidget {
                       flex: 1,
                       child: AppButtonWidget(
                         label: AppLocalizations.current.Continue,
+                        backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                         doublePadding: 15,
                         onTap: () {
                           // WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
-                          if (changeInfoCertificateController.formKey.currentState!.saveAndValidate()) {
+                          if (changeInfoCertificateController
+                              .formKey.currentState!
+                              .saveAndValidate()) {
                             debugPrint(true.toString());
                           } else {
                             debugPrint(false.toString());

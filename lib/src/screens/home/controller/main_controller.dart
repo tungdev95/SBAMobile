@@ -22,7 +22,7 @@ class MainController extends BaseController<HomeData> {
   }
 
   void getUserProfile() async {
-    final result = await ref.read(userApiProvider).getUserProfile();
+    final result = await ref.watch(userApiProvider).getUserProfile();
     var currentUser = ref.read(appController).userLogin;
     if (result.data != null) {
       final newProfile = result.data!.copyWith.call(

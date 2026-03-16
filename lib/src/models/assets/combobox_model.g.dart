@@ -8,7 +8,7 @@ part of 'combobox_model.dart';
 
 LegalComboModel _$LegalComboModelFromJson(Map<String, dynamic> json) =>
     LegalComboModel(
-      legalInformationTypeId: json['legalInformationTypeId'] as int,
+      legalInformationTypeId: (json['legalInformationTypeId'] as num).toInt(),
       legalInformationTypeName: json['legalInformationTypeName'] as String,
     );
 
@@ -20,7 +20,7 @@ Map<String, dynamic> _$LegalComboModelToJson(LegalComboModel instance) =>
 
 RoadContiguousType _$RoadContiguousTypeFromJson(Map<String, dynamic> json) =>
     RoadContiguousType(
-      roadContiguousTypeId: json['roadContiguousTypeId'] as int?,
+      roadContiguousTypeId: (json['roadContiguousTypeId'] as num?)?.toInt(),
       roadContiguousTypeName: json['roadContiguousTypeName'] as String?,
     );
 
@@ -32,7 +32,7 @@ Map<String, dynamic> _$RoadContiguousTypeToJson(RoadContiguousType instance) =>
 
 PositionModel _$PositionModelFromJson(Map<String, dynamic> json) =>
     PositionModel(
-      positionId: json['positionId'] as int?,
+      positionId: (json['positionId'] as num?)?.toInt(),
       positionName: json['positionName'] as String?,
     );
 
@@ -43,7 +43,7 @@ Map<String, dynamic> _$PositionModelToJson(PositionModel instance) =>
     };
 
 ZoneModel _$ZoneModelFromJson(Map<String, dynamic> json) => ZoneModel(
-      zoneId: json['zoneId'] as int?,
+      zoneId: (json['zoneId'] as num?)?.toInt(),
       zone: json['zone'] as String?,
     );
 
@@ -55,7 +55,7 @@ Map<String, dynamic> _$ZoneModelToJson(ZoneModel instance) => <String, dynamic>{
 PositionInPriceRange _$PositionInPriceRangeFromJson(
         Map<String, dynamic> json) =>
     PositionInPriceRange(
-      positionInPriceRangeId: json['positionInPriceRangeId'] as int?,
+      positionInPriceRangeId: (json['positionInPriceRangeId'] as num?)?.toInt(),
       positionInPriceRangeName: json['positionInPriceRangeName'] as String?,
     );
 
@@ -81,9 +81,9 @@ Map<String, dynamic> _$UsingPurposeResponseToJson(
     };
 
 UsingPurpose _$UsingPurposeFromJson(Map<String, dynamic> json) => UsingPurpose(
-      usingPurposeId: json['usingPurposeId'] as int?,
+      usingPurposeId: (json['usingPurposeId'] as num?)?.toInt(),
       usingPurposeName: json['usingPurposeName'] as String?,
-      insideOutside: json['insideOutside'] as int?,
+      insideOutside: (json['insideOutside'] as num?)?.toInt(),
       status: json['status'] as bool?,
     );
 
@@ -97,7 +97,7 @@ Map<String, dynamic> _$UsingPurposeToJson(UsingPurpose instance) =>
 
 ConstructionType _$ConstructionTypeFromJson(Map<String, dynamic> json) =>
     ConstructionType(
-      constructionTypeId: json['constructionTypeId'] as int?,
+      constructionTypeId: (json['constructionTypeId'] as num?)?.toInt(),
       constructionTypeName: json['constructionTypeName'] as String?,
     );
 
@@ -109,11 +109,11 @@ Map<String, dynamic> _$ConstructionTypeToJson(ConstructionType instance) =>
 
 ConstructionName _$ConstructionNameFromJson(Map<String, dynamic> json) =>
     ConstructionName(
-      constructionNameId: json['constructionNameId'] as int?,
+      constructionNameId: (json['constructionNameId'] as num?)?.toInt(),
       constructionName: json['constructionName'] as String?,
       lowPrice: (json['lowPrice'] as num?)?.toDouble(),
       highPrice: (json['highPrice'] as num?)?.toDouble(),
-      constructionTypeId: json['constructionTypeId'] as int?,
+      constructionTypeId: (json['constructionTypeId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ConstructionNameToJson(ConstructionName instance) =>
@@ -126,7 +126,7 @@ Map<String, dynamic> _$ConstructionNameToJson(ConstructionName instance) =>
     };
 
 TreeType _$TreeTypeFromJson(Map<String, dynamic> json) => TreeType(
-      assetTreeTypeId: json['assetTreeTypeId'] as int? ?? 0,
+      assetTreeTypeId: (json['assetTreeTypeId'] as num?)?.toInt() ?? 0,
       assetTreeTypeName: json['assetTreeTypeName'] as String? ?? '',
     );
 
@@ -136,7 +136,7 @@ Map<String, dynamic> _$TreeTypeToJson(TreeType instance) => <String, dynamic>{
     };
 
 RoadInPrice _$RoadInPriceFromJson(Map<String, dynamic> json) => RoadInPrice(
-      roadInPriceRangeId: json['roadInPriceRangeId'] as int? ?? 0,
+      roadInPriceRangeId: (json['roadInPriceRangeId'] as num?)?.toInt() ?? 0,
       provinceCode: json['provinceCode'] as String? ?? '',
       districts: json['districts'] as String? ?? '',
       road: json['road'] as String? ?? '',
@@ -155,7 +155,7 @@ Map<String, dynamic> _$RoadInPriceToJson(RoadInPrice instance) =>
     };
 
 RiskModel _$RiskModelFromJson(Map<String, dynamic> json) => RiskModel(
-      riskTypeId: json['riskTypeId'] as int?,
+      riskTypeId: (json['riskTypeId'] as num?)?.toInt(),
       riskTypeName: json['riskTypeName'] as String?,
     );
 
@@ -166,10 +166,10 @@ Map<String, dynamic> _$RiskModelToJson(RiskModel instance) => <String, dynamic>{
 
 RiskContentModel _$RiskContentModelFromJson(Map<String, dynamic> json) =>
     RiskContentModel(
-      riskAssetId: json['riskAssetId'] as int?,
+      riskAssetId: (json['riskAssetId'] as num?)?.toInt(),
       riskContent: json['riskContent'] as String?,
-      assetLevelTwoId: json['assetLevelTwoId'] as int?,
-      riskLevel: json['riskLevel'] as int?,
+      assetLevelTwoId: (json['assetLevelTwoId'] as num?)?.toInt(),
+      riskLevel: (json['riskLevel'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$RiskContentModelToJson(RiskContentModel instance) =>

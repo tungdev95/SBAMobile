@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:scale_size/scale_size.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../../core/extensions/datetime.dart';
 import '../../../i18n/generated_locales/l10n.dart';
 import '../../../widgets/base_screen.dart';
@@ -639,6 +641,7 @@ class ListSystemLinkState extends State<ListSystemLinkPage> {
                       SizedBox(height: 25),
                       AppButtonWidget(
                         label: AppLocalizations.current.confirm,
+                        backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                         doublePadding: 15,
                         onTap: () async {
                           String totp = await controller.getTOTP(widget.idCert);
@@ -751,8 +754,11 @@ class ListSystemLinkState extends State<ListSystemLinkPage> {
                             child: AppButtonWidget(
                               label: AppLocalizations.current.cancel,
                               doublePadding: 15,
-                              labelColor: Color(0xff0D75D6),
-                              backgroundColor: Color(0xffE0F0FF),
+                              // labelColor: Color(0xff0D75D6),
+                              // backgroundColor: Color(0xffE0F0FF),
+                              labelColor: HexColor(AppConfig.colorPrimaryBtn),
+                              backgroundColor: HexColor(AppConfig.colorSecondBtn),
+                              border: AppConfig.colorPrimaryBtn == "#0D75D6" ? null : Border.all(width: 1.5, color: HexColor(AppConfig.colorPrimaryBtn)),
                               onTap: () {
                                 setState(() {
                                   showViewDelete = false;
@@ -765,6 +771,7 @@ class ListSystemLinkState extends State<ListSystemLinkPage> {
                             flex: 1,
                             child: AppButtonWidget(
                               label: AppLocalizations.current.confirm,
+                              backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                               doublePadding: 15,
                               onTap: () {
                                 setState(() {

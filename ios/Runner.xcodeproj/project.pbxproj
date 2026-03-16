@@ -7,43 +7,53 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18A36E609FBE64E5B3F9A1E2 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 897E8C7B78C4EA036D82B465 /* Pods_Runner.framework */; };
 		1E0CAB26272C31830025B983 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1E0CAB25272C31830025B983 /* GoogleService-Info.plist */; };
 		1EAC04C827532D720049348C /* config in Resources */ = {isa = PBXBuildFile; fileRef = 1EAC04C727532D720049348C /* config */; };
 		1EDC131A26312E6300B8B239 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EDC131826312E6300B8B239 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		8C37D0342E71E8010002F042 /* eContractSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0112E71DF210002F042 /* eContractSDK.framework */; };
+		8C37D0352E71E8010002F042 /* eContractSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0112E71DF210002F042 /* eContractSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0362E71E8030002F042 /* eKYCLib.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB602B524AA700C21336 /* eKYCLib.xcframework */; };
+		8C37D0372E71E8030002F042 /* eKYCLib.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB602B524AA700C21336 /* eKYCLib.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0382E71E8050002F042 /* ICSdkEKYC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D00D2E71DEAD0002F042 /* ICSdkEKYC.xcframework */; };
+		8C37D0392E71E8050002F042 /* ICSdkEKYC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D00D2E71DEAD0002F042 /* ICSdkEKYC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FD68255D2B623C2C0087AAD1 /* SmartCASDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD68255C2B623C2C0087AAD1 /* SmartCASDK.framework */; };
+		FD68255E2B623C2C0087AAD1 /* SmartCASDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FD68255C2B623C2C0087AAD1 /* SmartCASDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0392E71E8050002F042 /* ICSdkEKYC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D00D2E71DEAD0002F042 /* ICSdkEKYC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FD68255D2B623C2C0087AAD1 /* SmartCASDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD68255C2B623C2C0087AAD1 /* SmartCASDK.framework */; };
+		FD68255E2B623C2C0087AAD1 /* SmartCASDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FD68255C2B623C2C0087AAD1 /* SmartCASDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D03C2E71E8090002F042 /* DPOTPView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0172E71DFB70002F042 /* DPOTPView.framework */; };
+		8C37D03D2E71E8090002F042 /* DPOTPView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0172E71DFB70002F042 /* DPOTPView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D03E2E71E80B0002F042 /* DropDown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0192E71DFBD0002F042 /* DropDown.framework */; };
+		8C37D03F2E71E80B0002F042 /* DropDown.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0192E71DFBD0002F042 /* DropDown.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0402E71E8310002F042 /* JWTDecode.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6C2B524AA700C21336 /* JWTDecode.framework */; };
+		8C37D0412E71E8310002F042 /* JWTDecode.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6C2B524AA700C21336 /* JWTDecode.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0442E71E8350002F042 /* NVActivityIndicatorView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0132E71DF620002F042 /* NVActivityIndicatorView.framework */; };
+		8C37D0452E71E8350002F042 /* NVActivityIndicatorView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0132E71DF620002F042 /* NVActivityIndicatorView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0462E71E8370002F042 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6A2B524AA700C21336 /* ObjectMapper.framework */; };
+		8C37D0472E71E8370002F042 /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6A2B524AA700C21336 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0482E71E83A0002F042 /* Reachability.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD1E295E2B5E2C580047C1C8 /* Reachability.xcframework */; };
+		8C37D04A2E71E83C0002F042 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB672B524AA700C21336 /* Result.framework */; };
+		8C37D04B2E71E83C0002F042 /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB672B524AA700C21336 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D04E2E71E83F0002F042 /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB662B524AA700C21336 /* RxRelay.framework */; };
+		8C37D04F2E71E83F0002F042 /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB662B524AA700C21336 /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0502E71E8400002F042 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6D2B524AA700C21336 /* RxSwift.framework */; };
+		8C37D0512E71E8400002F042 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6D2B524AA700C21336 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0522E71E8420002F042 /* SignaturePad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0152E71DF700002F042 /* SignaturePad.framework */; };
+		8C37D0532E71E8420002F042 /* SignaturePad.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0152E71DF700002F042 /* SignaturePad.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0562E71E84A0002F042 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 897E8C7B78C4EA036D82B465 /* Pods_Runner.framework */; };
+		8C37D0582E71EB140002F042 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6B2B524AA700C21336 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+
+		8C37D05E2E71ED400002F042 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D05C2E71ED360002F042 /* Alamofire.framework */; };
+		8C37D05F2E71ED400002F042 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D05C2E71ED360002F042 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0622E71ED740002F042 /* RxAlamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0602E71ED6B0002F042 /* RxAlamofire.framework */; };
+		8C37D0632E71ED740002F042 /* RxAlamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0602E71ED6B0002F042 /* RxAlamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8C37D0662E71EDA10002F042 /* Moya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0642E71ED9B0002F042 /* Moya.framework */; };
+		8C37D0672E71EDA10002F042 /* Moya.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37D0642E71ED9B0002F042 /* Moya.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		FD1E29562B5E2BB30047C1C8 /* flutter_jailbreak_detection.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD1E29522B5E2B890047C1C8 /* flutter_jailbreak_detection.xcframework */; };
-		FD1E29572B5E2BB30047C1C8 /* flutter_jailbreak_detection.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FD1E29522B5E2B890047C1C8 /* flutter_jailbreak_detection.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C722B5E227600C38D4E /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB692B524AA700C21336 /* Alamofire.framework */; };
-		FD2A7C732B5E227600C38D4E /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB692B524AA700C21336 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C742B5E227600C38D4E /* eContractSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB642B524AA700C21336 /* eContractSDK.framework */; };
-		FD2A7C752B5E227600C38D4E /* eContractSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB642B524AA700C21336 /* eContractSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C762B5E227600C38D4E /* eKYCLib.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB602B524AA700C21336 /* eKYCLib.xcframework */; };
-		FD2A7C772B5E227600C38D4E /* eKYCLib.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB602B524AA700C21336 /* eKYCLib.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C7E2B5E227800C38D4E /* JWTDecode.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6C2B524AA700C21336 /* JWTDecode.framework */; };
-		FD2A7C7F2B5E227800C38D4E /* JWTDecode.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6C2B524AA700C21336 /* JWTDecode.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C802B5E227800C38D4E /* Moya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB652B524AA700C21336 /* Moya.framework */; };
-		FD2A7C812B5E227800C38D4E /* Moya.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB652B524AA700C21336 /* Moya.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C822B5E227800C38D4E /* NVActivityIndicatorView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB622B524AA700C21336 /* NVActivityIndicatorView.framework */; };
-		FD2A7C832B5E227800C38D4E /* NVActivityIndicatorView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB622B524AA700C21336 /* NVActivityIndicatorView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C842B5E227800C38D4E /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6A2B524AA700C21336 /* ObjectMapper.framework */; };
-		FD2A7C852B5E227800C38D4E /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6A2B524AA700C21336 /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C882B5E227900C38D4E /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB672B524AA700C21336 /* Result.framework */; };
-		FD2A7C892B5E227900C38D4E /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB672B524AA700C21336 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C8A2B5E227900C38D4E /* RxAlamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB612B524AA700C21336 /* RxAlamofire.framework */; };
-		FD2A7C8B2B5E227900C38D4E /* RxAlamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB612B524AA700C21336 /* RxAlamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C8C2B5E227A00C38D4E /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6B2B524AA700C21336 /* RxCocoa.framework */; };
-		FD2A7C8D2B5E227A00C38D4E /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6B2B524AA700C21336 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C8E2B5E227A00C38D4E /* RxRelay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB662B524AA700C21336 /* RxRelay.framework */; };
-		FD2A7C8F2B5E227A00C38D4E /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB662B524AA700C21336 /* RxRelay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C902B5E227A00C38D4E /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6D2B524AA700C21336 /* RxSwift.framework */; };
-		FD2A7C912B5E227A00C38D4E /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB6D2B524AA700C21336 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FD2A7C922B5E227A00C38D4E /* SignaturePad.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB632B524AA700C21336 /* SignaturePad.framework */; };
-		FD2A7C932B5E227B00C38D4E /* SignaturePad.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FDB4AB632B524AA700C21336 /* SignaturePad.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FD6825542B623C2C0087AAD1 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD68254C2B623C2C0087AAD1 /* Constants.swift */; };
 		FD6825552B623C2C0087AAD1 /* VNPTSmartCASDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD68254D2B623C2C0087AAD1 /* VNPTSmartCASDK.swift */; };
 		FD6825562B623C2C0087AAD1 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD68254E2B623C2C0087AAD1 /* Config.swift */; };
@@ -52,36 +62,33 @@
 		FD6825592B623C2C0087AAD1 /* EKYCService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD6825512B623C2C0087AAD1 /* EKYCService.swift */; };
 		FD68255A2B623C2C0087AAD1 /* SmartCAResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD6825522B623C2C0087AAD1 /* SmartCAResult.swift */; };
 		FD68255B2B623C2C0087AAD1 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD6825532B623C2C0087AAD1 /* Helper.swift */; };
-		FD6825602B6258460087AAD1 /* ICSdkEKYC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD68255E2B6258420087AAD1 /* ICSdkEKYC.xcframework */; };
-		FD6825612B6258460087AAD1 /* ICSdkEKYC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FD68255E2B6258420087AAD1 /* ICSdkEKYC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FDEE7F462B616662004C3826 /* Reachability.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD1E295E2B5E2C580047C1C8 /* Reachability.xcframework */; };
-		FDEE7F482B616695004C3826 /* IOSSecuritySuite.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD1E29532B5E2B890047C1C8 /* IOSSecuritySuite.xcframework */; };
-		FDEE7F492B616695004C3826 /* IOSSecuritySuite.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FD1E29532B5E2B890047C1C8 /* IOSSecuritySuite.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		FD2A7C962B5E227B00C38D4E /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FDEE7F492B616695004C3826 /* IOSSecuritySuite.xcframework in Embed Frameworks */,
-				FD2A7C812B5E227800C38D4E /* Moya.framework in Embed Frameworks */,
-				FD2A7C8B2B5E227900C38D4E /* RxAlamofire.framework in Embed Frameworks */,
-				FD2A7C8D2B5E227A00C38D4E /* RxCocoa.framework in Embed Frameworks */,
-				FD2A7C912B5E227A00C38D4E /* RxSwift.framework in Embed Frameworks */,
-				FD2A7C892B5E227900C38D4E /* Result.framework in Embed Frameworks */,
-				FD6825612B6258460087AAD1 /* ICSdkEKYC.xcframework in Embed Frameworks */,
-				FD2A7C932B5E227B00C38D4E /* SignaturePad.framework in Embed Frameworks */,
-				FD1E29572B5E2BB30047C1C8 /* flutter_jailbreak_detection.xcframework in Embed Frameworks */,
-				FD2A7C852B5E227800C38D4E /* ObjectMapper.framework in Embed Frameworks */,
-				FD2A7C832B5E227800C38D4E /* NVActivityIndicatorView.framework in Embed Frameworks */,
-				FD2A7C772B5E227600C38D4E /* eKYCLib.xcframework in Embed Frameworks */,
-				FD2A7C7F2B5E227800C38D4E /* JWTDecode.framework in Embed Frameworks */,
-				FD2A7C732B5E227600C38D4E /* Alamofire.framework in Embed Frameworks */,
-				FD2A7C752B5E227600C38D4E /* eContractSDK.framework in Embed Frameworks */,
-				FD2A7C8F2B5E227A00C38D4E /* RxRelay.framework in Embed Frameworks */,
+
+				8C37D05F2E71ED400002F042 /* Alamofire.framework in Embed Frameworks */,
+				8C37D0582E71EB140002F042 /* RxCocoa.framework in Embed Frameworks */,
+				8C37D0472E71E8370002F042 /* ObjectMapper.framework in Embed Frameworks */,
+				8C37D04F2E71E83F0002F042 /* RxRelay.framework in Embed Frameworks */,
+				8C37D0512E71E8400002F042 /* RxSwift.framework in Embed Frameworks */,
+				8C37D04B2E71E83C0002F042 /* Result.framework in Embed Frameworks */,
+				8C37D0452E71E8350002F042 /* NVActivityIndicatorView.framework in Embed Frameworks */,
+				8C37D0352E71E8010002F042 /* eContractSDK.framework in Embed Frameworks */,
+				8C37D0532E71E8420002F042 /* SignaturePad.framework in Embed Frameworks */,
+				8C37D0412E71E8310002F042 /* JWTDecode.framework in Embed Frameworks */,
+				8C37D0372E71E8030002F042 /* eKYCLib.xcframework in Embed Frameworks */,
+				8C37D0392E71E8050002F042 /* ICSdkEKYC.xcframework in Embed Frameworks */,
+				8C37D03D2E71E8090002F042 /* DPOTPView.framework in Embed Frameworks */,
+				8C37D03F2E71E80B0002F042 /* DropDown.framework in Embed Frameworks */,
+				FD68255E2B623C2C0087AAD1 /* SmartCASDK.framework in Embed Frameworks */,
+				8C37D0672E71EDA10002F042 /* Moya.framework in Embed Frameworks */,
+				8C37D0632E71ED740002F042 /* RxAlamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -106,6 +113,15 @@
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		823A0B9FF0FD56C199460C05 /* Pods-Runner.debug pilot.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug pilot.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug pilot.xcconfig"; sourceTree = "<group>"; };
 		897E8C7B78C4EA036D82B465 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C37D00D2E71DEAD0002F042 /* ICSdkEKYC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = ICSdkEKYC.xcframework; sourceTree = "<group>"; };
+		8C37D0112E71DF210002F042 /* eContractSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = eContractSDK.framework; sourceTree = "<group>"; };
+		8C37D0132E71DF620002F042 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NVActivityIndicatorView.framework; sourceTree = "<group>"; };
+		8C37D0152E71DF700002F042 /* SignaturePad.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SignaturePad.framework; sourceTree = "<group>"; };
+		8C37D0172E71DFB70002F042 /* DPOTPView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DPOTPView.framework; sourceTree = "<group>"; };
+		8C37D0192E71DFBD0002F042 /* DropDown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropDown.framework; sourceTree = "<group>"; };
+		8C37D05C2E71ED360002F042 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
+		8C37D0602E71ED6B0002F042 /* RxAlamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxAlamofire.framework; sourceTree = "<group>"; };
+		8C37D0642E71ED9B0002F042 /* Moya.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Moya.framework; sourceTree = "<group>"; };
 		91959FEB82C0AAA75C9336C1 /* Pods-Runner.profile uat.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile uat.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile uat.xcconfig"; sourceTree = "<group>"; };
 		93EE966124898DDB1D513794 /* Pods-Runner.release pro.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release pro.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release pro.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -122,8 +138,6 @@
 		FD0643942B1DCC0900FA46AC /* FinalSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FinalSDK.xcframework; path = ../../../../../Downloads/vnpt_smartca_frameworks/FinalSDK.xcframework; sourceTree = "<group>"; };
 		FD0643972B1DCC8B00FA46AC /* open_file_safe.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = open_file_safe.xcframework; path = ../../../../../Downloads/vnpt_smartca_frameworks/open_file_safe.xcframework; sourceTree = "<group>"; };
 		FD06439A2B1DCCFF00FA46AC /* url_launcher_ios.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = url_launcher_ios.xcframework; path = ../../../../../Downloads/vnpt_smartca_frameworks/url_launcher_ios.xcframework; sourceTree = "<group>"; };
-		FD1E29522B5E2B890047C1C8 /* flutter_jailbreak_detection.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = flutter_jailbreak_detection.xcframework; sourceTree = "<group>"; };
-		FD1E29532B5E2B890047C1C8 /* IOSSecuritySuite.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = IOSSecuritySuite.xcframework; sourceTree = "<group>"; };
 		FD1E295A2B5E2C0E0047C1C8 /* open_file_safe.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = open_file_safe.xcframework; sourceTree = "<group>"; };
 		FD1E295E2B5E2C580047C1C8 /* Reachability.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Reachability.xcframework; sourceTree = "<group>"; };
 		FD68254C2B623C2C0087AAD1 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -134,21 +148,15 @@
 		FD6825512B623C2C0087AAD1 /* EKYCService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EKYCService.swift; sourceTree = "<group>"; };
 		FD6825522B623C2C0087AAD1 /* SmartCAResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmartCAResult.swift; sourceTree = "<group>"; };
 		FD6825532B623C2C0087AAD1 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
-		FD68255E2B6258420087AAD1 /* ICSdkEKYC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ICSdkEKYC.xcframework; path = ../../../../../../../Downloads/ICSdkEKYC.xcframework; sourceTree = "<group>"; };
 		FDB4AB602B524AA700C21336 /* eKYCLib.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = eKYCLib.xcframework; sourceTree = "<group>"; };
-		FDB4AB612B524AA700C21336 /* RxAlamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxAlamofire.framework; sourceTree = "<group>"; };
-		FDB4AB622B524AA700C21336 /* NVActivityIndicatorView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NVActivityIndicatorView.framework; sourceTree = "<group>"; };
-		FDB4AB632B524AA700C21336 /* SignaturePad.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SignaturePad.framework; sourceTree = "<group>"; };
-		FDB4AB642B524AA700C21336 /* eContractSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = eContractSDK.framework; sourceTree = "<group>"; };
-		FDB4AB652B524AA700C21336 /* Moya.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Moya.framework; sourceTree = "<group>"; };
 		FDB4AB662B524AA700C21336 /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxRelay.framework; sourceTree = "<group>"; };
 		FDB4AB672B524AA700C21336 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = "<group>"; };
-		FDB4AB692B524AA700C21336 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 		FDB4AB6A2B524AA700C21336 /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ObjectMapper.framework; sourceTree = "<group>"; };
 		FDB4AB6B2B524AA700C21336 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = "<group>"; };
 		FDB4AB6C2B524AA700C21336 /* JWTDecode.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = JWTDecode.framework; sourceTree = "<group>"; };
 		FDB4AB6D2B524AA700C21336 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
 		FDB4AB6E2B524AA700C21336 /* ICSdkEKYC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = ICSdkEKYC.xcframework; sourceTree = "<group>"; };
+		FD68255C2B623C2C0087AAD1 /* SmartCASDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SmartCASDK.framework; sourceTree = "<group>"; };
 		FDC0D63B2B61EBD700BE994C /* FlutterPluginRegistrant.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FlutterPluginRegistrant.xcframework; path = "../../../../../../../Downloads/ios_vnptsmartca_sdk-main/SdkSmartCA/FlutterPluginRegistrant.xcframework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,24 +165,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD2A7C8C2B5E227A00C38D4E /* RxCocoa.framework in Frameworks */,
-				FD1E29562B5E2BB30047C1C8 /* flutter_jailbreak_detection.xcframework in Frameworks */,
-				FD6825602B6258460087AAD1 /* ICSdkEKYC.xcframework in Frameworks */,
-				FD2A7C842B5E227800C38D4E /* ObjectMapper.framework in Frameworks */,
-				FD2A7C902B5E227A00C38D4E /* RxSwift.framework in Frameworks */,
-				FD2A7C922B5E227A00C38D4E /* SignaturePad.framework in Frameworks */,
-				FD2A7C8E2B5E227A00C38D4E /* RxRelay.framework in Frameworks */,
-				FD2A7C722B5E227600C38D4E /* Alamofire.framework in Frameworks */,
-				FD2A7C882B5E227900C38D4E /* Result.framework in Frameworks */,
-				FD2A7C822B5E227800C38D4E /* NVActivityIndicatorView.framework in Frameworks */,
-				FD2A7C742B5E227600C38D4E /* eContractSDK.framework in Frameworks */,
-				FD2A7C7E2B5E227800C38D4E /* JWTDecode.framework in Frameworks */,
-				FD2A7C762B5E227600C38D4E /* eKYCLib.xcframework in Frameworks */,
-				FD2A7C802B5E227800C38D4E /* Moya.framework in Frameworks */,
-				FDEE7F462B616662004C3826 /* Reachability.xcframework in Frameworks */,
-				FD2A7C8A2B5E227900C38D4E /* RxAlamofire.framework in Frameworks */,
-				FDEE7F482B616695004C3826 /* IOSSecuritySuite.xcframework in Frameworks */,
-				18A36E609FBE64E5B3F9A1E2 /* Pods_Runner.framework in Frameworks */,
+				8C37D0562E71E84A0002F042 /* Pods_Runner.framework in Frameworks */,
+				8C37D0462E71E8370002F042 /* ObjectMapper.framework in Frameworks */,
+				8C37D0502E71E8400002F042 /* RxSwift.framework in Frameworks */,
+				8C37D0522E71E8420002F042 /* SignaturePad.framework in Frameworks */,
+				8C37D04E2E71E83F0002F042 /* RxRelay.framework in Frameworks */,
+				8C37D0662E71EDA10002F042 /* Moya.framework in Frameworks */,
+				8C37D03C2E71E8090002F042 /* DPOTPView.framework in Frameworks */,
+				8C37D04A2E71E83C0002F042 /* Result.framework in Frameworks */,
+				8C37D0442E71E8350002F042 /* NVActivityIndicatorView.framework in Frameworks */,
+				8C37D0382E71E8050002F042 /* ICSdkEKYC.xcframework in Frameworks */,
+				8C37D05E2E71ED400002F042 /* Alamofire.framework in Frameworks */,
+				8C37D0482E71E83A0002F042 /* Reachability.xcframework in Frameworks */,
+				8C37D0402E71E8310002F042 /* JWTDecode.framework in Frameworks */,
+				8C37D0342E71E8010002F042 /* eContractSDK.framework in Frameworks */,
+				8C37D0622E71ED740002F042 /* RxAlamofire.framework in Frameworks */,
+				8C37D0362E71E8030002F042 /* eKYCLib.xcframework in Frameworks */,
+				FD68255D2B623C2C0087AAD1 /* SmartCASDK.framework in Frameworks */,
+				8C37D03E2E71E80B0002F042 /* DropDown.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,22 +291,24 @@
 				FDC0D63B2B61EBD700BE994C /* FlutterPluginRegistrant.xcframework */,
 				FD1E295E2B5E2C580047C1C8 /* Reachability.xcframework */,
 				FD1E295A2B5E2C0E0047C1C8 /* open_file_safe.xcframework */,
-				FD1E29522B5E2B890047C1C8 /* flutter_jailbreak_detection.xcframework */,
-				FD1E29532B5E2B890047C1C8 /* IOSSecuritySuite.xcframework */,
+
+				FD68255C2B623C2C0087AAD1 /* SmartCASDK.framework */,
+				8C37D0112E71DF210002F042 /* eContractSDK.framework */,
 				FDB4AB602B524AA700C21336 /* eKYCLib.xcframework */,
-				FDB4AB612B524AA700C21336 /* RxAlamofire.framework */,
-				FD68255E2B6258420087AAD1 /* ICSdkEKYC.xcframework */,
-				FDB4AB622B524AA700C21336 /* NVActivityIndicatorView.framework */,
-				FDB4AB632B524AA700C21336 /* SignaturePad.framework */,
-				FDB4AB642B524AA700C21336 /* eContractSDK.framework */,
-				FDB4AB652B524AA700C21336 /* Moya.framework */,
+				8C37D00D2E71DEAD0002F042 /* ICSdkEKYC.xcframework */,
+				8C37D0602E71ED6B0002F042 /* RxAlamofire.framework */,
+				8C37D0172E71DFB70002F042 /* DPOTPView.framework */,
+				8C37D0192E71DFBD0002F042 /* DropDown.framework */,
+				8C37D0132E71DF620002F042 /* NVActivityIndicatorView.framework */,
 				FDB4AB662B524AA700C21336 /* RxRelay.framework */,
+				8C37D0642E71ED9B0002F042 /* Moya.framework */,
 				FDB4AB672B524AA700C21336 /* Result.framework */,
-				FDB4AB692B524AA700C21336 /* Alamofire.framework */,
+				8C37D05C2E71ED360002F042 /* Alamofire.framework */,
 				FDB4AB6A2B524AA700C21336 /* ObjectMapper.framework */,
 				FDB4AB6B2B524AA700C21336 /* RxCocoa.framework */,
 				FDB4AB6C2B524AA700C21336 /* JWTDecode.framework */,
 				FDB4AB6D2B524AA700C21336 /* RxSwift.framework */,
+				8C37D0152E71DF700002F042 /* SignaturePad.framework */,
 				FDB4AB6E2B524AA700C21336 /* ICSdkEKYC.xcframework */,
 			);
 			path = SmartCASDK;
@@ -316,9 +326,9 @@
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
+				FD2A7C962B5E227B00C38D4E /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				1EAC04D527532F940049348C /* Copy GoogleService-Info.plist to the correct location */,
-				FD2A7C962B5E227B00C38D4E /* Embed Frameworks */,
 				1CDCF67D3E0DE52ED2E9EFBA /* [CP] Embed Pods Frameworks */,
 				DE9F910DCF4C730A9F1F36A5 /* [CP] Copy Pods Resources */,
 			);
@@ -337,7 +347,7 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					97C146ED1CF9000F007C117D = {
@@ -595,10 +605,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 21;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 94X8S7GFA2;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -613,11 +623,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
@@ -693,10 +703,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = 7755R4CX4U;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 94X8S7GFA2;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -711,11 +721,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
@@ -787,10 +797,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 21;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 94X8S7GFA2;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -805,11 +815,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -880,10 +890,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = 7755R4CX4U;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 94X8S7GFA2;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -898,11 +908,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -971,10 +981,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 21;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 94X8S7GFA2;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -989,11 +999,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1062,10 +1072,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = 7755R4CX4U;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 94X8S7GFA2;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1080,11 +1090,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1153,10 +1163,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 21;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 94X8S7GFA2;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1171,11 +1181,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1305,11 +1315,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 94X8S7GFA2;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1324,12 +1333,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
@@ -1346,10 +1354,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 21;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 94X8S7GFA2;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1364,11 +1372,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1445,7 +1453,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 94X8S7GFA2;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
@@ -1461,9 +1469,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -1537,11 +1545,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 94X8S7GFA2;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1556,12 +1563,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1630,10 +1636,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 21;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 94X8S7GFA2;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 537V83MWQH;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1648,11 +1654,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.8;
+				MARKETING_VERSION = 1.0.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = vn.vnlocker.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = vns.vnlocker.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = tungpt18;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;

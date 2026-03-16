@@ -61,17 +61,21 @@ Future<T?> showNotifyModal<T>(String message,
     String? title,
     AssetGenImage? image,
     VoidCallback? actionAccept,
-    VoidCallback? actionCancel}) {
+    VoidCallback? actionCancel,
+    TextAlign? contentAlign,
+    bool? showFaq}) {
   return Get.dialog(
     DialogNotification(
       content: message,
       image: image,
       title: title,
+      showFaq: showFaq,
       onlyActionCancel: onlyActionCancel,
       titleBtnAccept: titleBtnAccept,
       titleBtnCancel: titleBtnCancel,
       actionAccept: actionAccept,
       actionCancel: actionCancel,
+      contentAlign: contentAlign,
     ),
   );
 }
@@ -110,7 +114,7 @@ showProgressWithMesg(BuildContext context, String mesg) {
           const SizedBox(height: AppGap.g10),
           Text(
             mesg,
-            style: mainTheme.textTheme.bodyText2!.copyWith(color: Colors.white),
+            style: mainTheme.textTheme.bodyMedium!.copyWith(color: Colors.white),
           ),
         ],
       ),

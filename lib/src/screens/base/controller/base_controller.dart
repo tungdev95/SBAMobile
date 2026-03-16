@@ -121,9 +121,11 @@ class BaseController<T> extends StateNotifier<T> {
     if (mounted) {
       await DialogUtils.showMessageDialog(context,
           exception?.message ?? 'Có lỗi xảy ra, vui lòng thử lại sau!');
-      if (exception?.code == StatusCode.kTokenExpired) {
+      if (exception?.code == StatusCode.kTokenExpired ||
+          exception?.code == 409) {
         //Token hết hạn
-        ref.read(appController.notifier).logOut();
+        ref.read(appController.notifier).doLogout();
+        // ref.read(appController.notifier).removeUserInfo();
       }
     }
     return false;

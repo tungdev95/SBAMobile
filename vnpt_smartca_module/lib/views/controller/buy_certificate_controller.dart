@@ -3,10 +3,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:vnpt_smartca_module/core/models/response/service_response.dart';
 import 'package:vnpt_smartca_module/views/controller/app_controller.dart';
 import 'package:vnpt_smartca_module/views/pages/account_information/verify_otp_update.dart';
+import 'package:vnpt_smartca_module/views/pages/certificate/update_address.dart';
 import 'package:vnpt_smartca_module/views/widgets/dialog_notification.dart';
 import '../../../configs/injector/injector.dart';
 import '../../../core/models/app/device_info.dart';
@@ -30,13 +32,11 @@ import '../../../views/controller/base_controler.dart';
 import '../../../views/controller/econtract_controller.dart';
 import '../../../views/i18n/generated_locales/l10n.dart';
 import '../../../views/pages/certificate/buy/order_list_screen.dart';
-import '../../../views/pages/certificate/buy/sign_doc_error_screen.dart';
-import '../../../views/pages/certificate/buy/sign_doc_waiting_screen.dart';
 import '../../../views/pages/certificate/buy/verify_info_error_screen.dart';
 import '../../../views/pages/certificate/buy/verify_info_screen.dart';
 import '../../../views/pages/certificate/extend/confirm_cert_pack_extend_screen.dart';
-import '../../../views/pages/certificate/extend/sign_ticket_extend_error.dart';
 import '../../../views/pages/change_device/sign_bill.dart';
+import '../pages/certificate/buy/error_register_cert_screen.dart';
 import '../pages/certificate/generate_cer_key/index.dart';
 import '../pages/certificate/setup_pin_code/index.dart';
 import '../pages/register_account/certificate_pack_screen.dart';
@@ -49,7 +49,6 @@ import '../../core/services/user_info_on_device.dart';
 import '../pages/certificate/buy/order_processing_screen.dart';
 import '../pages/certificate/buy/verify_address_screen.dart';
 import '../pages/certificate/buy/verify_otp_screen.dart';
-import '../pages/certificate/buy/wait_for_accept_screen.dart';
 import '../pages/certificate/buy/waiting_for_accept_cert_screen.dart';
 import '../pages/register_account/confirm_cert_pack_screen.dart';
 import 'home_controller.dart';
@@ -62,30 +61,35 @@ class BuyCertificateController extends BaseController {
   final _deviceInfoService = getIt<DeviceInfoService>();
 
   // eContractController
-  final eContractController = Get.put(ContractController());
+  final eContractController = Get.put(ContractController(), permanent: true);
   final authController = Get.find<AuthController>();
+  final appController = Get.find<AppController>();
 
   final userInfoOnDeviceService = getIt<UserInfoOnDeviceService>();
 
   var orderCertItems = List<OrderCertModel>.empty().obs;
+  // final checkSuccessUpdate = Rx<SmartCAApiResponse?>(null);
 
   int ekycErrorCount = 0;
   String uid = "";
   bool isFlowRegister = false;
 
-  bool cancelLoop = false;
+  bool cancelLoop = true;
+  
+  int loopCount = 1;
 
   Rx<UserAddress?> userAddress = Rx(null);
-  EKYCService ekycService = EKYCService();
+  final ekycService = EKYCService();
+
   final checkSuccessUpdate = Rx<SmartCAApiResponse?>(null);
 
   // Rx<OrderCertModel?> currentOrderCertModel = Rx(null);
 
   void getListOrder(List<CertificateModel> listCerts) async {
-    showLoading();
+    showProgress();
     try {
       final failureOrVerified = await orderCertRepository.getOrderList();
-      hideLoading();
+      hideProgress();
       failureOrVerified.fold(
         (failure) => {
           showErrorModal(exceptionHandler(failure)),
@@ -96,35 +100,35 @@ class BuyCertificateController extends BaseController {
                 OrderCertListModel.fromMap(result.content);
             orderCertItems.value = orderCertListModel.items;
 
-            String? profileString =
-                await secureStorage.getLastData(LOCAL_USER_PROFILE);
-            ProfileModel profileModel =
-                ProfileModel.fromJson(jsonDecode(profileString!));
+            // final authController = Get.find<AuthController>();
 
-            CardInfo cardInfo = CardInfo();
-            cardInfo.IDCardInfo = ItemInfo()..FullName = profileModel.fullName;
-            cardInfo.Email = profileModel.email;
-            cardInfo.Phone = profileModel.phone;
-            cardInfo.Address = ItemAddress()..DiaChi;
+            // final accountFromVNeID =
+            //     await secureStorage.getLastData(ACCOUNT_OPEN_FROM_VNEID);
+            // final uid = authController.currentUser.value?.uid;
 
             if (orderCertListModel.items.isEmpty) {
-              Get.to(() => CertificatePackScreen(
-                  cardInfo: cardInfo, listCerts: listCerts));
+              Get.to(() => CertificatePackScreen());
             } else {
               // thong bao
               showNotifyModal(
-                  AppLocalizations.current.certOrderIsExistingNotice,
-                  onlyActionCancel: false,
-                  titleBtnAccept: AppLocalizations.current.newRegistration,
-                  titleBtnCancel: AppLocalizations.current.continueProcessing,
-                  actionCancel: () {
-                // todo chuyen sang man hinh danh sach don hang
-                Get.to(() => const OrderListScreen());
-              }, actionAccept: () {
-                // dang ky moi
-                Get.to(() => CertificatePackScreen(
-                    cardInfo: cardInfo, listCerts: listCerts));
-              });
+                AppLocalizations.current.certOrderIsExistingNotice,
+                onlyActionCancel: false,
+                titleBtnAccept: AppLocalizations.current.newRegistration,
+                titleBtnCancel: AppLocalizations.current.continueProcessing,
+                showFaq: false,
+                actionCancel: () {
+                  // todo chuyen sang man hinh danh sach don hang
+                  Get.to(() => const OrderListScreen());
+                },
+                actionAccept: () {
+                  // dang ky moi
+                  // if (accountFromVNeID != null && accountFromVNeID == uid) {
+                  Get.to(() => CertificatePackScreen());
+                  // } else {
+                  //   Get.to(ChooseMethodRegisterPage(listCert: listCerts));
+                  // }
+                },
+              );
             }
           } catch (e) {
             e.printError();
@@ -133,99 +137,41 @@ class BuyCertificateController extends BaseController {
         },
       );
     } catch (e, s) {
-      hideLoading();
       showErrorModal(exceptionHandler(GenericException(error: e, stack: s)));
     }
   }
 
-  void updateInfoUserAddress(UserAddress userAddress) async {
+  void getUserAddress(
+      TextEditingController addressController,
+      TextEditingController detailAddressController,
+      OrderCertModel orderCertModel) async {
     showLoading();
     try {
-      final failureOrVerified =
-          await orderCertRepository.updateUserAddress(userAddress);
-      hideLoading();
-      failureOrVerified.fold(
-        (failure) => {
-          showErrorModal(exceptionHandler(failure)),
-        },
-        (result) async {
-          debugPrint(result.toString());
-          showLoading();
-          try {
-            // uncomment after server update
-            // final updateOrderAddressResponse = await orderCertRepository.updateOrderAddress(orderCertModel.id);
-            // hideLoading();
-            // updateOrderAddressResponse.fold((l) => showErrorModal(exceptionHandler(l)),
-            //         (r) async {
-            //           showLoading();
-            //           try {
-            //             final failureOrVerified2 = await userRepository.getProfile();
-            //             hideLoading();
-            //             failureOrVerified2.fold((l) => showErrorModal(exceptionHandler(l)),
-            //                     (r) {
-            //                   Get.back(
-            //                       result: <String, String>{"email": email, "phone": phone});
-            //                 });
-            //           } catch (e, s) {
-            //             hideLoading();
-            //             showErrorModal(
-            //                 exceptionHandler(GenericException(error: e, stack: s)));
-            //           }
-            //     });
-
-            // remove after server update
-            final failureOrVerified2 = await userRepository.getProfile();
-            hideLoading();
-            failureOrVerified2.fold((l) => showErrorModal(exceptionHandler(l)),
-                (r) {
-              Get.dialog(DialogNotification(
-                content: AppLocalizations.current.update_info_success,
-                titleBtnAccept: AppLocalizations.current.goHomeTC,
-                onlyActionAccept: true,
-                actionAccept: () {
-                  final appController = Get.find<AppController>();
-                  appController.backToMainPage();
-                },
-              ));
-              // Get.back();
-            });
-          } catch (e, s) {
-            hideLoading();
-            showErrorModal(
-                exceptionHandler(GenericException(error: e, stack: s)));
-          }
-
-          // verifyEkyc
-
-          // UserAddress userAddress = UserAddress.fromJson(result.content);
-          // this.userAddress.value = userAddress;
-        },
-      );
-    } catch (e, s) {
-      hideLoading();
-      showErrorModal(exceptionHandler(GenericException(error: e, stack: s)));
-    }
-  }
-
-  void getUserAddress(TextEditingController addressController,
-      TextEditingController detailAddressController) async {
-    showLoading();
-    try {
-      final failureOrVerified = await orderCertRepository.getUserAddress();
-      hideLoading();
-      failureOrVerified.fold(
-        (failure) => {
-          showErrorModal(exceptionHandler(failure), callback: () {
-            Get.back();
-          }),
-        },
-        (result) async {
-          debugPrint(result.toString());
-          UserAddress userAddress = UserAddress.fromJson(result.content);
-          localUpdateUserAddress(
-              userAddress, addressController, detailAddressController);
-        },
-      );
+      if (orderCertModel.address != null) {
+        hideLoading();
+        UserAddress userAddress =
+            UserAddress.fromJson(orderCertModel.address!.toJson());
+        userAddress.diaChi = orderCertModel.address!.address;
+        // userAddress.updateName();
+        localUpdateUserAddress(
+            userAddress, addressController, detailAddressController);
+      } else {
+        final failureOrVerified = await orderCertRepository.getUserAddress();
+        hideLoading();
+        failureOrVerified.fold(
+          (failure) => {
+            showErrorModal(exceptionHandler(failure), callback: () {
+              Get.back();
+            }),
+          },
+          (result) async {
+            debugPrint(result.toString());
+            UserAddress userAddress = UserAddress.fromJson(result.content);
+            localUpdateUserAddress(
+                userAddress, addressController, detailAddressController);
+          },
+        );
+      }
     } catch (e, s) {
       hideLoading();
       showErrorModal(exceptionHandler(GenericException(error: e, stack: s)),
@@ -241,9 +187,8 @@ class BuyCertificateController extends BaseController {
       TextEditingController detailAddressController) {
     this.userAddress.value = userAddress;
     String provinceStr = userAddress.provinceName;
-    String districtStr = userAddress.districtName;
     String wardsStr = userAddress.wardName;
-    addressController.text = "$provinceStr, $districtStr, $wardsStr";
+    addressController.text = "$provinceStr, $wardsStr";
 
     String addressDetailStr = userAddress.streetName ?? "";
     detailAddressController.text = addressDetailStr;
@@ -264,45 +209,58 @@ class BuyCertificateController extends BaseController {
           debugPrint(result.toString());
           showLoading();
           try {
-            // uncomment after server update
-            // final updateOrderAddressResponse = await orderCertRepository.updateOrderAddress(orderCertModel.id);
-            // hideLoading();
-            // updateOrderAddressResponse.fold((l) => showErrorModal(exceptionHandler(l)),
-            //         (r) async {
-            //           showLoading();
-            //           try {
-            //             final failureOrVerified2 = await userRepository.getProfile();
-            //             hideLoading();
-            //             failureOrVerified2.fold((l) => showErrorModal(exceptionHandler(l)),
-            //                     (r) {
-            //                   Get.back(
-            //                       result: <String, String>{"email": email, "phone": phone});
-            //                 });
-            //           } catch (e, s) {
-            //             hideLoading();
-            //             showErrorModal(
-            //                 exceptionHandler(GenericException(error: e, stack: s)));
-            //           }
-            //     });
-
             // remove after server update
             final failureOrVerified2 = await userRepository.getProfile();
             hideLoading();
             failureOrVerified2.fold((l) => showErrorModal(exceptionHandler(l)),
                 (r) {
               Get.back(
-                  result: <String, String>{"email": email, "phone": phone});
+                  result: {"email": email, "phone": phone, "userAddress": userAddress});
             });
           } catch (e, s) {
             hideLoading();
             showErrorModal(
                 exceptionHandler(GenericException(error: e, stack: s)));
           }
+        },
+      );
+    } catch (e, s) {
+      hideLoading();
+      showErrorModal(exceptionHandler(GenericException(error: e, stack: s)));
+    }
+  }
 
-          // verifyEkyc
-
-          // UserAddress userAddress = UserAddress.fromJson(result.content);
-          // this.userAddress.value = userAddress;
+  void updateInfoUserAddress(UserAddress userAddress,
+      {Function()? actionAccept}) async {
+    showLoading();
+    try {
+      final failureOrVerified =
+          await orderCertRepository.updateUserAddress(userAddress);
+      hideLoading();
+      failureOrVerified.fold(
+        (failure) => {
+          showErrorModal(exceptionHandler(failure)),
+        },
+        (result) async {
+          debugPrint(result.toString());
+          showLoading();
+          try {
+            // remove after server update
+            final failureOrVerified2 = await userRepository.getProfile();
+            hideLoading();
+            failureOrVerified2.fold((l) => showErrorModal(exceptionHandler(l)),
+                (r) {
+              showSuccessModal(
+                message: AppLocalizations.current.update_info_success,
+                actionAccept: actionAccept ?? appController.backToMainPage,
+                titleBtnAccept: AppLocalizations.current.goHomeTC,
+              );
+            });
+          } catch (e, s) {
+            hideLoading();
+            showErrorModal(
+                exceptionHandler(GenericException(error: e, stack: s)));
+          }
         },
       );
     } catch (e, s) {
@@ -312,20 +270,51 @@ class BuyCertificateController extends BaseController {
   }
 
   createOrder(String? pricingCode) async {
-    showLoading();
+    showProgress();
     try {
+      final accountFromVNeID =
+          await secureStorage.getLastData(ACCOUNT_OPEN_FROM_VNEID);
+      int source = AccountSources.sdksmartca;
+
+      if (accountFromVNeID != null) {
+        final authController = Get.find<AuthController>();
+        source = accountFromVNeID == authController.currentUser.value?.uid
+            ? AccountSources.vneid
+            : AccountSources.sdksmartca;
+      }
+
       final failureOrVerified = await orderCertRepository
-          .createPersonalCertificateOrder({"pricingCode": pricingCode}, "");
-      hideLoading();
+          .createPersonalCertificateOrder(
+              {"pricingCode": pricingCode, "source": source}, "");
+
+      hideProgress();
+
       failureOrVerified.fold(
-        (failure) => {
-          showErrorModal(exceptionHandler(failure)),
+        (failure) {
+          final error = failure.error;
+          if (error is ServerException &&
+              error.codeDesc == "ADDRESSV2_INVALID") {
+            Get.to(() => UpdateAdressPage());
+          } else {
+            showErrorModal(exceptionHandler(failure));
+          }
         },
         (result) async {
           OrderCertModel orderCertModel = OrderCertModel.fromJson(result);
-          // todo by order status
-          // orderCertModel.status;
+
+          appController.backToMainPage();
+
+          Get.to(
+            () => OrderProcessingScreen(
+              label: AppLocalizations.current.processing,
+              content: AppLocalizations.current.waitaMinute,
+              hiddenIconBack: true,
+            ),
+          );
+
           handleOrderModelByStatus(orderCertModel, isFromListOrder: false);
+
+          secureStorage.removeData(ACCOUNT_OPEN_FROM_VNEID);
         },
       );
     } catch (e, s) {
@@ -333,7 +322,7 @@ class BuyCertificateController extends BaseController {
     }
   }
 
-  Future genKey(
+  Future phoneVerification(
       String pin, bool useBiometrics, CertificateModel certificateModel) async {
     showLoading();
     try {
@@ -362,17 +351,22 @@ class BuyCertificateController extends BaseController {
     showLoading();
     try {
       final authController = Get.find<AuthController>();
+      // Tránh trường hợp đổi SĐT trên oneBSS
+      final uid = await secureStorage.getLastData(USERNAME_KEY) ?? "";
+      final password = await secureStorage.getLastData(PASSWORD_KEY) ?? "";
+
+      await authController.getProfile(uid, password);
       final currentUser = authController.currentUser.value;
 
       DeviceInfoModel deviceInfo = await _deviceInfoService.getDeviceInfo();
       showLoading();
-      final failureOrVerified2 = await orderCertRepository.getOrderOTP({
+      final failureOrVerified = await orderCertRepository.getOrderOTP({
         "Uid": currentUser?.uid ?? "",
         "Phone": currentUser?.phone ?? "",
         "DeviceId": deviceInfo.deviceId
       });
       hideLoading();
-      failureOrVerified2.fold((l) => showErrorModal(exceptionHandler(l)), (r) {
+      failureOrVerified.fold((l) => showErrorModal(exceptionHandler(l)), (r) {
         if (sendAgain) {
           // nothing todo
         } else {
@@ -439,27 +433,6 @@ class BuyCertificateController extends BaseController {
           debugPrint(result.toString());
           showLoading();
           try {
-            // uncomment after server update
-            // final updateOrderAddressResponse = await orderCertRepository.updateOrderAddress(orderCertModel.id);
-            // hideLoading();
-            // updateOrderAddressResponse.fold((l) => showErrorModal(exceptionHandler(l)),
-            //         (r) async {
-            //           showLoading();
-            //           try {
-            //             final failureOrVerified2 = await userRepository.getProfile();
-            //             hideLoading();
-            //             failureOrVerified2.fold((l) => showErrorModal(exceptionHandler(l)),
-            //                     (r) {
-            //                   Get.back(
-            //                       result: <String, String>{"email": email, "phone": phone});
-            //                 });
-            //           } catch (e, s) {
-            //             hideLoading();
-            //             showErrorModal(
-            //                 exceptionHandler(GenericException(error: e, stack: s)));
-            //           }
-            //     });
-
             // remove after server update
             final failureOrVerified2 = await userRepository.getProfile();
             hideLoading();
@@ -470,9 +443,9 @@ class BuyCertificateController extends BaseController {
                 content: AppLocalizations.current.update_info_success,
                 titleBtnAccept: AppLocalizations.current.goHomeTC,
                 onlyActionAccept: true,
-                actionAccept: () {
-                  final appController = Get.find<AppController>();
+                actionAccept: () async {
                   appController.backToMainPage();
+                  await userRepository.getProfile();
                 },
               ));
             });
@@ -481,11 +454,6 @@ class BuyCertificateController extends BaseController {
             showErrorModal(
                 exceptionHandler(GenericException(error: e, stack: s)));
           }
-
-          // verifyEkyc
-
-          // UserAddress userAddress = UserAddress.fromJson(result.content);
-          // this.userAddress.value = userAddress;
         },
       );
     } catch (e, s) {
@@ -497,47 +465,52 @@ class BuyCertificateController extends BaseController {
   loopCheckOrderStatus(String orderId, int status) async {
     // vong lap check trang thai cua order
     await Future.delayed(const Duration(seconds: 3));
-    if (cancelLoop) {
+    if (!cancelLoop) {
       return;
     }
     try {
       final failureOrVerified =
           await orderCertRepository.getOrderInfo({"OrderId": orderId});
-      if (cancelLoop) {
+      if (!cancelLoop) {
         return;
       }
       failureOrVerified.fold(
         (failure) {
-          if (cancelLoop) {
+          if (!cancelLoop) {
             return;
           }
           loopCheckOrderStatus(orderId, status);
         },
         (result) async {
-          if (cancelLoop) {
+          if (!cancelLoop) {
             return;
           }
           OrderCertModel orderCertModel = OrderCertModel.fromJson(result);
+          debugPrint("phucbvLogCASE : ${orderCertModel.statusDesc}");
           if (orderCertModel.status == status) {
             // van o trang thai cho sinh hop dong, tiep tuc loop
-            loopCheckOrderStatus(orderId, status);
+            if (orderCertModel.status ==
+                OrderCertModel.APPROVE_REQUEST_CERT_WAITING) {
+              if (loopCount <= 10) {
+                loopCount++;
+                print("Loop count : $loopCount");
+                loopCheckOrderStatus(orderId, status);
+              } else {
+                handleOrderModelByStatus(orderCertModel,
+                    isFromListOrder: false);
+              }
+            } else {
+              loopCheckOrderStatus(orderId, status);
+            }
           } else {
             orderCertModel.orderItemController?.currentOrderCertModel.value =
                 orderCertModel;
             handleOrderModelByStatus(orderCertModel, isFromListOrder: false);
           }
-          // else if (orderCertModel.status == OrderCertModel.CONTRACT_SIGN_WAITING) {
-          //   // Get.back();
-          //   handleOrderModelByStatus(orderCertModel, isFromListOrder: false);
-          // } else {
-          //   Get.back();
-          //   Get.to(() => const SignDocErrorScreen());
-          // }
-          // handleOrderModelByStatus(orderCertModel, isFromListOrder: false);
         },
       );
-    } catch (e) {
-      if (cancelLoop) {
+    } catch (e, s) {
+      if (!cancelLoop) {
         return;
       }
       loopCheckOrderStatus(orderId, status);
@@ -545,16 +518,19 @@ class BuyCertificateController extends BaseController {
     }
   }
 
-  verifyOrderEkycCert(
-      String orderId, String ekycCode, String email, String phone) async {
+  verifyOrderEkycCert(String orderId, String ekycCode, String email,
+      String phone, UserAddress? userAddress) async {
     showLoading();
     try {
-      final failureOrVerified = await orderCertRepository
-          .verifyEkycWithOrderId({
+      userAddress?.districtId = "99999";
+
+      final failureOrVerified =
+          await orderCertRepository.verifyEkycWithOrderId({
         "OrderId": orderId,
         "ekycCode": ekycCode,
         "email": email,
-        "phone": phone
+        "phone": phone,
+        "address": userAddress,
       });
       hideLoading();
       failureOrVerified.fold(
@@ -589,51 +565,64 @@ class BuyCertificateController extends BaseController {
 
   handleOrderModelByStatus(OrderCertModel orderCertModel,
       {bool isFromListOrder = true}) async {
+    debugPrint("status: ${orderCertModel.statusDesc}");
+
     if (orderCertModel.status == OrderCertModel.EKYC_WAITING) {
       // open ekyc
-      eKycUserEnroll().then((value) async {
-        debugPrint("result ekyc >>>>: $value");
+      try {
+        eKycUserEnroll(
+                newCTSName: orderCertModel.getTypeEnum() == OrderType.changeInfo
+                    ? orderCertModel.fullName
+                    : null)
+            .then((value) async {
+          debugPrint("result ekyc >>>>: $value");
 
-        if (value == VerifyInfoType.error3times) {
-          // back to danh sach chung thu so
-          Get.back();
-        } else if (value is EkycResponseModel) {
-          // todo xac nhan thong tin
-          String? profileString =
-              await secureStorage.getLastData(LOCAL_USER_PROFILE);
-          ProfileModel profileModel =
-              ProfileModel.fromJson(jsonDecode(profileString!));
-          Get.to(() => VerifyAddressScreen(
-                profileModel: profileModel,
-                orderCertModel: orderCertModel,
-              ))?.then((result) {
-            if (result == true) {
-              // ekyc again
-              handleOrderModelByStatus(orderCertModel,
-                  isFromListOrder: isFromListOrder);
-            } else if (result is Map<String, String>) {
-              debugPrint("abc");
-
-              String email = result["email"] ?? "";
-              String phone = result["phone"] ?? "";
-
-              debugPrint("email: $email");
-              debugPrint("phone: $phone");
-
-              // xac thuc ekyc voi don hang
+          if (value == VerifyInfoType.error3times) {
+            // back to danh sach chung thu so
+            Get.until((route) => route.isFirst);
+          } else if (value is EkycResponseModel) {
+            if (orderCertModel.getTypeEnum() == OrderType.changeInfo) {
+              // xac nhan ekyc voi don hang luon
               verifyOrderEkycCert(
-                  orderCertModel.id,
-                  value.ekycCode,
-                  profileModel.email == email ? "" : email,
-                  profileModel.phone == phone ? "" : phone);
+                  orderCertModel.id, value.ekycCode ?? "", "", "", null);
             } else {
-              debugPrint("abc");
+              // todo xac nhan thong tin
+              String? profileString =
+                  await secureStorage.getLastData(LOCAL_USER_PROFILE);
+              ProfileModel profileModel =
+                  ProfileModel.fromJson(jsonDecode(profileString!));
+              Get.to(() => VerifyAddressScreen(
+                    profileModel: profileModel,
+                    orderCertModel: orderCertModel,
+                  ))?.then((result) {
+                if (result == true) {
+                  // ekyc again
+                  handleOrderModelByStatus(orderCertModel,
+                      isFromListOrder: isFromListOrder);
+                } else if (result is Map<String, dynamic>) {
+                  String email = result["email"] ?? "";
+                  String phone = result["phone"] ?? "";
+                  UserAddress? userAddress = result["userAddress"];
+
+                  debugPrint("email: $email");
+                  debugPrint("phone: $phone");
+
+                  // xac thuc ekyc voi don hang
+                  verifyOrderEkycCert(
+                    orderCertModel.id,
+                    value.ekycCode ?? "",
+                    profileModel.email == email ? "" : email,
+                    profileModel.phone == phone ? "" : phone,
+                    userAddress,
+                  );
+                }
+              });
             }
-          });
-        } else {
-          // todo nothing
-        }
-      });
+          } else {
+            if (!isFromListOrder) appController.backToMainPage();
+          }
+        });
+      } catch (e) {}
     } else if (orderCertModel.status == OrderCertModel.OTP_WAITING) {
     } else if (orderCertModel.status == OrderCertModel.PAYMENT_WATING) {
       // thanh toán
@@ -647,11 +636,21 @@ class BuyCertificateController extends BaseController {
               profileModel: profileModel,
             ))?.then((value) {
           if (value == true) {
-            Get.to(() => const SignDocWaitingScreen());
-            cancelLoop = false;
+            Get.to(
+              () => OrderProcessingScreen(
+                  label: AppLocalizations.current.paymentSuccess,
+                  content: AppLocalizations.current.waitaMinute),
+              preventDuplicates: false,
+            );
+
+            cancelLoop = true;
             loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
           } else if (value is OrderCertModel) {
             handleOrderModelByStatus(value, isFromListOrder: isFromListOrder);
+          } else {
+            if (!isFromListOrder) {
+              appController.backToMainPage();
+            }
           }
         });
       } else if (orderCertModel.getTypeEnum() == OrderType.renewCert) {
@@ -660,114 +659,145 @@ class BuyCertificateController extends BaseController {
               profileModel: profileModel,
             ))?.then((value) {
           if (value == true) {
-            Get.to(() => OrderProcessingScreen(
-                label: AppLocalizations.current.creating_extend_ticket_label,
-                content: AppLocalizations
-                    .current.creating_extend_ticket_description));
-            cancelLoop = false;
+            Get.to(
+              () => OrderProcessingScreen(
+                  label: AppLocalizations.current.creating_extend_ticket_label,
+                  content: AppLocalizations.current.waitaMinute),
+              preventDuplicates: false,
+            );
+            cancelLoop = true;
             loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
           } else if (value is OrderCertModel) {
             handleOrderModelByStatus(value, isFromListOrder: isFromListOrder);
+          } else {
+            if (!isFromListOrder) {
+              appController.backToMainPage();
+            }
           }
         });
       }
     } else if (orderCertModel.status ==
         OrderCertModel.CONTRACT_CREATE_WAITING) {
-      // sdk eContract
-      // eContractController.signedContract(orderId: orderCertModel.id);
-      // if (isFromListOrder) {
-      //   //
-      // } else {
       if (orderCertModel.getTypeEnum() == OrderType.newCert) {
-        Get.to(() => const SignDocWaitingScreen());
-
-        // vong lap check trang thai cua order
-        cancelLoop = false;
-        loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
+        Get.to(
+          () => OrderProcessingScreen(
+              label: AppLocalizations.current.creatingContract,
+              content: AppLocalizations.current.waitaMinute),
+          preventDuplicates: false,
+        );
       } else if (orderCertModel.getTypeEnum() == OrderType.renewCert) {
-        Get.to(() => OrderProcessingScreen(
-            label: AppLocalizations.current.creating_extend_ticket_label,
-            content:
-                AppLocalizations.current.creating_extend_ticket_description));
-
-        // vong lap check trang thai cua order
-        cancelLoop = false;
-        loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
+        Get.to(
+          () => OrderProcessingScreen(
+              label: AppLocalizations.current.creating_extend_ticket_label,
+              content: AppLocalizations.current.waitaMinute),
+          preventDuplicates: false,
+        );
       }
-      // }
-      // Get.to(() => const SignDocErrorScreen());
+      // vong lap check trang thai cua order
+      cancelLoop = true;
+      loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
     } else if (orderCertModel.status == OrderCertModel.CONTRACT_SIGN_WAITING) {
-      if (orderCertModel.getTypeEnum() == OrderType.changeDevice) {
+      if (orderCertModel.getTypeEnum() == OrderType.changeDevice ||
+          orderCertModel.getTypeEnum() == OrderType.changeInfo) {
         Get.to(() => SignBillPage(
-            serial: orderCertModel.previousSerial, orderId: orderCertModel.id));
+              serial: orderCertModel.previousSerial,
+              orderId: orderCertModel.id,
+              orderCertModel: orderCertModel,
+            ));
       } else {
-        // showLoading();
-        eContractController
-            .signedContract(orderId: orderCertModel.dhsxkdCustomerInfo.maGd)
-            .then((value) async {
-          // hideLoading();
-          if (eContractController.isContractSuccess.value) {
-            // success
-            debugPrint("success");
-            if (isFromListOrder) {
-              // ko can back
-            } else {
-              //
-              Get.back();
-            }
-            Get.to(() => WaitingForAcceptCertScreen(
-                  orderCertModel: orderCertModel,
-                ));
-            // // delay để đợi quá trình back xong
-            // await Future.delayed(const Duration(seconds: 1));
-            // // todo
-            // Get.to(() => OrderProcessingScreen(
-            //       label: AppLocalizations.current.processingRequest,
-            //       content: AppLocalizations.current.processingRequestDescription,
-            //     ));
-            // cancelLoop = false;
-            // loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
-          } else {
-            if (isFromListOrder) {
-              // ko can back
-            } else {
-              //
-              Get.back();
-            }
-            // error
-            // debugPrint("error");
-            // Get.to(() => const SignDocErrorScreen());
+        await eContractController.signedContract(
+          orderId: orderCertModel.dhsxkdCustomerInfo.maGd,
+          isFromListOrder: isFromListOrder,
+        );
+
+        if (eContractController.isContractSuccess.value) {
+          Get.to(
+            () => OrderProcessingScreen(
+                hiddenIconBack: true,
+                label: AppLocalizations.current.await_approve_cert,
+                content: AppLocalizations.current.waitaMinute),
+            preventDuplicates: false,
+          );
+
+          cancelLoop = true;
+          loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
+        } else {
+          if (!isFromListOrder) {
+            Get.until((route) => route.isFirst);
           }
-        });
+        }
       }
     } else if (orderCertModel.status == OrderCertModel.REQUESTCERT_WATING) {
-      // todo
       // delay để đợi quá trình back xong
-      await Future.delayed(const Duration(seconds: 1));
-      Get.to(() => OrderProcessingScreen(
-            label: AppLocalizations.current.processingRequest,
-            content: AppLocalizations.current.processingRequestDescription,
-          ));
-      cancelLoop = false;
+      Get.to(
+        () => OrderProcessingScreen(
+          label: AppLocalizations.current.orderREQUESTCERT_WATING,
+          content: AppLocalizations.current.waitaMinute,
+        ),
+        preventDuplicates: false,
+      );
+      cancelLoop = true;
       loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
     } else if (orderCertModel.status == OrderCertModel.KEY_ASSIGN_WATING) {
+      //sau khi chay ngam buoc cho duyet xong thi cho bo dem ve 1
+      loopCount = 1;
       // todo pin code
-      Get.to(() => SetupPinCodePage());
+      if (orderCertModel.getTypeEnum() == OrderType.changeDevice) {
+        // todo pin code
+        // 2 la trang thai cho kich hoat
+        try {
+          final homeController = Get.find<HomeController>();
+          final cert = homeController.listCertificate.value?.firstWhere(
+              (element) => element.id == orderCertModel.credentialId);
+
+          appController.backToMainPage();
+
+          Get.to(() => SetupPinCodePage(
+                certificateModel: CertificateModel(
+                  id: orderCertModel.credentialId!,
+                  status: 2,
+                  certProfile: cert != null
+                      ? CertProfile(serviceType: cert.certProfile?.serviceType)
+                      : null,
+                ),
+              ));
+        } catch (e) {}
+      } else if (orderCertModel.getTypeEnum() == OrderType.newCert ||
+          orderCertModel.getTypeEnum() == OrderType.renewCert) {
+        final homeController = Get.find<HomeController>();
+        await homeController.getCertificateListWaitingActive();
+        final cert = homeController.listCertificate.value?.firstWhere(
+            (element) => element.id == orderCertModel.credentialId);
+
+        appController.backToMainPage();
+
+        if (cert?.status == 2) {
+          Get.to(() => SetupPinCodePage(
+                certificateModel: CertificateModel(
+                  id: orderCertModel.credentialId!,
+                  status: 2,
+                  certProfile: cert != null
+                      ? CertProfile(serviceType: cert.certProfile?.serviceType)
+                      : null,
+                ),
+              ));
+        }
+      }
     } else if (orderCertModel.status == OrderCertModel.ONEBSS_SUBMIT_WAITING) {
-      cancelLoop = false;
+      cancelLoop = true;
       loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
     } else if (orderCertModel.status ==
         OrderCertModel.APPROVE_REQUEST_CERT_WAITING) {
       if (!isFromListOrder) {
-        Get.back();
-        // delay để đợi quá trình back xong
-        await Future.delayed(const Duration(seconds: 1));
-        Get.to(() => OrderProcessingScreen(
-              label: AppLocalizations.current.processingRequest,
-              content: AppLocalizations.current.processingRequestDescription,
-            ));
-        cancelLoop = false;
-        loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
+        if (loopCount <= 10 && orderCertModel.version == 2) {
+          cancelLoop = true;
+          loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
+        } else {
+          appController.backToMainPage();
+          loopCount = 1;
+          Get.to(
+              () => WaitingForAcceptCertScreen(orderCertModel: orderCertModel));
+        }
       }
     } else if (orderCertModel.status == OrderCertModel.EKYC_ERROR) {
     } else if (orderCertModel.status == OrderCertModel.OTP_ERROR) {
@@ -784,8 +814,13 @@ class BuyCertificateController extends BaseController {
                 profileModel: profileModel,
               ))?.then((value) {
             if (value == true) {
-              Get.to(() => const SignDocWaitingScreen());
-              cancelLoop = false;
+              Get.to(
+                () => OrderProcessingScreen(
+                    label: AppLocalizations.current.paymentFailed,
+                    content: AppLocalizations.current.contactHotline),
+                preventDuplicates: false,
+              );
+              cancelLoop = true;
               loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
             } else if (value is OrderCertModel) {
               handleOrderModelByStatus(value, isFromListOrder: isFromListOrder);
@@ -797,11 +832,14 @@ class BuyCertificateController extends BaseController {
                 profileModel: profileModel,
               ))?.then((value) {
             if (value == true) {
-              Get.to(() => OrderProcessingScreen(
-                  label: AppLocalizations.current.creating_extend_ticket_label,
-                  content: AppLocalizations
-                      .current.creating_extend_ticket_description));
-              cancelLoop = false;
+              Get.to(
+                () => OrderProcessingScreen(
+                    label:
+                        AppLocalizations.current.creating_extend_ticket_label,
+                    content: AppLocalizations.current.waitaMinute),
+                preventDuplicates: false,
+              );
+              cancelLoop = true;
               loopCheckOrderStatus(orderCertModel.id, orderCertModel.status);
             } else if (value is OrderCertModel) {
               handleOrderModelByStatus(value, isFromListOrder: isFromListOrder);
@@ -810,74 +848,73 @@ class BuyCertificateController extends BaseController {
         }
       }
     } else if (orderCertModel.status == OrderCertModel.CONTRACT_CREATE_ERROR) {
-      if (isFromListOrder) {
-        // ko can back
-      } else {
-        //
-        Get.back();
-      }
-      if (orderCertModel.getTypeEnum() == OrderType.renewCert) {
-        Get.to(() => const SignTicketExtendError());
-      } else {
-        Get.to(() => const SignDocErrorScreen());
-      }
-    } else if (orderCertModel.status == OrderCertModel.CONTRACT_SIGN_ERROR) {
-      // Get.back();
-      // Get.to(() => const SignDocErrorScreen());
       if (!isFromListOrder) {
-        Get.back();
-        showErrorModal(AppLocalizations.current.orderCONTRACT_SIGN_ERROR);
+        Get.until((route) => route.isFirst);
       }
+
+      Get.to(() => ErrorRegisterCertScreen(
+            title: orderCertModel.getTypeEnum() == OrderType.renewCert
+                ? AppLocalizations.current.create_ticket_extension_error_label
+                : AppLocalizations.current.orderNoteContentState1,
+          ));
+    } else if (orderCertModel.status == OrderCertModel.CONTRACT_SIGN_ERROR) {
+      if (!isFromListOrder) {
+        Get.until((route) => route.isFirst);
+      }
+      Get.to(() => ErrorRegisterCertScreen(
+            title: AppLocalizations.current.orderCONTRACT_SIGN_ERROR,
+          ));
     } else if (orderCertModel.status == OrderCertModel.REQUESTCERT_ERROR) {
-      if (orderCertModel.getTypeEnum() == OrderType.newCert) {
-        if (!isFromListOrder) {
-          Get.back();
-          // showErrorModal(AppLocalizations.current.orderREQUESTCERT_ERROR);
-        }
-      } else if (orderCertModel.getTypeEnum() == OrderType.changeDevice) {
-        Get.back();
-        showErrorModal(AppLocalizations.current.orderCONTRACT_SIGN_ERROR);
+      if (!isFromListOrder) {
+        Get.until((route) => route.isFirst);
       }
+      Get.to(() => ErrorRegisterCertScreen(
+          title: AppLocalizations.current.tao_yeu_cau_chungthu_loi));
     } else if (orderCertModel.status == OrderCertModel.ONEBSS_SUBMIT_ERROR) {
       if (!isFromListOrder) {
-        Get.back();
-        // showErrorModal(AppLocalizations.current.orderONEBSS_SUBMIT_ERROR);
+        Get.until((route) => route.isFirst);
       }
+
+      Get.to(() => ErrorRegisterCertScreen(
+          title: AppLocalizations.current.submit_onebss_er));
     } else if (orderCertModel.status ==
         OrderCertModel.APPROVE_REQUEST_CERT_ERROR) {
       if (!isFromListOrder) {
-        Get.back();
-        // showErrorModal(AppLocalizations.current.orderAPPROVE_REQUEST_CERT_ERROR);
+        Get.until((route) => route.isFirst);
       }
+      Get.to(() => ErrorRegisterCertScreen(
+            title: AppLocalizations.current.approve_request_er,
+          ));
     } else if (orderCertModel.status == OrderCertModel.REJECT_REQUEST_CERT) {
       if (!isFromListOrder) {
-        Get.back();
-        showErrorModal(AppLocalizations.current.orderREJECT_REQUEST_CERT);
+        Get.until((route) => route.isFirst);
       }
+      Get.to(() => ErrorRegisterCertScreen(
+            title: AppLocalizations.current.orderREJECT_REQUEST_CERT,
+          ));
     } else if (orderCertModel.status == OrderCertModel.KEY_ASSIGN_ERROR) {
       if (!isFromListOrder) {
-        Get.back();
-        showErrorModal(AppLocalizations.current.orderKEY_ASSIGN_ERROR);
+        Get.until((route) => route.isFirst);
       }
+      Get.to(() => ErrorRegisterCertScreen(
+            title: AppLocalizations.current.orderKEY_ASSIGN_ERROR,
+          ));
     } else if (orderCertModel.status == OrderCertModel.CANCELED) {
       if (!isFromListOrder) {
-        Get.back();
+        Get.until((route) => route.isFirst);
         showErrorModal(AppLocalizations.current.orderCANCELED);
       }
     } else if (orderCertModel.status == OrderCertModel.DONE) {
       if (orderCertModel.getTypeEnum() == OrderType.newCert) {
-        if (isFromListOrder) {
-          // ko can back
-        } else {
-          Get.back();
+        if (!isFromListOrder) {
+          Get.until((route) => route.isFirst);
         }
-        Get.to(() => const WaitForAcceptScreen());
       } else if (orderCertModel.getTypeEnum() == OrderType.changeDevice) {
-        Get.back();
-        // todo pin code
+        Get.until((route) => route.isFirst);
         // 2 la trang thai cho kich hoat
         try {
           final homeController = Get.find<HomeController>();
+          homeController.getCertificateListWaitingActive();
           final cert = homeController.listCertificate.value?.firstWhere(
               (element) => element.id == orderCertModel.credentialId);
 
@@ -892,6 +929,12 @@ class BuyCertificateController extends BaseController {
               ));
         } catch (e) {}
       }
+    } else if (orderCertModel.status ==
+        OrderCertModel.EKYC_PROFILE_SYNC_ERROR) {
+      Get.until((route) => route.isFirst);
+      Get.to(() => ErrorRegisterCertScreen(
+            title: AppLocalizations.current.sync_onebss_er,
+          ));
     } else {
       // todo nothing
     }
@@ -903,7 +946,7 @@ class BuyCertificateController extends BaseController {
     return;
   }
 
-  verifyEkyc(dynamic data) async {
+  verifyEkyc(dynamic data, {String? newCTSName}) async {
     String errMess = '';
     showLoading();
     try {
@@ -918,37 +961,8 @@ class BuyCertificateController extends BaseController {
       var nearPortrait = data["NearPortrait"];
       var farPortrait = data["FarPortrait"];
 
-      // if (idFront == null ||
-      //     idFront.isEmpty ||
-      //     idBack == null ||
-      //     idBack.isEmpty ||
-      //     faceVideo == null ||
-      //     faceVideo.isEmpty ||
-      //     idFrontFull == null ||
-      //     idFrontFull.isEmpty ||
-      //     idBackFull == null ||
-      //     idBackFull.isEmpty ||
-      //     nearPortrait == null ||
-      //     nearPortrait.isEmpty ||
-      //     ocrIdVideo == null ||
-      //     ocrIdVideo.isEmpty ||
-      //     farPortrait == null ||
-      //     farPortrait.isEmpty) {
-      //   errMess = AppLocalizations.current.verifyFailDetail;
-      //   showErrorModal(errMess, title: AppLocalizations.current.verifyFail, image: Assets.images.icDialogFail,
-      //       callback: () {
-      //     // back to root, result null
-      //     Get.back();
-      //   });
-      //   return;
-      // }
-
-      // String? profileString =
-      //     await secureStorage.getLastData(LOCAL_USER_PROFILE);
       ProfileModel profileModel = ProfileModel();
-      // if (profileString != null && !isFlowRegister) {
-      //   profileModel = ProfileModel.fromJson(jsonDecode(profileString!));
-      // } else {
+
       final authController = Get.find<AuthController>();
       if (authController.authStatus == AuthenticationStatus.authenticated) {
         uid = authController.currentUser.value!.uid;
@@ -957,7 +971,6 @@ class BuyCertificateController extends BaseController {
 
       isFlowRegister = false;
       profileModel.uid = uid;
-      // }
       DeviceInfoModel deviceInfo = await _deviceInfoService.getDeviceInfo();
 
       EkycCustomerRequest param = EkycCustomerRequest(
@@ -970,7 +983,7 @@ class BuyCertificateController extends BaseController {
         faceVideo: faceVideo,
         ocrIdVideo: ocrIdVideo,
         uid: profileModel.uid,
-        fullName: profileModel.fullName,
+        fullName: newCTSName ?? profileModel.fullName,
         deviceId: deviceInfo.deviceId,
         dkkdImages: [],
         dkkdVideo: null,
@@ -980,15 +993,20 @@ class BuyCertificateController extends BaseController {
       hideLoading();
       failureOrVerified.fold(
         (failure) {
-          // showErrorModal(exceptionHandler(failure),
-          //     title: AppLocalizations.current.verifyFail, image: Assets.images.icDialogFail, callback: () {
-          //   Get.back();
-          // }),
           ekycErrorCount = ekycErrorCount + 1;
+          exceptionHandler(failure);
+          String reasonMessage = "";
+          if (failure.error is ServerException) {
+            ServerException serverException = failure.error as ServerException;
+            if (serverException.codeDesc != null &&
+                serverException.codeDesc!.isNotEmpty) {
+              reasonMessage = serverException.message;
+            }
+          }
           if (ekycErrorCount >= 3) {
             Get.to(() => VerifyInfoErrorScreen(
                   type: VerifyInfoType.error3times,
-                  errorText: exceptionHandler(failure),
+                  errorText: reasonMessage,
                 ))?.then((value) {
               ekycErrorCount = 0;
               // back to danh sach goi cuoc
@@ -997,18 +1015,12 @@ class BuyCertificateController extends BaseController {
           } else {
             Get.to(() => VerifyInfoErrorScreen(
                   type: VerifyInfoType.error,
-                  errorText: exceptionHandler(failure),
+                  errorText: reasonMessage,
                 ))?.then((value) async {
               if (value == true) {
-                // back to danh sach goi cuoc
-                // Get.back(result: VerifyInfoType.error);
-                await _ekycAgain();
+                await _ekycAgain(newCTSName: newCTSName);
               } else {
-                // ekycErrorCount = 0;
-                // // back to danh sach goi cuoc
                 Get.back();
-                // // back to danh sach cts
-                // Get.back();
               }
             });
           }
@@ -1022,7 +1034,7 @@ class BuyCertificateController extends BaseController {
           // todo
         },
       );
-    } catch (e) {
+    } catch (e, s) {
       showErrorModal(errMess,
           title: AppLocalizations.current.verifyFail,
           image: Assets.images.icDialogFail, callback: () {
@@ -1031,100 +1043,97 @@ class BuyCertificateController extends BaseController {
     }
   }
 
-  _ekycAgain() async {
+  _ekycAgain({String? newCTSName}) async {
+    EKYCService ekycService = EKYCService();
+    String errMess = '';
     // userStatus
-    var data = await ekycService.eKYCFull();
-    if (data == null) {
-      // showErrorModal(
-      //   errMess,
-      //   title: AppLocalizations.current.verifyFail,
-      //   image: Assets.images.icDialogFail,
-      // );
-      Get.back();
-      return;
-    }
+    try {
+      var data = await ekycService.eKYCFull();
+      if (data == null) {
+        Get.back();
+        return;
+      }
 
-    var idFront = data["IdFront"];
-    var idBack = data["IdBack"];
-    var idFrontFull = data["IdFrontFull"];
-    var idBackFull = data["IdBackFull"];
-    var faceVideo = data["FaceVideo"];
-    var ocrIdVideo = data["OcrIdVideo"];
-    var nearPortrait = data["NearPortrait"];
-    var farPortrait = data["FarPortrait"];
+      var idFront = data["IdFront"];
+      var idBack = data["IdBack"];
+      var idFrontFull = data["IdFrontFull"];
+      var idBackFull = data["IdBackFull"];
+      var faceVideo = data["FaceVideo"];
+      var ocrIdVideo = data["OcrIdVideo"];
+      var nearPortrait = data["NearPortrait"];
+      var farPortrait = data["FarPortrait"];
 
-    if (idFront == null ||
-        idFront.isEmpty ||
-        idBack == null ||
-        idBack.isEmpty ||
-        faceVideo == null ||
-        faceVideo.isEmpty ||
-        idFrontFull == null ||
-        idFrontFull.isEmpty ||
-        idBackFull == null ||
-        idBackFull.isEmpty ||
-        nearPortrait == null ||
-        nearPortrait.isEmpty ||
-        ocrIdVideo == null ||
-        ocrIdVideo.isEmpty ||
-        farPortrait == null ||
-        farPortrait.isEmpty) {
-      // errMess = AppLocalizations.current.verifyFailDetail;
-      // showErrorModal(errMess, title: AppLocalizations.current.verifyFail, image: Assets.images.icDialogFail,
-      //     callback: () {
-      //     });
-      Get.back();
-      return;
+      if (idFront == null ||
+          idFront.isEmpty ||
+          idBack == null ||
+          idBack.isEmpty ||
+          faceVideo == null ||
+          faceVideo.isEmpty ||
+          idFrontFull == null ||
+          idFrontFull.isEmpty ||
+          idBackFull == null ||
+          idBackFull.isEmpty ||
+          nearPortrait == null ||
+          nearPortrait.isEmpty ||
+          ocrIdVideo == null ||
+          ocrIdVideo.isEmpty ||
+          farPortrait == null ||
+          farPortrait.isEmpty) {
+        Get.back();
+        return;
+      }
+      verifyEkyc(data, newCTSName: newCTSName);
+    } catch (e, s) {
+      showErrorModal(exceptionHandler(GenericException(error: e, stack: s)));
     }
-    verifyEkyc(data);
   }
 
-  Future eKycUserEnroll() async {
+  Future eKycUserEnroll({String? newCTSName}) async {
+    EKYCService ekycService = EKYCService();
+    String errMess = '';
     // userStatus
-    var data = await ekycService.eKYCFull();
-    if (data == null) {
-      // showErrorModal(
-      //   errMess,
-      //   title: AppLocalizations.current.verifyFail,
-      //   image: Assets.images.icDialogFail,
-      // );
-      return null;
+    try {
+      var data = await ekycService.eKYCFull();
+      if (data == null) {
+        return null;
+      }
+
+      var idFront = data["IdFront"];
+      var idBack = data["IdBack"];
+      var idFrontFull = data["IdFrontFull"];
+      var idBackFull = data["IdBackFull"];
+      var faceVideo = data["FaceVideo"];
+      var ocrIdVideo = data["OcrIdVideo"];
+      var nearPortrait = data["NearPortrait"];
+      var farPortrait = data["FarPortrait"];
+
+      if (idFront == null ||
+          idFront.isEmpty ||
+          idBack == null ||
+          idBack.isEmpty ||
+          faceVideo == null ||
+          faceVideo.isEmpty ||
+          idFrontFull == null ||
+          idFrontFull.isEmpty ||
+          idBackFull == null ||
+          idBackFull.isEmpty ||
+          nearPortrait == null ||
+          nearPortrait.isEmpty ||
+          ocrIdVideo == null ||
+          ocrIdVideo.isEmpty ||
+          farPortrait == null ||
+          farPortrait.isEmpty) {
+        return null;
+      }
+
+      var result = await Get.to(() => VerifyInfoScreen(
+            data: data,
+            newCTSName: newCTSName,
+          ));
+      return result;
+    } catch (e, s) {
+      showErrorModal(exceptionHandler(GenericException(error: e, stack: s)));
     }
-
-    var idFront = data["IdFront"];
-    var idBack = data["IdBack"];
-    var idFrontFull = data["IdFrontFull"];
-    var idBackFull = data["IdBackFull"];
-    var faceVideo = data["FaceVideo"];
-    var ocrIdVideo = data["OcrIdVideo"];
-    var nearPortrait = data["NearPortrait"];
-    var farPortrait = data["FarPortrait"];
-
-    if (idFront == null ||
-        idFront.isEmpty ||
-        idBack == null ||
-        idBack.isEmpty ||
-        faceVideo == null ||
-        faceVideo.isEmpty ||
-        idFrontFull == null ||
-        idFrontFull.isEmpty ||
-        idBackFull == null ||
-        idBackFull.isEmpty ||
-        nearPortrait == null ||
-        nearPortrait.isEmpty ||
-        ocrIdVideo == null ||
-        ocrIdVideo.isEmpty ||
-        farPortrait == null ||
-        farPortrait.isEmpty) {
-      // errMess = AppLocalizations.current.verifyFailDetail;
-      // showErrorModal(errMess, title: AppLocalizations.current.verifyFail, image: Assets.images.icDialogFail,
-      //     callback: () {
-      //     });
-      return null;
-    }
-
-    var result = await Get.to(() => VerifyInfoScreen(data: data));
-    return result;
   }
 
   // huy don hang

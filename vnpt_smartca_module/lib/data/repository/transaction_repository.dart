@@ -247,6 +247,118 @@ class TransactionRepository {
       return Left(GenericException(error: e, stack: s));
     }
   }
+
+  Future<Either<GenericException, bool>> uploadSignedAcceptance(
+    Map req,
+  ) async {
+    try {
+      final remoteData = await remoteDataSource.uploadSignedAcceptance(req);
+      return remoteData.code == 0
+          ? Right(true)
+          : Left(GenericException(
+              error: ServerException(
+              message: remoteData.message,
+              code: remoteData.code,
+              codeDesc: remoteData.codeDesc,
+            )));
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
+
+  Future<Either<GenericException, List<TransactionModel>>>
+      waitingtransAcceptance(WaitingTransactionListRequest req) async {
+    try {
+      final remoteData = await remoteDataSource.waitingtransAcceptance(req);
+      if (remoteData.content != null && remoteData.code == 0) {
+        List<TransactionModel> trans = List.from(
+          remoteData.content.map(
+            (x) => TransactionModel.fromMap(x),
+          ),
+        );
+
+        return Right(trans);
+      } else {
+        return Left(GenericException(
+          error: ServerException(
+            message: remoteData.message,
+            code: remoteData.code,
+            codeDesc: remoteData.codeDesc,
+          ),
+        ));
+      }
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
+
+  Future<Either<GenericException, TransactionModel>> waitingtraninfoAcceptance(
+    WaitingTransactionRequest req,
+  ) async {
+    try {
+      try {
+        final remoteData =
+            await remoteDataSource.waitingtraninfoAcceptance(req);
+        return remoteData.code == 0
+            ? Right(TransactionModel.fromMap(remoteData.content))
+            : Left(GenericException(
+                error: ServerException(
+                message: remoteData.message,
+                code: remoteData.code,
+                codeDesc: remoteData.codeDesc,
+              )));
+      } catch (e, s) {
+        return Left(GenericException(error: e, stack: s));
+      }
+    } on SocketException catch (e) {
+      return Left(GenericException(
+          error: ServerException(
+        message: AppLocalizations.current.noInternet,
+        code: 404,
+        codeDesc: AppLocalizations.current.noInternet,
+      )));
+    }
+  }
+
+  Future<Either<GenericException, SmartCAApiResponse>> signconfirmAcceptance(
+      TransactionModel model, String userPIN, String sad) async {
+    try {
+      final remoteData = await remoteDataSource.signconfirmAcceptance(
+        ConfirmWTRequest(
+          tranId: model.tranId,
+          credentialId: model.credentialId,
+          sad: sad,
+        ),
+      );
+      return remoteData.code == 0
+          ? Right(remoteData)
+          : Left(GenericException(
+              error: ServerException(
+              message: remoteData.message,
+              code: remoteData.code,
+              codeDesc: remoteData.codeDesc,
+            )));
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
+
+  Future<Either<GenericException, SmartCAApiResponse>> confirmApproveCert(
+      String serial) async {
+    try {
+      final remoteData = await remoteDataSource.confirmApproveCert(serial);
+      return remoteData.code == 0
+          ? Right(remoteData)
+          : Left(GenericException(
+              error: ServerException(
+              message: remoteData.message,
+              code: remoteData.code,
+              codeDesc: remoteData.codeDesc,
+            )));
+    } catch (e, s) {
+      return Left(GenericException(error: e, stack: s));
+    }
+  }
 }
 
 @lazySingleton

@@ -244,7 +244,7 @@ class LoginController extends BaseController<LoginState> {
   Future azureADLogin() async {
     final AadOAuth oauth = ref.read(appController.notifier).oauth;
     final hasCacheAccount = await oauth.hasCachedAccountInformation;
-    await oauth.logout();
+    // await oauth.logout();
     final result = await oauth.login();
 
     result.fold(

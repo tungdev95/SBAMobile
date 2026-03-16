@@ -447,7 +447,7 @@ public enum RxCocoaError : Swift.Error, Swift.CustomDebugStringConvertible {
   case errorDuringSwizzling
   case castingError(object: Any, targetType: Any.Type)
 }
-extension RxCocoa.RxCocoaError {
+extension RxCocoaError {
   public var debugDescription: Swift.String {
     get
   }
@@ -455,7 +455,7 @@ extension RxCocoa.RxCocoaError {
 public enum RxCocoaInterceptionMechanism {
   case unknown
   case kvo
-  public static func == (a: RxCocoa.RxCocoaInterceptionMechanism, b: RxCocoa.RxCocoaInterceptionMechanism) -> Swift.Bool
+  public static func == (a: RxCocoaInterceptionMechanism, b: RxCocoaInterceptionMechanism) -> Swift.Bool
   public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
@@ -463,7 +463,7 @@ public enum RxCocoaInterceptionMechanism {
 }
 public enum RxCocoaObjCRuntimeError : Swift.Error, Swift.CustomDebugStringConvertible {
   case unknown(target: Swift.AnyObject)
-  case objectMessagesAlreadyBeingIntercepted(target: Swift.AnyObject, interceptionMechanism: RxCocoa.RxCocoaInterceptionMechanism)
+  case objectMessagesAlreadyBeingIntercepted(target: Swift.AnyObject, interceptionMechanism: RxCocoaInterceptionMechanism)
   case selectorNotImplemented(target: Swift.AnyObject)
   case cantInterceptCoreFoundationTollFreeBridgedObjects(target: Swift.AnyObject)
   case threadingCollisionWithOtherInterceptionMechanism(target: Swift.AnyObject)
@@ -472,7 +472,7 @@ public enum RxCocoaObjCRuntimeError : Swift.Error, Swift.CustomDebugStringConver
   case observingPerformanceSensitiveMessages(target: Swift.AnyObject)
   case observingMessagesWithUnsupportedReturnType(target: Swift.AnyObject)
 }
-extension RxCocoa.RxCocoaObjCRuntimeError {
+extension RxCocoaObjCRuntimeError {
   public var debugDescription: Swift.String {
     get
   }
@@ -1400,7 +1400,7 @@ public enum RxCocoaURLError : Swift.Error {
   case httpRequestFailed(response: Foundation.HTTPURLResponse, data: Foundation.Data?)
   case deserializationError(error: Swift.Error)
 }
-extension RxCocoa.RxCocoaURLError : Swift.CustomDebugStringConvertible {
+extension RxCocoaURLError : Swift.CustomDebugStringConvertible {
   public var debugDescription: Swift.String {
     get
   }
@@ -1429,5 +1429,5 @@ extension RxSwift.Reactive where Base : WebKit.WKWebView {
     get
   }
 }
-extension RxCocoa.RxCocoaInterceptionMechanism : Swift.Equatable {}
-extension RxCocoa.RxCocoaInterceptionMechanism : Swift.Hashable {}
+extension RxCocoaInterceptionMechanism : Swift.Equatable {}
+extension RxCocoaInterceptionMechanism : Swift.Hashable {}

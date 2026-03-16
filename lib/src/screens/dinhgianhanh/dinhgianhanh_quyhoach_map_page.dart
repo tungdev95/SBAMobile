@@ -35,7 +35,7 @@ class DinhGiaNhanhQuyHoachMapPage extends StatelessWidget {
       ),
       body: InAppWebView(
         initialUrlRequest:
-            URLRequest(url: Uri.parse('https://map.ekgis.vn/#16/$lat/$lng')),
+            URLRequest(url: WebUri('https://map.ekgis.vn/#16/$lat/$lng')),
         onWebViewCreated: (controller) {
           // ref.read(provider(ref).notifier).controller = controller;
         },

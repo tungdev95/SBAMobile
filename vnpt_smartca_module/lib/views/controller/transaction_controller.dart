@@ -1,12 +1,18 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
 
 import '../../../configs/injector/injector.dart';
 import '../../../core/models/app/exceptions.dart';
@@ -28,18 +34,24 @@ import 'package:base32/base32.dart';
 import '../../core/models/app/smartca_message_result.dart';
 import '../../core/models/app/user_info_on_device.dart';
 import '../../core/models/response/service_response.dart';
+import '../../core/models/response/token_model.dart';
+import '../../core/services/secure_local_storage.dart';
 import '../../core/services/user_info_on_device.dart';
+import '../../core/utils/constants.dart';
 import '../../data/repository/eseal/3rd_repository.dart';
 import '../../data/repository/eseal/transaction_repository.dart';
 import '../../method_channel_handler.dart';
-import '../pages/certificate/select_cert_screen.dart';
 import '../pages/certificate/sign_bbnt/widget/preview_pdf_acceptance.dart';
+import '../pages/transaction_request/waiting_confirm_by_smartca_app_screen.dart';
 import '../pages/transaction_request/widgets/pin_dialog.dart';
 import '../utils/enums.dart';
 import '../widgets/dialog/common_dialog.dart';
+import '../widgets/draw_signature_dialog.dart';
 import '../widgets/navigator_helper.dart';
+import '../widgets/show_snackbar_widget.dart';
 import 'app_controller.dart';
 import 'auth_controller.dart';
+import 'certificate_controller.dart';
 import 'home_controller.dart';
 
 class TransactionController extends BaseController {
@@ -61,6 +73,8 @@ class TransactionController extends BaseController {
   final displayDocName = ''.obs;
   final isShowResult = false.obs;
   bool isOpenFromExternalApp = false;
+  Timer? waitingConfirmTimer;
+  final checkConfirmAcceptance = false.obs;
 
   /*
     Sử dụng cho việc hiển thị view countdown
@@ -69,6 +83,8 @@ class TransactionController extends BaseController {
     - isTransactionState = false ==> các trường hợp khác;
   */
   final isTransactionState = true.obs;
+  int wrongPINCount = 0;
+  bool isSystemLinkTrans = false;
 
   final CountDownController countDownController = CountDownController();
 
@@ -142,6 +158,36 @@ class TransactionController extends BaseController {
     return msg;
   }
 
+  /// Xem chi tiết giao dịch chờ.
+  waitingtraninfoAcceptance(String tranId) async {
+    String msg = '';
+    try {
+      final failureOrTransactionInfo = await transactionRepository
+          .waitingtraninfoAcceptance(WaitingTransactionRequest(tranId: tranId));
+      await failureOrTransactionInfo.fold(
+        (l) async {
+          isTransactionState.value = false;
+          isShowResult.value = false;
+          refreshController.refreshFailed();
+          msg = exceptionHandler(
+              GenericException(error: l.error, stack: l.stack));
+          showErrorModal(msg);
+        },
+        (r) async {
+          transactionInfo.value = r;
+          getListTransactionFile(r);
+          isShowResult.value = true;
+          isTransactionState.value = true;
+        },
+      );
+    } catch (e) {
+      isTransactionState.value = false;
+      msg = AppLocalizations.current.serviceSomethingWentWrong;
+      showErrorModal(msg);
+    }
+    return msg;
+  }
+
   //isBlank = false: đang ở màn hình giao dịch cần ký
   //isBlank = true: đang ở màn hình xem chi tiết giao dịch cần ký
   void onUpdateTransactionItems(TransactionModel tran) {
@@ -165,9 +211,9 @@ class TransactionController extends BaseController {
     listFile.value = [];
     for (var element in tran.docs) {
       FileModel file = FileModel(
-          name: element['name'],
-          size: element['size'],
-          data: element['data'],
+          name: element['name'] ?? "",
+          size: element['size'] ?? "",
+          data: element['data'] ?? "",
           file: null,
           path: '',
           sizeMb: 0);
@@ -188,13 +234,29 @@ class TransactionController extends BaseController {
       final failureOrTransactionInfo =
           await transactionRepository.getWaitingTransactionById(
               WaitingTransactionRequest(tranId: transactionModel.tranId));
-      hideProgress(closeOverlays: true);
+      hideProgress();
 
       failureOrTransactionInfo.fold(
-        (l) => {
-          refreshController.refreshFailed(),
+        (l) {
+          refreshController.refreshFailed();
+          if (l.error is ServerException &&
+              ((l.error as ServerException).codeDesc ?? "")
+                  .contains("SIGNATURE_TRANSACTION_NOT_WAITING")) {
+            Timer(const Duration(milliseconds: 500), () {
+              final appController = Get.find<AppController>();
+              if (appController.selectedIndex.value == 0) {
+                onRefresh();
+              }
+
+              appController.backToMainPage();
+            });
+
+            showNotifyModal(AppLocalizations.current.transactionNotWaiting);
+
+            return;
+          }
           showErrorModal(exceptionHandler(
-              GenericException(error: l.error, stack: l.stack)))
+              GenericException(error: l.error, stack: l.stack)));
         },
         (r) async {
           transactionInfo.value = r;
@@ -210,24 +272,54 @@ class TransactionController extends BaseController {
   confirmWaitingTransaction(
       String userPIN, TransactionModel transactionModel) async {
     try {
-      showProgress();
+      final cert = await getCertInfoOnDevice(transactionModel.credentialId,
+          transactionModel: transactionModel,
+          showNotify: transactionModel.tranType != 5);
 
-      final cert = await getCertInfoOnDevice(transactionModel.credentialId);
-      if (cert == null) return;
+      if (cert == null) {
+        if (transactionModel.tranType == 5) {
+          showNotifyModal(
+            AppLocalizations.current.reSignAcceptance,
+            titleBtnAccept: AppLocalizations.current.Continue,
+            showFaq: false,
+            actionAccept: () {
+              drawSignature(transactionModel);
+            },
+            onlyActionCancel: false,
+          );
+        }
+        return;
+      }
+
       final authController = Get.find<AuthController>();
       final currentUser = authController.currentUser.value;
 
       final isEseal = cert.otpSecret != null && cert.otpSecret != "";
-
       if (userPIN != cert.pin) {
-        hideProgress();
-        showErrorModal(AppLocalizations.current.invalidPIN);
+        wrongPINCount++;
+        if (wrongPINCount > 4 && transactionModel.tranType == 5) {
+          showNotifyModal(
+            AppLocalizations.current.reSignAcceptance,
+            titleBtnAccept: AppLocalizations.current.Continue,
+            showFaq: false,
+            actionAccept: () {
+              drawSignature(transactionModel);
+            },
+            onlyActionCancel: false,
+          );
+        } else {
+          showErrorModal(AppLocalizations.current.invalidPIN);
+        }
         return;
       }
+      wrongPINCount = 0;
+      showProgress();
 
       String sad;
       if (isEseal == true) {
-        await getOTPSecret(transactionModel.credentialId);
+        if (transactionModel.tranType != 5) {
+          await getOTPSecret(transactionModel.credentialId);
+        }
 
         sad = await _generateSADUtils.checkedAndGenerateSADAcceptanceESeal(
             transactionModel, currentUser!.uid, cert);
@@ -266,69 +358,180 @@ class TransactionController extends BaseController {
           }
         }
       } else {
+        // if (transactionModel.tranType == 5) {
+        //   failureOrConfirmed = await transactionRepository
+        //       .signconfirmAcceptance(transactionModel, userPIN, sad);
+        // } else {
         failureOrConfirmed = await transactionRepository
             .confirmWaitingTransaction(transactionModel, userPIN, sad);
+        // }
       }
 
-      hideProgress(closeOverlays: true);
+      hideProgress();
 
       failureOrConfirmed.fold(
         (l) async {
           refreshController.refreshFailed();
-          // if (l.error is ServerException) {
-          //   if ((l.error as ServerException).code == 63000) {
-          //     showChangeDevice();
+          if (l.error is ServerException) {
+            if ((l.error as ServerException).code == 62003) {
+              showSuccessModal(
+                  message: AppLocalizations.current.signedSuccess,
+                  titleBtnAccept: AppLocalizations.current.close,
+                  actionAccept: () {
+                    Timer(const Duration(milliseconds: 500), () {
+                      final appController = Get.find<AppController>();
+                      if (appController.selectedIndex.value == 0) {
+                        onRefresh();
+                      }
+                      if (isSystemLinkTrans == false) {
+                        appController.backToMainPage();
+                      }
+                    });
+                  });
+              return;
+            } else if (transactionModel.tranType == 5) {
+              showNotifyModal(
+                AppLocalizations.current.reSignAcceptance,
+                titleBtnAccept: AppLocalizations.current.Continue,
+                showFaq: false,
+                actionAccept: () {
+                  drawSignature(transactionModel);
+                },
+                onlyActionCancel: false,
+              );
+              return;
+            } else if ((l.error as ServerException).code == 63000 ||
+                (l.error as ServerException).code == 63001) {
+              Get.to(
+                () => WaitingConfirmBySmartCAAppScreen(
+                  label: AppLocalizations.current.KAKChanged,
+                  transactionModel: transactionModel,
+                  onChangeDevice: () =>
+                      onTapChangeDevice(transactionModel.credentialId),
+                  openSmartCAApp: () => openSmartCAApp(transactionModel),
+                  waitingConfirmOnApp: () =>
+                      waitingConfirmOnSmartCAApp(transactionModel!),
+                ),
+              );
+              return;
+            }
+          }
 
-          //     return;
-          //   }
-          // }
           final message = exceptionHandler(
               GenericException(error: l.error, stack: l.stack));
+
           sendWaitingTransactionResult(message, 1);
 
           showErrorModal(message);
         },
         (r) async {
           refreshController.refreshCompleted();
-          if (transactionModel.tranType == 5 && isEseal) {
-            var param = {
-              'uid': currentUser!.uid,
-              'pin': userPIN,
-              'showQr': true,
-              'credentialId': transactionModel.credentialId,
-            };
-            var resp;
-            failureOrConfirmed =
-                await transactionRepositoryEseal.eSealGetCode(param);
-            failureOrConfirmed.fold((l) => l, (_resp) => resp = _resp);
+          final appController = Get.find<AppController>();
 
-            final totpBasicSpec = resp.content['totpBasicSpec'];
-            final cert = await _userInfoOnDeviceService
-                .getCerCurrentUserByIdCer(transactionModel.credentialId);
-            cert?.otpSecret =
-                base32.encode(base64Decode(totpBasicSpec['totp']));
-            await _userInfoOnDeviceService.addOrUpdateCert(
-                currentUser.uid, cert!);
-          }
+          final currentHostAppMethod = appController.currentHostAppMethod.value;
 
           showSuccessModal(
-              message: AppLocalizations.current.signTransactionDone,
-              titleBtnAccept: AppLocalizations.current.close,
-              title: AppLocalizations.current.successNotirce,
-              actionAccept: () {
-                Timer(const Duration(milliseconds: 500), () {
-                  final appController = Get.find<AppController>();
-                  if (appController.selectedIndex.value == 0) {
-                    onRefresh();
+            message: transactionModel.tranType == 5
+                ? AppLocalizations.current.signBbntSuccess
+                : AppLocalizations.current.signTransactionDone,
+            titleBtnAccept: transactionModel.tranType == 5
+                ? AppLocalizations.current.iUnderstand
+                : AppLocalizations.current.close,
+            title: AppLocalizations.current.successNotirce,
+            actionAccept: () {
+              Timer(const Duration(milliseconds: 500), () async {
+                appController.backToMainPage();
+
+                if (transactionModel.tranType == 5 &&
+                    (currentHostAppMethod == MethodChannelNames.createAccount ||
+                        currentHostAppMethod ==
+                            MethodChannelNames.getAuthentication)) {
+                  final secureLocalDataSource =
+                      getIt<SecureLocalStorageService>();
+
+                  final tokenString = await secureLocalDataSource
+                      .getLastData(LOCAL_ACCESS_TOKEN_AUTH);
+
+                  var token = TokenModel.fromJson(tokenString!);
+
+                  final homeController = Get.find<HomeController>();
+                  final serial = homeController.listCertificate.value
+                      ?.firstWhere((element) =>
+                          element.id == transactionModel.credentialId)
+                      .serial;
+
+                  SmartCaResult resp = SmartCaResult(
+                    ResultCode.SUCCESS_CODE,
+                    ResultCodeDesc.SUCCESS,
+                    jsonEncode(
+                      {
+                        'accessToken': token.accessToken,
+                        'credentialId': transactionModel.credentialId,
+                        'serial': serial,
+                      },
+                    ),
+                  );
+
+                  final methodChannelHandler = getIt<MethodChannelHandler>();
+                  if (currentHostAppMethod ==
+                      MethodChannelNames.getAuthentication) {
+                    methodChannelHandler.send(
+                        method: MethodChannelNames.getAuthenticationResult,
+                        data: resp);
+                  } else {
+                    methodChannelHandler.send(
+                        method: MethodChannelNames.createAccountResult,
+                        data: resp);
                   }
 
-                  appController.backToMainPage();
-
-                  // close sdk
-                  sendWaitingTransactionResult(r.message, r.code);
                   NavigatorHandler.closeSDK();
-                });
+                } else if (currentHostAppMethod ==
+                    MethodChannelNames.getWaitingTransaction) {
+                  if (transactionModel.tranType != 5) {
+                    sendWaitingTransactionResult(r.message, r.code);
+                  } else {
+                    appController.selectTab(0);
+                  }
+                }
               });
+            },
+          );
+
+          if (currentHostAppMethod ==
+                  MethodChannelNames.getWaitingTransaction &&
+              transactionModel.tranType != 5) {
+            appController.backToMainPage();
+
+            Timer(const Duration(milliseconds: 100), () async {
+              sendWaitingTransactionResult(r.message, r.code);
+            });
+          }
+
+          Timer(
+            const Duration(milliseconds: 300),
+            () async {
+              if (transactionModel.tranType == 5 && isEseal == true) {
+                var param = {
+                  'uid': currentUser!.uid,
+                  'pin': userPIN,
+                  'showQr': true,
+                  'credentialId': transactionModel.credentialId,
+                };
+                var resp;
+                failureOrConfirmed =
+                    await transactionRepositoryEseal.eSealGetCode(param);
+                failureOrConfirmed.fold((l) => l, (_resp) => resp = _resp);
+
+                final totpBasicSpec = resp.content['totpBasicSpec'];
+                final cert = await _userInfoOnDeviceService
+                    .getCerCurrentUserByIdCer(transactionModel.credentialId);
+                cert?.otpSecret =
+                    base32.encode(base64Decode(totpBasicSpec['totp']));
+                await _userInfoOnDeviceService.addOrUpdateCert(
+                    currentUser.uid, cert!);
+              }
+            },
+          );
         },
       );
     } catch (e) {
@@ -342,16 +545,17 @@ class TransactionController extends BaseController {
   rejectWaitingTransaction(
       String userPIN, TransactionModel transactionModel) async {
     try {
-      showProgress();
-
-      final cert = await getCertInfoOnDevice(transactionModel.credentialId);
+      final cert = await getCertInfoOnDevice(
+        transactionModel.credentialId,
+        transactionModel: transactionModel,
+      );
       if (cert == null) return;
 
       if (userPIN != cert.pin) {
-        hideProgress();
         showErrorModal(AppLocalizations.current.invalidPIN);
         return;
       }
+      showProgress();
 
       final sad = await _generateSADUtils.checkedAndGenerateSAD(
           transactionModel, userPIN, cert);
@@ -359,13 +563,33 @@ class TransactionController extends BaseController {
       final failureOrConfirmed = await transactionRepository
           .rejectWaitingTransaction(transactionModel, userPIN, sad);
 
-      hideProgress(closeOverlays: true);
+      hideProgress();
 
       await failureOrConfirmed.fold(
         (l) async {
           refreshController.refreshFailed();
           final message = exceptionHandler(
               GenericException(error: l.error, stack: l.stack));
+
+          if ((l.error as ServerException).code == 62003) {
+            showSuccessModal(
+                message:
+                    AppLocalizations.current.cancel_tranaction_success("", ""),
+                titleBtnAccept: AppLocalizations.current.close,
+                actionAccept: () {
+                  Timer(const Duration(milliseconds: 500), () {
+                    final appController = Get.find<AppController>();
+                    if (appController.selectedIndex.value == 0) {
+                      onRefresh();
+                    }
+                    if (isSystemLinkTrans == false) {
+                      appController.backToMainPage();
+                    }
+                  });
+                });
+            return;
+          }
+
           sendWaitingTransactionResult(message, 1);
 
           showErrorModal(message);
@@ -375,15 +599,16 @@ class TransactionController extends BaseController {
 
           sendWaitingTransactionResult(r.message, r.code);
 
-          showSuccessModal(
+          showSnackBarWidget(
             message: AppLocalizations.current.cancelTransactionDone,
-            titleBtnAccept: AppLocalizations.current.close,
-            title: AppLocalizations.current.successNotirce,
-            actionAccept: () {
-              onRefresh();
-              Get.until((route) => Get.currentRoute == "/");
-            },
+            icon: const Icon(Icons.check_circle_outline,
+                color: Colors.white, size: 32),
+            milliseconds: 1400,
+            backgroundColor: Color(0xff0D75D6),
           );
+
+          onRefresh();
+          Get.until((route) => Get.currentRoute == "/");
         },
       );
     } catch (e) {
@@ -587,6 +812,8 @@ class TransactionController extends BaseController {
       }
 
       for (var item in itemTransactions) {
+        if (item.tranType == 5) continue;
+
         final sad =
             await _generateSADUtils.checkedAndGenerateSAD(item, userPIN, cert);
 
@@ -652,7 +879,8 @@ class TransactionController extends BaseController {
     final authenticated = await biometricService.authenticateWithBiometrics();
     if (authenticated) {
       //Lấy PIN lưu ở Local
-      final cert = await getCertInfoOnDevice(transactionModel.credentialId);
+      final cert = await getCertInfoOnDevice(transactionModel.credentialId,
+          transactionModel: transactionModel);
       if (cert == null) return;
 
       if (transactionType == TransactionType.confirm) {
@@ -674,7 +902,7 @@ class TransactionController extends BaseController {
     try {
       showProgress();
       String msg = await getWaitingTransactionInfoById(tranId);
-      hideProgress(closeOverlays: true);
+      hideProgress();
       if (msg.isEmpty) {
         Get.to(() => TransactionDetail());
       } else {
@@ -721,12 +949,16 @@ class TransactionController extends BaseController {
   getBbntTrans(String credentialId) async {
     try {
       TransactionModel? transactionBbnt;
+      transactionInfo.value = null;
 
-      var req = WaitingTransactionListRequest(pageIndex: 1, pageSize: 5);
+      var req = WaitingTransactionListRequest(pageIndex: 1, pageSize: 25);
       bool isStop = false;
       List<TransactionModel>? transactions;
+      int count = 0;
 
       while (isStop == false) {
+        if (count > 150) isStop = true;
+
         final failureOrTransactionModel =
             await transactionRepository.getWaitingTransactions(req);
 
@@ -748,7 +980,8 @@ class TransactionController extends BaseController {
             }
           }
         } else {
-          await Future.delayed(const Duration(seconds: 3), () {});
+          await Future.delayed(Duration(seconds: count > 20 ? 4 : 3), () {});
+          count++;
         }
       }
 
@@ -839,19 +1072,89 @@ class TransactionController extends BaseController {
     controller.appRefreshController.refresh(params: param);
   }
 
-  Future<CertModel?> getCertInfoOnDevice(String credentialId) async {
+  onTapChangeDevice(String credentialId) {
+    try {
+      waitingConfirmTimer?.cancel();
+      Get.find<AppController>().selectTab(0);
+
+      final certificateController = Get.isRegistered<CertificateController>()
+          ? Get.find<CertificateController>()
+          : Get.put(CertificateController());
+
+      final homeController = Get.find<HomeController>();
+      final serial = homeController.listCertificate.value
+          ?.firstWhere((element) => element.id == credentialId)
+          .serial;
+
+      certificateController.requestChangeDevice(
+          id: credentialId, serial: serial ?? "");
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  waitingConfirmOnSmartCAApp(TransactionModel transactionModel) async {
+    try {
+      waitingConfirmTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
+        await getTransInfor(transactionModel!.tranId);
+
+        switch (transactionInfo.value?.tranStatus) {
+          case 1:
+            Get.until((route) => route.isFirst);
+            Get.find<AppController>().backToMainPage();
+            // return AppLocalizations.current.signedSuccess;
+            sendWaitingTransactionResult(transactionInfo.value!.textStatus, 0);
+            timer.cancel();
+            break;
+          case 4000:
+            // return AppLocalizations.current.waitingForSignerConfirm;
+            break;
+          default:
+            Get.until((route) => route.isFirst);
+            Get.find<AppController>().backToMainPage();
+            sendWaitingTransactionResult(transactionInfo.value!.textStatus, 1);
+            timer.cancel();
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  openSmartCAApp(TransactionModel transactionModel) async {
+    final uid = Get.find<AuthController>().currentUser.value?.uid;
+    final host = AppConfig.environment == Environment.dev
+        ? "http://demorms.vnptit.vn"
+        : "https://smartca.vnpt.vn";
+    String appUrl =
+        "$host/app/?uid=$uid&action=getTransactionDetail&tranId=${transactionModel.tranId}";
+
+    final Uri url = Uri.parse(appUrl);
+    await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    );
+  }
+
+  Future<CertModel?> getCertInfoOnDevice(String credentialId,
+      {bool showNotify = true, TransactionModel? transactionModel}) async {
     final certModel =
         await _userInfoOnDeviceService.getCerCurrentUserByIdCer(credentialId);
 
-    if (certModel == null || certModel.privateKey == null) {
-      hideProgress();
-
-      showNotifyModal(AppLocalizations.current.KAKNotFound,
-          titleBtnAccept: AppLocalizations.current.changeDevice,
-          titleBtnCancel: AppLocalizations.current.close, actionAccept: () {
-        // controller.requestChangeDevice(certModel!.id!);
-        Get.to(() => SelectCertScreen());
-      }, onlyActionCancel: false);
+    if (certModel == null ||
+        (certModel?.privateKey == null && certModel.otpSecret == null)) {
+      if (showNotify == true) {
+        Get.to(
+          () => WaitingConfirmBySmartCAAppScreen(
+            label: AppLocalizations.current.KAKNotFound,
+            transactionModel: transactionModel,
+            onChangeDevice: () => onTapChangeDevice(credentialId),
+            openSmartCAApp: () => openSmartCAApp(transactionModel!),
+            waitingConfirmOnApp: () =>
+                waitingConfirmOnSmartCAApp(transactionModel!),
+          ),
+        );
+      }
 
       return null;
     }
@@ -861,7 +1164,6 @@ class TransactionController extends BaseController {
   sendWaitingTransactionResult(String msg, int code) {
     if (Get.find<AppController>().currentHostAppMethod.value !=
         MethodChannelNames.getWaitingTransaction) {
-      showErrorModal(msg);
       return;
     }
 
@@ -928,7 +1230,8 @@ class TransactionController extends BaseController {
       if (certModel == null || certModel.otpSecret == null) {
         showNotifyModal(AppLocalizations.current.KAKNotFound,
             titleBtnAccept: AppLocalizations.current.changeDevice,
-            titleBtnCancel: AppLocalizations.current.close,
+            titleBtnCancel: AppLocalizations.current.searchFaq,
+            showFaq: true,
             actionAccept: () {},
             onlyActionCancel: false);
 
@@ -958,6 +1261,107 @@ class TransactionController extends BaseController {
         cert?.otpSecret = newTOTP;
         await userInfoOnDeviceService.addOrUpdateCert(currentUser.uid, cert!);
       }
+    } catch (e, s) {
+      rethrow;
+    }
+  }
+
+  drawSignature(TransactionModel transactionModel) {
+    showDialog(
+      context: Get.context!,
+      barrierDismissible: false,
+      builder: (_) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: DrawSignatureWidget(
+            callBack: (data) async {
+              showProgress();
+
+              String base64Image = base64Encode(data);
+              final failureOrConfirmed =
+                  await transactionRepository.uploadSignedAcceptance({
+                "TranId": transactionModel.tranId,
+                "AcceptanceSignatureBase64": base64Image,
+              });
+              hideProgress();
+
+              failureOrConfirmed.fold(
+                (failure) async {
+                  showErrorModal(exceptionHandler(failure));
+                },
+                (r) {
+                  Get.until((route) => Get.currentRoute == "/");
+
+                  showSuccessModal(
+                    message: AppLocalizations.current.reSignAcceptanceSuccess,
+                    titleBtnAccept: AppLocalizations.current.activate,
+                    actionAccept: () async {
+                      wrongPINCount = 0;
+                      showProgress();
+
+                      await Future.delayed(
+                        const Duration(seconds: 2),
+                        () async {
+                          final certificateController =
+                              Get.isRegistered<CertificateController>()
+                                  ? Get.find<CertificateController>()
+                                  : Get.put(CertificateController());
+
+                          final homeController = Get.find<HomeController>();
+                          await homeController
+                              .getCertificateListWaitingActive();
+
+                          final serial = homeController.listCertificate.value
+                              ?.firstWhere((element) =>
+                                  element.id == transactionModel.credentialId)
+                              .serial;
+
+                          certificateController.requestChangeDevice(
+                              id: transactionModel.credentialId,
+                              serial: serial ?? "");
+
+                          final appController = Get.find<AppController>();
+                          if (appController.selectedIndex.value == 0) {
+                            onRefresh();
+                          }
+
+                          if (isSystemLinkTrans == false) {
+                            appController.backToMainPage();
+                          }
+                        },
+                      );
+
+                      hideProgress();
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  confirmApproveCert(String serial) async {
+    showLoading();
+    try {
+      final failureOrVerified =
+          await transactionRepository.confirmApproveCert(serial);
+      hideLoading();
+      failureOrVerified.fold(
+        (failure) => {
+          showErrorModal(exceptionHandler(failure)),
+        },
+        (result) {
+          final appController = Get.find<AppController>();
+          if (isSystemLinkTrans == false) {
+            checkConfirmAcceptance.value = false;
+            appController.backToMainPage();
+          }
+        },
+      );
     } catch (e, s) {
       showErrorModal(exceptionHandler(GenericException(error: e, stack: s)));
     }

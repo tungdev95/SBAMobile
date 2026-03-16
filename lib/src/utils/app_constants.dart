@@ -1,6 +1,6 @@
 class AppConstants {
   static const String kDevUrl = 'https://vns.io.vn/be/';
-  static const String kUatUrl = 'https://cmv.io.vn/be/';
+  static const String kUatUrl = 'https://uat-cmv.sacombank-sba.com.vn/be/';
   static const String kProUrl = 'https://thamdinhgia.sacombank-sba.com.vn/be/';
   static const String kUser = "USER";
   static const String kLangCode = "LANGUAGE_CODE";

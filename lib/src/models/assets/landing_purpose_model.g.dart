@@ -8,7 +8,7 @@ part of 'landing_purpose_model.dart';
 
 LandingPurposeModel _$LandingPurposeModelFromJson(Map<String, dynamic> json) =>
     LandingPurposeModel(
-      usingPurposeId: json['usingPurposeId'] as int?,
+      usingPurposeId: (json['usingPurposeId'] as num?)?.toInt(),
       usingOrigin: json['usingOrigin'] as String?,
       usingPeriod: json['usingPeriod'] as String?,
       legalAreaWidth: (json['legalAreaWidth'] as num?)?.toDouble(),
@@ -23,7 +23,7 @@ LandingPurposeModel _$LandingPurposeModelFromJson(Map<String, dynamic> json) =>
       realCommonArea: (json['realCommonArea'] as num?)?.toDouble(),
       isConsolidationPurposeParent:
           json['isConsolidationPurposeParent'] as bool?,
-      orderBy: json['orderBy'] as int?,
+      orderBy: (json['orderBy'] as num?)?.toInt(),
       legalAreaNotConsiderValue:
           (json['legalAreaNotConsiderValue'] as num?)?.toDouble(),
       realAreaNotConsiderValue:

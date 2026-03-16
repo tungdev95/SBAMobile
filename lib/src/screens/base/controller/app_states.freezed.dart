@@ -12,7 +12,7 @@ part of 'app_states.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AppState {
@@ -118,33 +118,15 @@ class __$$AppStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AppStateImpl implements _AppState {
-  _$AppStateImpl({this.language = const LanguageModel(), this.userLogin});
+class _$AppStateImpl extends _AppState {
+  _$AppStateImpl({this.language = const LanguageModel(), this.userLogin})
+      : super._();
 
   @override
   @JsonKey()
   final LanguageModel language;
   @override
   final UserModel? userLogin;
-
-  @override
-  String toString() {
-    return 'AppState(language: $language, userLogin: $userLogin)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AppStateImpl &&
-            (identical(other.language, language) ||
-                other.language == language) &&
-            (identical(other.userLogin, userLogin) ||
-                other.userLogin == userLogin));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, language, userLogin);
 
   @JsonKey(ignore: true)
   @override
@@ -153,10 +135,11 @@ class _$AppStateImpl implements _AppState {
       __$$AppStateImplCopyWithImpl<_$AppStateImpl>(this, _$identity);
 }
 
-abstract class _AppState implements AppState {
+abstract class _AppState extends AppState {
   factory _AppState(
       {final LanguageModel language,
       final UserModel? userLogin}) = _$AppStateImpl;
+  _AppState._() : super._();
 
   @override
   LanguageModel get language;

@@ -5,7 +5,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import '../../configs/injector/injector.dart';
+import '../../core/models/app/device_info.dart';
+import '../../core/models/app/smartca_api_config.dart';
 import '../../core/models/response/token_model.dart';
+import '../../core/services/device_info.dart';
 import '../../core/services/secure_local_storage.dart';
 import '../../core/utils/constants.dart';
 import '../repository/authen_repository.dart';
@@ -14,16 +17,24 @@ final ignoreList = [
   "/auth/token",
   "/auth/refresh_token",
   "https://econtract-api-demo.vnptit3.vn/sso/exchange-sso-token",
-  "https://api-hopdong.vnpt.vn/sso/exchange-sso-token"
+  "https://econtract-api-poc.vnptit3.vn/sso/exchange-sso-token",
+  "https://api-hopdong.vnpt.vn/sso/exchange-sso-token",
 ];
 
 class AuthInterceptor extends Interceptor {
   late SecureLocalStorageService _secureLocalDataSource;
   late Dio _dio;
+  late SmartCAApiConfig _smartCAApiConfig;
+  final _deviceInfoService = getIt<DeviceInfoService>();
 
-  AuthInterceptor(SecureLocalStorageService secureLocalDataSource, Dio dio) {
+  String? appversion;
+  DeviceInfoModel? deviceInfo;
+
+  AuthInterceptor(SecureLocalStorageService secureLocalDataSource, Dio dio,
+      SmartCAApiConfig smartCAApiConfig) {
     _secureLocalDataSource = secureLocalDataSource;
     _dio = dio;
+    _smartCAApiConfig = smartCAApiConfig;
   }
 
   @override
@@ -33,10 +44,25 @@ class AuthInterceptor extends Interceptor {
       final tokenString =
           await _secureLocalDataSource.getLastData(LOCAL_ACCESS_TOKEN_AUTH);
 
+      deviceInfo ??= await _deviceInfoService.getDeviceInfo();
+
       if (tokenString != null) {
         var token = TokenModel.fromJson(tokenString);
 
         options.headers["Authorization"] = "Bearer ${token.accessToken}";
+        try {
+          options.headers["clientID"] = _smartCAApiConfig.clientId;
+          options.headers["clientName"] = "SDK";
+          options.headers["deviceId"] = deviceInfo!.deviceId;
+          // options.headers["deviceName"] = deviceInfo!.deviceName;
+          options.headers["osName"] = deviceInfo!.osName;
+          options.headers["osVersion"] = deviceInfo!.osVersion;
+          options.headers["branch"] = deviceInfo!.branch;
+          options.headers["deviceModel"] = deviceInfo!.deviceModel;
+          options.headers["appVersion"] = "1.0";
+        } catch (e) {
+          print(e);
+        }
       }
     }
 
@@ -49,7 +75,7 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     // super.onError(err, handler);
     Future.delayed(
       const Duration(seconds: 1),
@@ -57,7 +83,8 @@ class AuthInterceptor extends Interceptor {
     );
   }
 
-  refreshTokenHandler(DioError error, ErrorInterceptorHandler handler) async {
+  refreshTokenHandler(
+      DioException error, ErrorInterceptorHandler handler) async {
     if (error.response?.statusCode == HttpStatus.unauthorized ||
         error.response?.statusCode == HttpStatus.forbidden) {
       try {
@@ -67,7 +94,7 @@ class AuthInterceptor extends Interceptor {
         return tokenJson.fold((l) => handler.reject(error), (token) async {
           //set bearer
           error.requestOptions.headers["Authorization"] =
-              "Bearer " + token.accessToken;
+              "Bearer ${token.accessToken}";
           //create request with new access token
           final opts = Options(
               method: error.requestOptions.method,

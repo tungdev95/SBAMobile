@@ -9,7 +9,7 @@ class EContractApiGWConfigDemo extends EContractApiGWConfig {
     tokenKey =
         "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCY/AeDrgdONvTOucWbnGGX5ZqgCQI/GHxXaGyNk93/QxdzTU1xJqcM0qpE5oJ+brVyYTG+vnjqr4SqfxNky+ze2ck0q5NHn4cOJHNkeqqW7TQf8ctGuWBbUWHsjJdXfV7/Z20RE2A4QUqP6EKL/fdf8ZPOT4g8ey8JdksJe/f8WQIDAQAB";
     tokenId = "893eb5c0-2653-463b-b23b-795163af7446";
-    domain = "https://econtract-api-demo.vnptit3.vn";
+    domain = "https://econtract-api-poc.vnptit3.vn";
     clientId = "smart-ca.client@econtract.vnpt.vn";
     clientSecret = "Abc@12345";
   }

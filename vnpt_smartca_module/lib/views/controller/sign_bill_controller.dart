@@ -18,13 +18,14 @@ class SignBillController extends BaseController {
   RxBool checkIRead = true.obs;
   final resultUploadContract = Rx<OrderCertModel?>(null);
 
-  void getBill(String? serial) async {
-    if (serial == null) {
+  void getBill(String? serial, String? orderId) async {
+    if (serial == null || orderId == null) {
       return;
     }
     showLoading();
     try {
-      final failureOrVerified = await signBillRepository.getBill(serial);
+      final failureOrVerified =
+          await signBillRepository.getBill(serial, orderId);
       hideLoading();
       failureOrVerified.fold(
         (failure) => {
@@ -45,7 +46,8 @@ class SignBillController extends BaseController {
     }
     // showLoading();
     try {
-      final failureOrVerified = await signBillRepository.saveSignatureImage(serial, base64SignatureImage);
+      final failureOrVerified = await signBillRepository.saveSignatureImage(
+          serial, base64SignatureImage);
       // hideLoading();
       failureOrVerified.fold(
         (failure) => {
@@ -67,7 +69,8 @@ class SignBillController extends BaseController {
     }
     // showLoading();
     try {
-      final failureOrVerified = await signBillRepository.uploadOrderContract(orderId, base64Contract);
+      final failureOrVerified =
+          await signBillRepository.uploadOrderContract(orderId, base64Contract);
       // hideLoading();
       failureOrVerified.fold(
         (failure) => {

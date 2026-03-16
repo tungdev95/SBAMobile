@@ -11,8 +11,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
-import '../configs/app_config.dart';
-
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -108,6 +106,10 @@ class $AssetsImagesGen {
   SvgGenImage get enLanguage =>
       const SvgGenImage('assets/images/en_language.svg');
 
+  /// File path: assets/images/extend_cert.png
+  AssetGenImage get extendCert =>
+      const AssetGenImage('assets/images/extend_cert.png');
+
   /// File path: assets/images/eye_order_detail.png
   AssetGenImage get eyeOrderDetail =>
       const AssetGenImage('assets/images/eye_order_detail.png');
@@ -178,6 +180,10 @@ class $AssetsImagesGen {
   AssetGenImage get icBarcode =>
       const AssetGenImage('assets/images/ic_barcode.png');
 
+  /// File path: assets/images/ic_box_package.svg
+  SvgGenImage get icBoxPackage =>
+      const SvgGenImage('assets/images/ic_box_package.svg');
+
   /// File path: assets/images/ic_buy_cts.png
   AssetGenImage get icBuyCts =>
       const AssetGenImage('assets/images/ic_buy_cts.png');
@@ -247,6 +253,9 @@ class $AssetsImagesGen {
   AssetGenImage get icCloudUpload =>
       const AssetGenImage('assets/images/ic_cloud_upload.png');
 
+  /// File path: assets/images/ic_cmnd.svg
+  SvgGenImage get icCmnd => const SvgGenImage('assets/images/ic_cmnd.svg');
+
   /// File path: assets/images/ic_copy.png
   AssetGenImage get icCopy => const AssetGenImage('assets/images/ic_copy.png');
 
@@ -276,6 +285,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_edit_address.png
   AssetGenImage get icEditAddress =>
       const AssetGenImage('assets/images/ic_edit_address.png');
+
+  /// File path: assets/images/ic_error_cert.png
+  AssetGenImage get icErrorCert =>
+      const AssetGenImage('assets/images/ic_error_cert.png');
 
   /// File path: assets/images/ic_extend.png
   AssetGenImage get icExtend =>
@@ -331,6 +344,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_location.png
   AssetGenImage get icLocation =>
       const AssetGenImage('assets/images/ic_location.png');
+
+  /// File path: assets/images/ic_lock.svg
+  SvgGenImage get icLock => const SvgGenImage('assets/images/ic_lock.svg');
 
   /// File path: assets/images/ic_notification.png
   AssetGenImage get icNotification =>
@@ -576,6 +592,9 @@ class $AssetsImagesGen {
   SvgGenImage get viLanguage =>
       const SvgGenImage('assets/images/vi_language.svg');
 
+  /// File path: assets/images/vneid.svg
+  SvgGenImage get vneid => const SvgGenImage('assets/images/vneid.svg');
+
   /// File path: assets/images/vnpt_eidas.svg
   SvgGenImage get vnptEidas =>
       const SvgGenImage('assets/images/vnpt_eidas.svg');
@@ -618,6 +637,7 @@ class $AssetsImagesGen {
         emptySignature,
         en,
         enLanguage,
+        extendCert,
         eyeOrderDetail,
         faceId,
         footerImg,
@@ -636,6 +656,7 @@ class $AssetsImagesGen {
         icBaner2,
         icBaner3,
         icBarcode,
+        icBoxPackage,
         icBuyCts,
         icBuySignatures,
         icCalendar,
@@ -654,6 +675,7 @@ class $AssetsImagesGen {
         icChoduyet,
         icClose,
         icCloudUpload,
+        icCmnd,
         icCopy,
         icDialogFail,
         icDialogLock,
@@ -662,6 +684,7 @@ class $AssetsImagesGen {
         icDocument,
         icEdit,
         icEditAddress,
+        icErrorCert,
         icExtend,
         icFilter,
         icHistory,
@@ -676,6 +699,7 @@ class $AssetsImagesGen {
         icLinkSystem,
         icLoading,
         icLocation,
+        icLock,
         icNotification,
         icObjectBusiness,
         icObjectHouseholds,
@@ -740,6 +764,7 @@ class $AssetsImagesGen {
         verifyInformation,
         vi,
         viLanguage,
+        vneid,
         vnptEidas,
         waiting,
         word,
@@ -805,7 +830,7 @@ class AssetGenImage {
       matchTextDirection: matchTextDirection,
       gaplessPlayback: gaplessPlayback,
       isAntiAlias: isAntiAlias,
-      package: AppConfig.isFlutter ? "vnpt_smartca_module" : null, //package,
+      package: package,
       filterQuality: filterQuality,
       cacheWidth: cacheWidth,
       cacheHeight: cacheHeight,
@@ -819,7 +844,7 @@ class AssetGenImage {
     return AssetImage(
       _assetName,
       bundle: bundle,
-      package: AppConfig.isFlutter ? "vnpt_smartca_module" : null,
+      package: package,
     );
   }
 
@@ -858,7 +883,7 @@ class SvgGenImage {
       key: key,
       matchTextDirection: matchTextDirection,
       bundle: bundle,
-      package: AppConfig.isFlutter ? "vnpt_smartca_module" : null,
+      package: package,
       width: width,
       height: height,
       fit: fit,

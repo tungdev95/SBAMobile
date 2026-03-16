@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 
 import '../../configs/app_config.dart';
 import '../../gen/assets.gen.dart';
@@ -51,14 +52,14 @@ class DialogNotification extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.all(20),
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     (image ?? Assets.images.icDialogNotice).image(
-                      height: 80,
+                      height: 60,
                       fit: BoxFit.fill,
                     ),
                     SizedBox(height: 20),
@@ -76,7 +77,7 @@ class DialogNotification extends StatelessWidget {
                       textAlign: contentAlign ?? TextAlign.center,
                       style: const TextStyle(
                         color: Color(0xff08285C),
-                        fontSize: 14.5,
+                        fontSize: 15,
                         height: 1.3,
                       ),
                     ),
@@ -88,9 +89,21 @@ class DialogNotification extends StatelessWidget {
                             : Expanded(
                                 child: AppButtonWidget(
                                   label: titleBtnCancel ??
-                                      AppLocalizations.current.close,
-                                  labelColor: const Color(0xff0D75D6),
-                                  backgroundColor: const Color(0xffE0F0FF),
+                                      (showFaq == true
+                                          ? AppLocalizations.current.searchFaq
+                                          : AppLocalizations.current.close),
+                                  // labelColor: const Color(0xff0D75D6),
+                                  // backgroundColor: const Color(0xffE0F0FF),
+                                  labelColor:
+                                      HexColor(AppConfig.colorPrimaryBtn),
+                                  backgroundColor:
+                                      HexColor(AppConfig.colorSecondBtn),
+                                  border: AppConfig.colorPrimaryBtn == "#0D75D6"
+                                      ? null
+                                      : Border.all(
+                                          width: 1.5,
+                                          color: HexColor(
+                                              AppConfig.colorPrimaryBtn)),
                                   onTap: () {
                                     Navigator.pop(context);
 
@@ -100,7 +113,8 @@ class DialogNotification extends StatelessWidget {
                                     if (showFaq == true) {
                                       launchUrl(
                                           mode: LaunchMode.externalApplication,
-                                          Uri.parse(AppConfig.faqLink));
+                                          Uri.parse(
+                                              "${AppConfig.faqLink}?msg=$content"));
                                     }
                                   },
                                 ),
@@ -108,13 +122,15 @@ class DialogNotification extends StatelessWidget {
                         SizedBox(
                             width: (onlyActionCancel || onlyActionAccept)
                                 ? 0
-                                : 16),
+                                : 14),
                         onlyActionCancel
                             ? Container()
                             : Expanded(
                                 child: AppButtonWidget(
                                   label: titleBtnAccept ??
                                       AppLocalizations.current.confirm,
+                                  backgroundColor:
+                                      HexColor(AppConfig.colorPrimaryBtn),
                                   onTap: () {
                                     Navigator.pop(context);
                                     actionAccept?.call();

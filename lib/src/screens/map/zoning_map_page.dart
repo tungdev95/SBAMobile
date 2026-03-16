@@ -21,7 +21,7 @@ class ZoningMapPage extends BasePage<ZoningMapPageController, MapPageData> {
     return RepaintBoundary(
       key: ref.read(provider(ref).notifier).mapKey,
       child: InAppWebView(
-        initialUrlRequest: URLRequest(url: Uri.parse('https://map.ekgis.vn')),
+        initialUrlRequest: URLRequest(url: WebUri('https://map.ekgis.vn')),
         onWebViewCreated: (controller) {
           ref.read(provider(ref).notifier).controller = controller;
         },

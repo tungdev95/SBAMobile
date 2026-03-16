@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/core/models/response/certificate_model.dart';
+import 'package:vnpt_smartca_module/views/controller/buy_certificate_controller.dart';
+import 'package:vnpt_smartca_module/views/controller/home_controller.dart';
+import 'package:vnpt_smartca_module/views/pages/certificate/setup_pin_code/index.dart';
 import '../../../widgets/base_screen.dart';
 
 import '../../../../core/models/response/order_cert_model.dart';
@@ -13,14 +17,42 @@ import '../../../widgets/base_text.dart';
 import '../../../widgets/bottom_contact.dart';
 
 class WaitingForAcceptCertScreen extends StatelessWidget {
+  // final EkycResponseModel ekycResponseModel;
 
   final OrderCertModel orderCertModel;
+  final String? title;
 
-  const WaitingForAcceptCertScreen({super.key, required this.orderCertModel});
+  const WaitingForAcceptCertScreen(
+      {super.key, required this.orderCertModel, this.title});
 
-  _backToHome(BuildContext context) {
+  // final buyCertificateController = Get.put(BuyCertificateController());
+  // final authController = Get.find<AuthController>();
+
+  _backToHome(BuildContext context) async {
     final appController = Get.find<AppController>();
-    appController.backToMainPage();
+    final homeController = Get.find<HomeController>();
+
+    await homeController.getCertificateListWaitingActive();
+    final cert = homeController.listCertificate.value
+        ?.firstWhere((element) => element.id == orderCertModel.credentialId);
+
+    if (cert?.status == 2) {
+      Get.to(() => SetupPinCodePage(
+            certificateModel: CertificateModel(
+              id: orderCertModel.credentialId!,
+              status: 2,
+              certProfile: cert != null
+                  ? CertProfile(serviceType: cert.certProfile?.serviceType)
+                  : null,
+            ),
+          ));
+    } else {
+      final controller = Get.find<BuyCertificateController>();
+      controller.cancelLoop = false;
+      appController.backToMainPage();
+    }
+
+    // Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   _getTitle() {
@@ -41,12 +73,12 @@ class WaitingForAcceptCertScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        _backToHome(context);
+        await _backToHome(context);
         return true;
       },
       child: BaseScreen(
         // loadingWidget: BaseLoading<BuyCertificateController>(),
-        hideAppBar: true,
+        hideAppBar: false,
         body: Column(
           children: [
             Expanded(
@@ -58,36 +90,36 @@ class WaitingForAcceptCertScreen extends StatelessWidget {
                     Container(
                       alignment: Alignment.center,
                       child: Assets.images.icChoduyet.image(
-                        width: 250,
-                        height: 250,
+                        width: 200,
+                        height: 200,
                         fit: BoxFit.fill,
                       ),
                     ),
-                    SizedBox(height: 50),
+                    SizedBox(height: 10),
                     BaseText(
                       _getTitle(),
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: Color(0xff08285C),
                       textAlign: TextAlign.center,
-                      height: 24 / 14,
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 16),
                     BaseText(
                       AppLocalizations.current.waitingForAcceptCertDescription,
                       color: Color(0xff08285C),
-                      height: 24 / 14,
                       textAlign: TextAlign.center,
+                      fontWeight: FontWeight.w500,
+                      height: 1.4,
                     ),
                     Spacer(),
                     AppButtonWidget(
                       label: AppLocalizations.current.iUnderstand,
                       doublePadding: 15,
-                      onTap: () {
-                        _backToHome(context);
+                      onTap: () async {
+                        await _backToHome(context);
                       },
                     ),
-                    SizedBox(height: 20),
+                    // SizedBox(height: 20),
                   ],
                 ),
               ),

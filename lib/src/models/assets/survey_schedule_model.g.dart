@@ -8,7 +8,7 @@ part of 'survey_schedule_model.dart';
 
 SurveyScheduleModel _$SurveyScheduleModelFromJson(Map<String, dynamic> json) =>
     SurveyScheduleModel(
-      surveyScheduleId: json['surveyScheduleId'] as int?,
+      surveyScheduleId: (json['surveyScheduleId'] as num?)?.toInt(),
       appraisalFileId: json['appraisalFileId'] as String?,
       timeStart: json['timeStart'] == null
           ? null

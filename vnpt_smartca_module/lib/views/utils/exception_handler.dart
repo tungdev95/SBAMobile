@@ -10,6 +10,7 @@ String exceptionHandler(GenericException failure) {
   Object error = failure.error;
   // final stack = failure.stack;
   final iSendLogRepository = getIt<SendLogRepository>();
+
   if (error is ServerException) {
     iSendLogRepository.sendLog(
         "${error.codeDesc ?? error.codeDesc.toString()}  ${error.message}");
@@ -36,31 +37,48 @@ String exceptionHandler(GenericException failure) {
           case DioExceptionType.receiveTimeout:
             message = AppLocalizations.current.connectTimeout;
             break;
+          case DioExceptionType.connectionError:
+            message = AppLocalizations.current.serviceLostConnection;
+            break;
           default:
-            message = error.response != null &&
-                    error.response!.data.toString().isNotEmpty
-                ? error.response!.data['message'] ??
-                    error.response!.data['title'] ??
-                    error.response!.data['detail'] ??
-                    error.response!.data['error_description'] ??
-                    error.response!.data['error'] ??
-                    error.response!.data['errors']
-                        .toString()
-                        .replaceAll("{", "")
-                        .replaceAll("}", "") ??
-                    error.message ??
-                    error.toString()
-                : error.message;
+            if ((error.response?.statusCode ?? -1) >= 500) {
+              message =
+                  "${AppLocalizations.current.serviceSomethingWentWrong}\n(st ${error.response?.statusCode})";
+            } else {
+              message = error.response != null &&
+                      error.response!.data.toString().isNotEmpty
+                  ? error.response!.data['message'] ??
+                      error.response!.data['title'] ??
+                      error.response!.data['detail'] ??
+                      error.response!.data['error_description'] ??
+                      error.response!.data['error'] ??
+                      error.response!.data['errors']
+                          .toString()
+                          .replaceAll("{", "")
+                          .replaceAll("}", "") ??
+                      error.message ??
+                      error.toString()
+                  : error.message;
+            }
         }
 
-        return message;
+        return message == ""
+            ? AppLocalizations.current.serviceSomethingWentWrong
+            : message;
       case NoInternetException:
         return AppLocalizations.current.noInternet;
       case ServerException:
-        return (error as ServerException).message;
+        var message = (error as ServerException).message;
+        if (message?.trim() == "null") {
+          message = AppLocalizations.current.serviceSomethingWentWrong;
+        }
+        return message;
       default:
-        return (error as DioException).response?.data["message"] ??
-            error.toString();
+        var message = error.toString();
+        if (message?.trim() == "null") {
+          message = AppLocalizations.current.serviceSomethingWentWrong;
+        }
+        return message;
     }
   } catch (e) {
     iSendLogRepository.sendLog(e.toString());

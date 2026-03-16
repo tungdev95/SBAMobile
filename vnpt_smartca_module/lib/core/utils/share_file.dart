@@ -4,8 +4,9 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 // import 'package:open_file_safe/open_file_safe.dart';
+// import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../models/app/file_model.dart';
 
@@ -136,22 +137,22 @@ class ShareFiles {
     final directory = await localTempPath;
     Directory dirApp = Directory('$directory/Documents');
     try {
-      // Share.shareXFiles(
-      //     ['${dirApp.path}/$filename'].map((e) => XFile(e)).toList(),
-      //     subject: filename
-      //     // sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-      //     );
-    } catch (e, _) {}
+      Share.shareXFiles(
+          ['${dirApp.path}/$filename'].map((e) => XFile(e)).toList(),
+          subject: filename
+          // sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+          );
+    } catch (e, stackTrace) {}
   }
 
-  static Future<void> readFile(String fileName) async {
-    final directory = await localTempPath;
-    Directory dirApp = Directory('$directory/Documents');
-    // try {
-    //   final result = await OpenFile.open('${dirApp.path}/$fileName');
-    //   print(result);
-    // } catch (e, stackTrace) {
-    //   print(stackTrace.toString());
-    // }
-  }
+  // static Future<void> readFile(String fileName) async {
+  //   final directory = await localTempPath;
+  //   Directory dirApp = Directory('$directory/Documents');
+  //   try {
+  //     final result = await OpenFile.open('${dirApp.path}/$fileName');
+  //     print(result);
+  //   } catch (e, stackTrace) {
+  //     print(stackTrace.toString());
+  //   }
+  // }
 }

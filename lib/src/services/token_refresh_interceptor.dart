@@ -1,11 +1,9 @@
 import 'package:aad_oauth/aad_oauth.dart';
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sba/sba_app.dart';
 import 'package:sba/src/models/base/base_api_model.dart';
 import 'package:sba/src/screens/base/top_level_provider.dart';
 import 'package:sba/src/services/api/user_api.dart';
-import 'package:sba/src/utils/dialog_utils.dart';
 import 'package:vnpt_smartca_module/core/extensions/either_data.dart';
 
 class TokenRefreshInterceptor extends QueuedInterceptor {
@@ -27,6 +25,20 @@ class TokenRefreshInterceptor extends QueuedInterceptor {
     var refreshToken = userLogin?.refreshToken;
     String? accessToken = null;
     final statusCode = err.response?.statusCode;
+    if (statusCode == 409) {
+      _isRefreshing = false;
+      return handler.reject(
+        DioException.badResponse(
+          statusCode: StatusCode.kTokenExpired,
+          requestOptions: err.requestOptions,
+          response: err.response ??
+              Response(
+                requestOptions: err.requestOptions,
+                statusCode: StatusCode.kTokenExpired,
+              ),
+        ),
+      );
+    }
     if (statusCode == 401 || statusCode == 403 && refreshToken != null) {
       if (!_isRefreshing) {
         _isRefreshing = true;
@@ -45,7 +57,19 @@ class TokenRefreshInterceptor extends QueuedInterceptor {
           }
         } catch (e) {
           // If refresh fails, clear tokens and proceed with error
-          await _clearTokens();
+
+          _isRefreshing = false;
+          return handler.reject(
+            DioException.badResponse(
+              statusCode: StatusCode.kTokenExpired,
+              requestOptions: err.requestOptions,
+              response: err.response ??
+                  Response(
+                    requestOptions: err.requestOptions,
+                    statusCode: StatusCode.kTokenExpired,
+                  ),
+            ),
+          );
         } finally {
           _isRefreshing = false;
         }
@@ -60,6 +84,8 @@ class TokenRefreshInterceptor extends QueuedInterceptor {
             accessToken,
           );
           return handler.resolve(response);
+        } else {
+          return handler.reject(err);
         }
       }
     }
@@ -92,26 +118,10 @@ class TokenRefreshInterceptor extends QueuedInterceptor {
     return null;
   }
 
-  Future<void> _clearTokens() async {
-    await DialogUtils.showMessageDialog(
-      SBAApp.navigatorKey.currentState!.context,
-      TokenExpiredException().message,
-    );
-    ref.read(appController.notifier).doLogout();
-  }
-
   Future<Response> _retryRequest(
     RequestOptions requestOptions,
     String? accessToken,
   ) {
-    // final options = Options(
-    //   method: requestOptions.method,
-    //   headers: {
-    //     ...requestOptions.headers,
-    //     'Authorization': 'Bearer $accessToken',
-    //   },
-    // );
-
     return dio.request(
       requestOptions.path,
       data: requestOptions.data,

@@ -17,7 +17,6 @@ class TypeAheadFormFieldCustom<T> extends StatelessWidget {
     this.initialValue,
     this.suggestionsCallback,
     this.validator,
-    Null Function(dynamic value)? onSaved,
     this.onSelectedCallback,
     this.doublePadding = 16,
   }) : super(key: key);
@@ -48,57 +47,56 @@ class TypeAheadFormFieldCustom<T> extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          TypeAheadFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            textFieldConfiguration: TextFieldConfiguration(
+          TypeAheadField(
+            controller: controller,
+            builder: (context, controller, focusNode) => TextField(
               controller: controller,
+              focusNode: focusNode,
+              autofocus: true,
+              scrollPadding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 180),
               decoration: ConfigInputDecoration().config(
                 "",
                 borderColor: Color(0xffA5B0C2),
                 fillColor: Colors.white,
                 suffixIcon: IconButton(
                   onPressed: () {
-                    controller?.text = "";
+                    controller.text = "";
                   },
                   icon: Icon(Icons.close),
                   color: Color(0xff5768A5),
                 ),
               ),
             ),
-            suggestionsCallback: (pattern) {
-              return suggestionsCallback?.call(pattern);
-            },
-            itemBuilder: (context, suggestion) {
-              dynamic option = suggestion;
-              return Padding(
-                padding: const EdgeInsets.only(left: 10.0, top: 10.0, bottom: 10.0),
-                child: Text(
-                  option.name ?? option.toString(),
-                  style: TextStyle(fontSize: 14.0, color: HexColor("#08285C")),
-                ),
-              );
-            },
-            transitionBuilder: (context, suggestionsBox, controller) {
-              return suggestionsBox;
-            },
-            onSuggestionSelected: (suggestion) {
-              onSelectedCallback?.call(suggestion);
-            },
-            noItemsFoundBuilder: (context) => Container(
+            emptyBuilder: (context) => SizedBox(
               height: 50,
               child: Center(
                 child: Text(
                   AppLocalizations.current.dataNotFound,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      ?.copyWith(color: HexColor("#6079A0"), fontWeight: FontWeight.normal, fontSize: 16.0),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: HexColor("#6079A0"),
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16.0),
                 ),
               ),
             ),
-            // ignore: missing_return
-            validator: this.validator,
-            onSaved: (value) => {},
+            itemBuilder: (context, suggestion) {
+              return Container(
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                child: Text((suggestion as dynamic)?.name ?? ''),
+              );
+            },
+            onSelected: (value) {
+              if (validator != null &&
+                  validator!((value as dynamic)?.name) == "") {
+                onSelectedCallback?.call(value);
+              } else {
+                onSelectedCallback?.call(value);
+              }
+            },
+            suggestionsCallback: (search) {
+              return suggestionsCallback?.call(search);
+            },
           )
         ],
       ),

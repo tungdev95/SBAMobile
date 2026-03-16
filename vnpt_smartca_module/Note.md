@@ -45,7 +45,7 @@ dart fix --apply
 
 **Lệnh build cho Android**
 ```bash
-flutter_3x build aar --no-profile
+flutter build aar --no-profile
 ```
 
 **Lệnh build cho iOS**
@@ -58,5 +58,5 @@ flutter_3x build ios-framework --cocoapods --no-profile --output=ios_framework
 
 // Build tất cả ra xcframework 
 
-flutter build ios-framework --no-profile --output=ios_framework
+fvm flutter build ios-framework --no-profile --no-debug --output=ios_framework
 ```

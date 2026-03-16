@@ -58,5 +58,10 @@ class MethodChannelNames {
   static String activeEContract = "activeEContract";
 
   static const String getMainInfo = "getMainInfo";
+  static const String createAccount = "createAccount";
   static String getMainInfoResult = "getMainInfoResult";
+  static String createAccountResult = "createAccountResult";
+
+  static const String signOut = "signOut";
+  static String signOutResult = "signOutResult";
 }

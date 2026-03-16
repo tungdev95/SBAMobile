@@ -20,7 +20,7 @@ Map<String, dynamic> _$SaveAssetResponseToJson(SaveAssetResponse instance) =>
 
 SaveAssetBody _$SaveAssetBodyFromJson(Map<String, dynamic> json) =>
     SaveAssetBody(
-      code: json['code'] as int? ?? 200,
+      code: (json['code'] as num?)?.toInt() ?? 200,
       message: json['message'] as String? ?? '',
     );
 

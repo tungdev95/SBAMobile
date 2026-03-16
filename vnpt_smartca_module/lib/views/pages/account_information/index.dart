@@ -8,13 +8,13 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:scale_size/scale_size.dart';
 import 'package:vnpt_smartca_module/core/extensions/string.dart';
-import 'package:vnpt_smartca_module/core/models/app/district_model.dart';
 import 'package:vnpt_smartca_module/core/models/app/province_model.dart';
 import 'package:vnpt_smartca_module/core/models/app/wards_model.dart';
 import 'package:vnpt_smartca_module/core/models/response/user_address.dart';
 import 'package:vnpt_smartca_module/core/services/device_info.dart';
 import 'package:vnpt_smartca_module/views/controller/buy_certificate_controller.dart';
 import 'package:vnpt_smartca_module/views/controller/enter_info_controller.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import 'package:vnpt_smartca_module/views/utils/config_input_decoration.dart';
 import 'package:vnpt_smartca_module/views/widgets/dialog_notification.dart';
 import 'package:vnpt_smartca_module/views/widgets/typehead_formfield_custom.dart';
@@ -29,6 +29,7 @@ import '../../../gen/assets.gen.dart';
 import '../../controller/app_controller.dart';
 import '../../i18n/generated_locales/l10n.dart';
 import '../../widgets/base_text.dart';
+import 'address_details_widget.dart';
 
 class AccountInformationPage extends StatefulWidget {
   const AccountInformationPage({Key? key}) : super(key: key);
@@ -38,8 +39,6 @@ class AccountInformationPage extends StatefulWidget {
 }
 
 class AccountInformationState extends State<AccountInformationPage> {
-  final _secureLocalDataSource = getIt<SecureLocalStorageService>();
-  ProfileModel? userProfile;
   final _deviceInfoService = getIt<DeviceInfoService>();
 
   final appController = Get.find<AppController>();
@@ -51,7 +50,6 @@ class AccountInformationState extends State<AccountInformationPage> {
   int maxLength250 = 250;
   int maxLength12 = 12;
   String provinceStr = "";
-  String districtStr = "";
   String wardsStr = "";
   String addressDetailStr = "";
   final controller = Get.put(BuyCertificateController());
@@ -59,7 +57,7 @@ class AccountInformationState extends State<AccountInformationPage> {
   @override
   void initState() {
     super.initState();
-    getUserInformation();
+
     getDeviceInfo();
   }
 
@@ -74,19 +72,6 @@ class AccountInformationState extends State<AccountInformationPage> {
 
   @override
   Widget build(BuildContext context) {
-    // controller.checkSuccessUpdate.listen((p0) {
-    //   if(p0?.code == 0) {
-    //     Get.dialog(DialogNotification(
-    //       content: AppLocalizations.current.update_info_success,
-    //       titleBtnAccept: AppLocalizations.current.goHome,
-    //       onlyActionAccept: true,
-    //       actionAccept: () {
-    //         final appController = Get.find<AppController>();
-    //         appController.backToMainPage();
-    //       },
-    //     ));
-    //   }
-    // });
     return BaseScreen(
       title: AppLocalizations.current.accountInformation,
       loadingWidget: BaseLoading<BuyCertificateController>(),
@@ -103,9 +88,11 @@ class AccountInformationState extends State<AccountInformationPage> {
                     margin: EdgeInsets.all(16),
                     padding: EdgeInsets.all(15),
                     decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
-                        image: AssetImage(Assets.images.icInfoHeaderBg.path),
-                        fit: BoxFit.fill,
+                        image: AssetImage(Assets.images.icInfoHeaderBg.path,
+                            package: AppConfig.package),
+                        fit: BoxFit.cover,
                       ),
                     ),
                     child: Row(
@@ -117,14 +104,16 @@ class AccountInformationState extends State<AccountInformationPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               BaseText(
-                                userProfile?.fullName?.capitalize,
+                                controllerAddress
+                                    .userProfile.value.fullName?.capitalize,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
                               ),
                               SizedBox(height: 4),
                               BaseText(
-                                userProfile?.uid,
+                                controllerAddress.userProfile.value.uid
+                                    ?.toUpperCase(),
                                 color: Colors.white,
                               ),
                             ],
@@ -153,19 +142,28 @@ class AccountInformationState extends State<AccountInformationPage> {
                         _itemInformation(
                             Assets.images.icProfileCircle,
                             AppLocalizations.current.accountType,
-                            getTypeAccount(userProfile?.accType)),
+                            getTypeAccount(
+                                controllerAddress.userProfile.value.accType)),
                         _itemInformation(
                             Assets.images.icPersonalCard,
                             AppLocalizations.current.fullDocument,
-                            userProfile?.uid),
-                        _itemInformation(Assets.images.icCall,
-                            AppLocalizations.current.phone, userProfile?.phone),
-                        _itemInformation(Assets.images.mail,
-                            AppLocalizations.current.email, userProfile?.email),
+                            controllerAddress.userProfile.value.uid
+                                ?.split("_")
+                                .first
+                                .toUpperCase()),
+                        _itemInformation(
+                            Assets.images.icCall,
+                            AppLocalizations.current.phone,
+                            controllerAddress.userProfile.value.phone),
+                        _itemInformation(
+                            Assets.images.mail,
+                            AppLocalizations.current.email,
+                            controllerAddress.userProfile.value.email),
                         _itemInformation(
                             Assets.images.icLocation,
                             AppLocalizations.current.addressDetail,
-                            userProfile?.userAddress?.diaChi,
+                            controllerAddress
+                                .userProfile.value.userAddress?.diaChi,
                             isEditAddressImg: true, tapEdit: () {
                           setState(() {
                             showDetailAddress = !showDetailAddress;
@@ -192,7 +190,17 @@ class AccountInformationState extends State<AccountInformationPage> {
               ),
             ),
             showEmailAndPhone ? showEmailAndPhones() : Container(),
-            showDetailAddress ? showAddressDetails() : Container()
+            showDetailAddress
+                ? AddressDetailsWidget(
+                    controllerAddress: controllerAddress,
+                    controller: controller,
+                    onClose: () {
+                      setState(() {
+                        showDetailAddress = false;
+                      });
+                    },
+                  )
+                : Container()
           ],
         ),
       ),
@@ -242,15 +250,6 @@ class AccountInformationState extends State<AccountInformationPage> {
     );
   }
 
-  Future<void> getUserInformation() async {
-    String? strProfile =
-        await _secureLocalDataSource.getLastData(LOCAL_USER_PROFILE);
-    if (strProfile != null) {
-      userProfile = ProfileModel.fromJson(json.decode(strProfile));
-      setState(() {});
-    }
-  }
-
   String getTypeAccount(int? type) {
     switch (type) {
       case 0:
@@ -267,38 +266,15 @@ class AccountInformationState extends State<AccountInformationPage> {
   }
 
   Widget showAddressDetails() {
-    controllerAddress.txtProvinceController.text =
-        userProfile?.userAddress?.provinceName ?? '';
-    controllerAddress.txtDistrictController.text =
-        userProfile?.userAddress?.districtName ?? '';
-    controllerAddress.txtWardController.text =
-        userProfile?.userAddress?.wardName ?? '';
-    controllerAddress.txtAddressController.text =
-        userProfile?.userAddress?.streetName ?? '';
+    ProvinceModel provinceModel =
+        ProvinceModel(provinceId: 0, provinceName: '');
 
-    ProvinceModel provinceModel = ProvinceModel(
-      provinceId:
-          int.tryParse(userProfile?.userAddress?.provinceId ?? "0") ?? 0,
-      provinceName: userProfile?.userAddress?.provinceName ?? '',
-    );
-    DistrictModel districtModel = DistrictModel(
-      districtId:
-          int.tryParse(userProfile?.userAddress?.districtId ?? "0") ?? 0,
-      districtName: userProfile?.userAddress?.districtName ?? '',
-    );
-    WardsModel wardsModel = WardsModel(
-      wardId: int.tryParse(userProfile?.userAddress?.wardId ?? "0") ?? 0,
-      wardName: userProfile?.userAddress?.wardName ?? '',
-    );
+    WardsModel wardsModel = WardsModel(wardId: 0, wardName: '');
 
-    controllerAddress.getProvince();
-    if (provinceModel.id > 0) {
-      controllerAddress.getDistrict(provinceModel.id.toString());
-    }
-    if (provinceModel.id > 0 && districtModel.id > 0) {
-      controllerAddress.getWards(
-          provinceModel.id.toString(), districtModel.id.toString());
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await controllerAddress.getAllWards();
+      controllerAddress.addressStandardization(provinceModel, wardsModel);
+    });
 
     return Container(
       height: 1.height,
@@ -341,8 +317,8 @@ class AccountInformationState extends State<AccountInformationPage> {
                               });
                             },
                             child: Container(
-                              width: 25,
-                              height: 25,
+                              width: 30,
+                              height: 30,
                               alignment: Alignment.centerRight,
                               child: Assets.images.icClose.svg(
                                 width: 15,
@@ -371,36 +347,12 @@ class AccountInformationState extends State<AccountInformationPage> {
                         provinceModel = province;
                         controllerAddress.txtProvinceController.text =
                             province.name;
-                        controllerAddress.txtDistrictController.text = "";
                         controllerAddress.txtWardController.text = "";
-                        controllerAddress
-                            .getDistrict(provinceModel.id.toString());
+
                         return province.name;
                       },
                       validator: (value) {
                         return controllerAddress.validateProvinces(value);
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    TypeAheadFormFieldCustom(
-                      labelText: AppLocalizations.current.district,
-                      controller: controllerAddress.txtDistrictController,
-                      suggestionsCallback: (pattern) {
-                        return controllerAddress
-                            .getDistrictsSuggestions(pattern);
-                      },
-                      onSelectedCallback: (option) {
-                        DistrictModel district = option as DistrictModel;
-                        districtModel = district;
-                        controllerAddress.txtDistrictController.text =
-                            district.name;
-                        controllerAddress.txtWardController.text = "";
-                        controllerAddress.getWards(provinceModel.id.toString(),
-                            districtModel.id.toString());
-                        return district.name;
-                      },
-                      validator: (value) {
-                        return controllerAddress.validateDistricts(value);
                       },
                     ),
                     SizedBox(height: 16),
@@ -435,6 +387,7 @@ class AccountInformationState extends State<AccountInformationPage> {
                       margin: EdgeInsets.symmetric(horizontal: 16),
                       child: FormBuilderTextField(
                         name: 'detailAddress',
+                        enableSuggestions: true,
                         // initialValue: addressDetailStr,
                         readOnly: false,
                         controller: controllerAddress.txtAddressController,
@@ -461,17 +414,17 @@ class AccountInformationState extends State<AccountInformationPage> {
                         onTap: () {
                           if (controllerAddress.formKey1.currentState!
                               .saveAndValidate()) {
-                            if (provinceModel.provinceId == int.tryParse(userProfile?.userAddress?.provinceId ?? "0") &&
-                                districtModel.districtId ==
-                                    int.tryParse(
-                                        userProfile?.userAddress?.districtId ??
-                                            "0") &&
+                            if (provinceModel.provinceId ==
+                                    int.tryParse(controllerAddress.userProfile
+                                            .value.userAddress?.provinceId ??
+                                        "0") &&
                                 wardsModel.wardId ==
-                                    int.tryParse(
-                                        userProfile?.userAddress?.wardId ??
-                                            "0") &&
+                                    int.tryParse(controllerAddress.userProfile
+                                            .value.userAddress?.wardId ??
+                                        "0") &&
                                 controllerAddress.txtAddressController.text ==
-                                    userProfile?.userAddress?.streetName) {
+                                    controllerAddress.userProfile.value
+                                        .userAddress?.streetName) {
                               Get.dialog(DialogNotification(
                                 content:
                                     AppLocalizations.current.not_info_change,
@@ -483,8 +436,6 @@ class AccountInformationState extends State<AccountInformationPage> {
                             }
                             provinceStr =
                                 controllerAddress.txtProvinceController.text;
-                            districtStr =
-                                controllerAddress.txtDistrictController.text;
                             wardsStr = controllerAddress.txtWardController.text;
                             addressDetailStr =
                                 controllerAddress.txtAddressController.text;
@@ -492,15 +443,12 @@ class AccountInformationState extends State<AccountInformationPage> {
                             UserAddress userAddress = UserAddress(
                                 provinceId: provinceModel.provinceId.toString(),
                                 provinceName: provinceModel.provinceName,
-                                districtId: districtModel.districtId.toString(),
-                                districtName:
-                                    districtModel.districtName.toString(),
                                 wardId: wardsModel.wardId.toString(),
                                 wardName: wardsModel.wardName.toString(),
                                 streetName:
                                     controllerAddress.txtAddressController.text,
                                 diaChi:
-                                    "${controllerAddress.txtAddressController.text}, ${wardsModel!.wardName.toString()}, ${districtModel!.districtName.toString()}, ${provinceModel!.provinceName}");
+                                    "${controllerAddress.txtAddressController.text}, ${wardsModel!.wardName.toString()}, ${provinceModel!.provinceName}");
 
                             controller.updateInfoUserAddress(userAddress);
                           }
@@ -518,17 +466,10 @@ class AccountInformationState extends State<AccountInformationPage> {
   }
 
   Widget showEmailAndPhones() {
-    // ekycResponseModel.ocrResult.recentlyLocation = controller.addressDetailTEC.text;
-    // String provinceStr = ekycResponseModel.ocrResult.city?.capitalize ?? "";
-    // String districtStr = ekycResponseModel.ocrResult.district?.capitalize ?? "";
-    // String wardsStr = ekycResponseModel.ocrResult.ward?.capitalize ?? "";
-    // String addressDetailStr = ekycResponseModel.ocrResult.recentlyLocation?.capitalize ?? "";
-    //
-    // controllerAddress.txtProvinceController.text = provinceStr;
-    // controllerAddress.txtDistrictController.text = districtStr;
-    // controllerAddress.txtWardController.text = wardsStr;
-    controllerAddress.txtPhoneController.text = userProfile?.phone ?? '';
-    controllerAddress.txtEmailController.text = userProfile?.email ?? '';
+    controllerAddress.txtPhoneController.text =
+        controllerAddress.userProfile.value.phone ?? '';
+    controllerAddress.txtEmailController.text =
+        controllerAddress.userProfile.value.email ?? '';
 
     return Container(
       // height: 1.height,
@@ -677,9 +618,9 @@ class AccountInformationState extends State<AccountInformationPage> {
                           if (controllerAddress.formKey1.currentState!
                               .saveAndValidate()) {
                             if (controllerAddress.txtPhoneController.text ==
-                                    userProfile?.phone &&
+                                    controllerAddress.userProfile.value.phone &&
                                 controllerAddress.txtEmailController.text ==
-                                    userProfile?.email) {
+                                    controllerAddress.userProfile.value.email) {
                               Get.dialog(DialogNotification(
                                 content: AppLocalizations
                                     .current.please_choose_email_phone_other,
@@ -703,22 +644,10 @@ class AccountInformationState extends State<AccountInformationPage> {
                                   .trim(),
                             );
                           }
-
-                          // if (controllerAddress.formKey1.currentState!.saveAndValidate()) {
-                          //   ekycResponseModel.ocrResult.city = provinceModel.provinceName;
-                          //   ekycResponseModel.ocrResult.cityId = provinceModel.provinceId.toString();
-                          //   ekycResponseModel.ocrResult.district = districtModel.districtName;
-                          //   ekycResponseModel.ocrResult.districtId = districtModel.districtId.toString();
-                          //   ekycResponseModel.ocrResult.ward = wardsModel.wardName;
-                          //   ekycResponseModel.ocrResult.wardId = wardsModel.wardId.toString();
-                          //   ekycResponseModel.ocrResult.recentlyLocation = controllerAddress.txtAddressController.text;
-                          //   updateDataText();
-                          //   showViewAddress = false;
-                          //   setState(() {});
-                          // }
                         },
                       ),
                     ),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),

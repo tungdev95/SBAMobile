@@ -4,6 +4,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
+import '../../../core/models/response/order_cert_model.dart';
 import '../../widgets/base_loading.dart';
 import '../../widgets/base_screen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -22,9 +25,10 @@ import '../certificate/buy/order_processing_screen.dart';
 class SignBillPage extends StatelessWidget {
   final String? serial;
   final String? orderId;
+  final OrderCertModel? orderCertModel;
 
-  SignBillPage({super.key, this.serial, this.orderId}) {
-    controller.getBill(serial);
+  SignBillPage({super.key, this.serial, this.orderId, this.orderCertModel}) {
+    controller.getBill(serial, orderId);
   }
 
   final controller = Get.put(SignBillController());
@@ -53,7 +57,8 @@ class SignBillPage extends StatelessWidget {
     controller.resultUploadContract.listen((result) {
       if (result != null) {
         // LUONG KICH HOAT CERT
-        controllerBuyCert.handleOrderModelByStatus(result, isFromListOrder: false);
+        controllerBuyCert.handleOrderModelByStatus(result,
+            isFromListOrder: false);
       }
     });
     return BaseScreen(
@@ -62,10 +67,10 @@ class SignBillPage extends StatelessWidget {
       colorBg: Color(0xffFAFBFF),
       body: Column(
         children: [
-          HeaderStep(
-            step: 1,
-            customImageStep: Assets.images.stepOneNew,
-          ),
+          // HeaderStep(
+          //   step: 1,
+          //   customImageStep: Assets.images.stepOneNew,
+          // ),
           Expanded(
             child: Container(
               margin: EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 15),
@@ -75,7 +80,9 @@ class SignBillPage extends StatelessWidget {
                     child: Container(
                       color: Colors.white,
                       child: Obx(() => controller.contentBill.value.isNotEmpty
-                          ? WebViewWidget(controller: webViewController..loadHtmlString(controller.contentBill.value))
+                          ? WebViewWidget(
+                              controller: webViewController
+                                ..loadHtmlString(controller.contentBill.value))
                           : Container()),
                     ),
                   ),
@@ -85,10 +92,13 @@ class SignBillPage extends StatelessWidget {
                       Obx(
                         () => InkWell(
                           onTap: () {
-                            controller.checkIRead.value = !controller.checkIRead.value;
+                            controller.checkIRead.value =
+                                !controller.checkIRead.value;
                           },
-                          child:
-                              (controller.checkIRead.value ? Assets.images.icCheckbox : Assets.images.icUncheck).image(
+                          child: (controller.checkIRead.value
+                                  ? Assets.images.icCheckbox
+                                  : Assets.images.icUncheck)
+                              .image(
                             width: 25,
                             height: 25,
                             fit: BoxFit.fill,
@@ -107,6 +117,7 @@ class SignBillPage extends StatelessWidget {
                   SizedBox(height: 10),
                   AppButtonWidget(
                     label: AppLocalizations.current.electronicSignature,
+                    backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                     onTap: () {
                       if (controller.checkIRead.value) {
                         showSignaturePopUP(context);
@@ -128,18 +139,39 @@ class SignBillPage extends StatelessWidget {
     );
   }
 
+  _getTitle() {
+    if (orderCertModel != null &&
+        orderCertModel?.getTypeEnum() == OrderType.changeInfo) {
+      return AppLocalizations.current.creatingChangeInfoTicketRequest;
+    } else {
+      return AppLocalizations.current.creatingRequest;
+    }
+  }
+
+  _getDescription() {
+    if (orderCertModel != null &&
+        orderCertModel?.getTypeEnum() == OrderType.changeInfo) {
+      return AppLocalizations
+          .current.creatingChangeInfoTicketRequestDescription;
+    } else {
+      return AppLocalizations.current.processingRequestChangeDevice;
+    }
+  }
+
   void showSignaturePopUP(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (_) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: DrawSignatureWidget(
             callBack: (data) {
               String base64Image = base64Encode(data);
               Get.to(() => OrderProcessingScreen(
-                    label: AppLocalizations.current.creatingRequest,
-                    content: AppLocalizations.current.processingRequestChangeDevice,
+                    label: _getTitle(),
+                    content: _getDescription(),
                   ));
               controller.saveSignatureImage(serial, base64Image);
             },

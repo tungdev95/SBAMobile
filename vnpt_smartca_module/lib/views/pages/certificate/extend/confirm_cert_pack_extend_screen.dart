@@ -2,6 +2,8 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:vnpt_smartca_module/configs/app_config.dart';
+import 'package:vnpt_smartca_module/views/utils/color.dart';
 import '../../../../core/models/response/profile_model.dart';
 import '../../../controller/extend_certificate_controller.dart';
 import '../../../i18n/generated_locales/l10n.dart';
@@ -25,10 +27,13 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
   // final controller = Get.find<BuyCertificateController>();
   final controllerExtend = Get.find<ExtendCertificateController>();
 
-  ConfirmCertPackExtendScreen({super.key, required this.orderCertModel, required this.profileModel});
+  ConfirmCertPackExtendScreen(
+      {super.key, required this.orderCertModel, required this.profileModel});
 
   _renderItemInfo(String label, String content,
-      {Color? contentColor, FontWeight? contentFontWeight, bool isShowCopyButton = false}) {
+      {Color? contentColor,
+      FontWeight? contentFontWeight,
+      bool isShowCopyButton = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       // crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +58,8 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
         Expanded(
           flex: 7,
           child: Container(
-            alignment: label.isNotEmpty ? Alignment.centerRight : Alignment.centerLeft,
+            alignment:
+                label.isNotEmpty ? Alignment.centerRight : Alignment.centerLeft,
             child: BaseText(
               content,
               fontWeight: contentFontWeight ?? FontWeight.w400,
@@ -72,7 +78,8 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                 onTap: () {
                   FlutterClipboard.copy(content);
                 },
-                child: Assets.images.icCopy.image(width: 20, height: 20, fit: BoxFit.contain)),
+                child: Assets.images.icCopy
+                    .image(width: 20, height: 20, fit: BoxFit.contain)),
           ),
         )
       ],
@@ -87,7 +94,8 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     OrderCertModel value = orderCertModel;
     return BaseScreen(
-      title: AppLocalizations.current.certificate_package_page_confirm_order_title,
+      title:
+          AppLocalizations.current.certificate_package_page_confirm_order_title,
       colorBg: const Color.fromRGBO(241, 244, 250, 1),
       loadingWidget: const BaseLoading<BuyCertificateController>(),
       body: Container(
@@ -109,9 +117,12 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 7),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(11), topRight: Radius.circular(11)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(11),
+                      topRight: Radius.circular(11)),
                 ),
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, top: 8, bottom: 8),
                 child: Row(
                   children: [
                     Expanded(
@@ -142,8 +153,9 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                           height: 14,
                           decoration: const BoxDecoration(
                               color: Color.fromRGBO(241, 244, 250, 1),
-                              borderRadius:
-                                  BorderRadius.only(topRight: Radius.circular(14), bottomRight: Radius.circular(14))),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(14),
+                                  bottomRight: Radius.circular(14))),
                         )
                       ],
                     ),
@@ -171,8 +183,9 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                           height: 14,
                           decoration: const BoxDecoration(
                               color: Color.fromRGBO(241, 244, 250, 1),
-                              borderRadius:
-                                  BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(14),
+                                  bottomLeft: Radius.circular(14))),
                         )
                       ],
                     ),
@@ -184,23 +197,28 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 7),
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(11), bottomRight: Radius.circular(11)),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(11),
+                      bottomRight: Radius.circular(11)),
                 ),
                 padding: const EdgeInsets.only(left: 16, right: 16),
                 child: Column(
                   children: [
-                    _renderItemInfo(AppLocalizations.current.orderCode, value.dhsxkdCustomerInfo.maGd,
+                    _renderItemInfo(AppLocalizations.current.orderCode,
+                        value.dhsxkdCustomerInfo.maGd ?? "",
                         contentFontWeight: FontWeight.w700,
                         contentColor: const Color(0xff08285C),
                         isShowCopyButton: true),
                     const SizedBox(
                       height: 8,
                     ),
-                    _renderItemInfo(AppLocalizations.current.orderDate, DatetimeFormat().formatDate(value.createdDate)),
+                    _renderItemInfo(AppLocalizations.current.orderDate,
+                        DatetimeFormat().formatDate(value.createdDate)),
                     const SizedBox(
                       height: 8,
                     ),
-                    _renderItemInfo(AppLocalizations.current.status, value.getStateText(),
+                    _renderItemInfo(
+                        AppLocalizations.current.status, value.getStateText(),
                         contentFontWeight: FontWeight.w600,
                         contentColor: const Color(0xffDB7269)),
                     Container(
@@ -222,27 +240,35 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    _renderItemInfo(_replaceText(AppLocalizations.current.subscriber_name),
+                    _renderItemInfo(
+                        _replaceText(AppLocalizations.current.subscriber_name),
                         controllerExtend.profileModel?.fullName ?? "",
-                        contentFontWeight: FontWeight.w400, contentColor: const Color(0xff08285C)),
+                        contentFontWeight: FontWeight.w400,
+                        contentColor: const Color(0xff08285C)),
                     const SizedBox(
                       height: 8,
                     ),
                     _renderItemInfo(
-                        _replaceText(AppLocalizations.current.idNumber), controllerExtend.profileModel?.uid ?? "",
-                        contentFontWeight: FontWeight.w400, contentColor: const Color(0xff08285C)),
+                        _replaceText(AppLocalizations.current.idNumber),
+                        controllerExtend.profileModel?.uid ?? "",
+                        contentFontWeight: FontWeight.w400,
+                        contentColor: const Color(0xff08285C)),
                     const SizedBox(
                       height: 8,
                     ),
                     _renderItemInfo(
-                        _replaceText(AppLocalizations.current.address), controllerExtend.profileModel?.address ?? "",
-                        contentFontWeight: FontWeight.w400, contentColor: const Color(0xff08285C)),
+                        _replaceText(AppLocalizations.current.address),
+                        controllerExtend.profileModel?.address ?? "",
+                        contentFontWeight: FontWeight.w400,
+                        contentColor: const Color(0xff08285C)),
                     const SizedBox(
                       height: 8,
                     ),
                     _renderItemInfo(
-                        _replaceText(AppLocalizations.current.phone), controllerExtend.profileModel?.phone ?? "",
-                        contentFontWeight: FontWeight.w700, contentColor: const Color(0xff08285C)),
+                        _replaceText(AppLocalizations.current.phone),
+                        controllerExtend.profileModel?.phone ?? "",
+                        contentFontWeight: FontWeight.w700,
+                        contentColor: const Color(0xff08285C)),
                     const SizedBox(
                       height: 8,
                     ),
@@ -260,9 +286,10 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    _renderItemInfo(
-                        "", orderCertModel.previousSerial ?? "",
-                        contentFontWeight: FontWeight.w400, contentColor: const Color(0xff08285C), isShowCopyButton: true),
+                    _renderItemInfo("", orderCertModel.previousSerial ?? "",
+                        contentFontWeight: FontWeight.w400,
+                        contentColor: const Color(0xff08285C),
+                        isShowCopyButton: true),
                     Container(
                       margin: const EdgeInsets.only(top: 8, bottom: 6),
                       color: Colors.white,
@@ -283,18 +310,19 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                       height: 8,
                     ),
                     _renderItemInfo(
-                      _replaceText(AppLocalizations.current.product_name),
-                      value.pricing?.pricingName ?? "",
-                        contentFontWeight: FontWeight.w700, contentColor: const Color(0xff08285C)
-                    ),
+                        _replaceText(AppLocalizations.current.product_name),
+                        value.pricing?.pricingName ?? "",
+                        contentFontWeight: FontWeight.w700,
+                        contentColor: const Color(0xff08285C)),
                     const SizedBox(
                       height: 8,
                     ),
                     _renderItemInfo(
-                      _replaceText(AppLocalizations.current.certificate_package_item_price_title),
-                      value.pricing?.priceStr ?? "",
-                       contentFontWeight: FontWeight.w400, contentColor: const Color(0xff069802)
-                    ),
+                        _replaceText(AppLocalizations
+                            .current.certificate_package_item_price_title),
+                        value.pricing?.priceStr ?? "",
+                        contentFontWeight: FontWeight.w400,
+                        contentColor: const Color(0xff069802)),
                     // const SizedBox(
                     //   height: 8,
                     // ),
@@ -338,7 +366,8 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: const Color(0xff0D75D6))),
                 margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 alignment: Alignment.centerLeft,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,7 +391,8 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                         visible: true,
                         child: BaseText(
                           (orderCertModel.pricing.price > 0)
-                              ? AppLocalizations.current.service_pack_vat_included
+                              ? AppLocalizations
+                                  .current.service_pack_vat_included
                               : "",
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -374,15 +404,22 @@ class ConfirmCertPackExtendScreen extends StatelessWidget {
                     ),
                     AppButtonWidget(
                       label: AppLocalizations.current.pay,
+                      backgroundColor: HexColor(AppConfig.colorPrimaryBtn),
                       onTap: () {
-                        String? referrerCode = controllerExtend.formKey4.currentState?.fields["referralCode"]?.value.toString().trim();
-                        Get.to(() => PaymentScreen(orderCertModel: orderCertModel, profileModel: controllerExtend.profileModel!, raCode: referrerCode,))?.then((value) {
+                        String? referrerCode = controllerExtend.formKey4
+                            .currentState?.fields["referralCode"]?.value
+                            .toString()
+                            .trim();
+                        Get.to(() => PaymentScreen(
+                              orderCertModel: orderCertModel,
+                              raCode: referrerCode,
+                            ))?.then((value) {
                           // widget.cardInfo.ReferrerCode = null;
                           if (value != null) {
                             // thanh toan thanh cong
                             // if (value == true) {
-                              // todo
-                              Get.back(result: value);
+                            // todo
+                            Get.back(result: value);
                             // }
                           }
                         });

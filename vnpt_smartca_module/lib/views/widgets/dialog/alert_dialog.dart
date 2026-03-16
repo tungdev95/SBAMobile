@@ -86,7 +86,7 @@ class _YesNoDialogState extends State<YesNoDialog> {
                     backgroundColor: Colors.white,
                     textStyle: Theme.of(context)
                         .textTheme
-                        .bodyText1
+                        .bodyLarge
                         ?.copyWith(color: const Color.fromRGBO(222, 155, 57, 1.0)),
                     onCallBack: widget.callback,
                   ),
